@@ -19,7 +19,7 @@ public class SaveImageAction extends AbstractAction {
 	public SaveImageAction (Julia f) {
 		super("Save Image", new ImageIcon
 				(Thread.currentThread().getContextClassLoader().getResource
-						("Resources/saveImage.png")));
+						("saveImage.png")));
 		putValue("SHORT_DESCRIPTION", "Save Image");
 		putValue("LONG_DESCRIPTION", "Save the graph to a .jpeg file");
 		parentFrame = f;

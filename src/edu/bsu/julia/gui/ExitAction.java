@@ -15,7 +15,7 @@ public class ExitAction extends AbstractAction {
 	public ExitAction(Julia f) {
 		super("Exit", new ImageIcon
 				(Thread.currentThread().getContextClassLoader().getResource
-						("Resources/exit.png")));
+						("exit.png")));
 		putValue("SHORT_DESCRIPTION", "Exit Program");
 		putValue("LONG_DESCRIPTION", "Exit the program.  Unsaved " +
 				"data will be lost.");

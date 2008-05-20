@@ -15,7 +15,7 @@ public class EditSessionAction extends AbstractAction {
 	public EditSessionAction(Julia f) {
 		super("Edit Session", new ImageIcon
 				(Thread.currentThread().getContextClassLoader().getResource
-						("Resources/sessionedit.png")));
+						("sessionedit.png")));
 		putValue("SHORT_DESCRIPTION", "Edit Session");
 		putValue("LONG_DESCRIPTION", "Edit the current session variables.");
 		parentFrame = f;

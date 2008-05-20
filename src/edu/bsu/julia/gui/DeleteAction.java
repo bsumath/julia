@@ -15,7 +15,7 @@ public class DeleteAction extends AbstractAction{
 	public DeleteAction(Julia f, DefaultListModel listModel, int i, int t) {
 		super("Delete", new ImageIcon
 				(Thread.currentThread().getContextClassLoader().getResource
-						("Resources/delete.png")));
+						("resources/delete.png")));
 		putValue("SHORT_DESCRIPTION", "Delete");
 		putValue("LONG_DESCRIPTION", "Delete the chosen function.");
 		parentFrame = f;

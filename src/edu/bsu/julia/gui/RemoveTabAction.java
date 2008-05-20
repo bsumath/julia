@@ -14,7 +14,7 @@ public class RemoveTabAction extends AbstractAction {
 	public RemoveTabAction(Julia f) {
 		super("Remove Active Graph", new ImageIcon
 				(Thread.currentThread().getContextClassLoader().getResource
-						("Resources/removeTab.png")));
+						("removeTab.png")));
 		putValue("SHORT_DESCRIPTION", "Remove the active tab");
 		putValue("LONG_DESCRIPTION", "Remove the active tab from the " +
 				"center graph panel.");

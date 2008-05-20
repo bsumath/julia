@@ -1,0 +1,33 @@
+<project name="JuliaBeta" default="all" basedir=".">
+	<property name="keystore.alias" value="" />
+	<property name="keystore.password" value="" />
+	<property name="keystore" location="../keystore.ks" />
+	<property name="out.dir" location="build" />
+	
+	<!-- Make all the jars and upload -->
+	<target name="all" depends="init,julia.jar,resources.jar" />
+	
+	<!-- Initialize the build process. -->
+	<target name="init">
+		<!-- make sure the output directory exists -->
+		<mkdir dir="${out.dir}" />
+	</target>
+	
+	<!-- Make the jar that contains only the classes -->
+	<target name="julia.jar">
+		<jar destfile="${out.dir}/julia.jar">
+			<fileset dir="bin" includes="**/*.class" />
+		</jar>
+		<signjar alias="${keystore.alias}" storepass="${keystore.password}"
+			keystore="${keystore}" jar="${out.dir}/julia.jar" />
+	</target>
+	
+	<!-- make the resources jar -->
+	<target name="resources.jar">  
+		<jar destfile="${out.dir}/resources.jar" 
+			basedir="${basedir}/resources" />
+		<signjar alias="${keystore.alias}" storepass="${keystore.password}" 
+			keystore="${keystore}" jar="${out.dir}/resources.jar" />  
+	</target>
+</project>
+

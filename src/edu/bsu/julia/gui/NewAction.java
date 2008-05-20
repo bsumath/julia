@@ -13,7 +13,7 @@ public class NewAction extends AbstractAction {
 	public NewAction(Julia f) {
 		super("New Session", new ImageIcon
 				(Thread.currentThread().getContextClassLoader().getResource
-						("Resources/sessionnew.png")));
+						("sessionnew.png")));
 		putValue("SHORT_DESCRIPTION", "New Session");
 		putValue("LONG_DESCRIPTION", "Creates a new session with " +
 				"an empty function list.");

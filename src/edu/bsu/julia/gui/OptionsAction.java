@@ -13,7 +13,7 @@ public class OptionsAction extends AbstractAction {
 	public OptionsAction(Julia f) {
 		super("Options", new ImageIcon
 				(Thread.currentThread().getContextClassLoader().getResource
-						("Resources/configure.png")));
+						("configure.png")));
 		putValue("SHORT_DESCRIPTION", "Options");
 		putValue("LONG_DESCRIPTION", "Change the dot size" +
 				"and Axis Trigger");

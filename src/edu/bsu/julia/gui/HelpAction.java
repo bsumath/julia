@@ -13,7 +13,7 @@ public class HelpAction extends AbstractAction {
 	public HelpAction(Julia f) {
 		super("Help", new ImageIcon
 				(Thread.currentThread().getContextClassLoader().getResource
-						("Resources/help.png")));
+						("help.png")));
 		putValue("SHORT_DESCRIPTION", "Open Help");
 		putValue("LONG_DESCRIPTION",
 				"Open the help file in the default web browser.");
