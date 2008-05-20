@@ -14,7 +14,7 @@ public class AddFunctionAction extends AbstractAction {
 	public AddFunctionAction(Julia f) {
 		super("Add Function", new ImageIcon
 				(Thread.currentThread().getContextClassLoader().getResource
-						("Resources/addformula.png")));
+						("addformula.png")));
 		parentFrame = f;
 		putValue("SHORT_DESCRIPTION", "Add Function");
 		putValue("LONG_DESCRIPTION", "Add a new function to the present " +

@@ -14,7 +14,7 @@ public class ZoomOutAction extends AbstractAction {
 	public ZoomOutAction(Julia f) {
 		super("Zoom Out", new ImageIcon
 				(Thread.currentThread().getContextClassLoader().getResource
-						("Resources/viewmag-.png")));
+						("viewmag-.png")));
 		putValue("SHORT_DESCRIPTION", "Zoom Out On Graph");
 		putValue("LONG_DESCRIPTION", "Zoom out on the visible section of the " +
 				"graph.");

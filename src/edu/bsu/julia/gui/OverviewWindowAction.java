@@ -12,7 +12,7 @@ public class OverviewWindowAction extends AbstractAction {
 	public OverviewWindowAction(Julia f) {
 		super("Open Overview Window", new ImageIcon
 				(Thread.currentThread().getContextClassLoader().getResource
-						("Resources/overview.png")));
+						("overview.png")));
 		putValue("SHORT_DESCRIPTION", "Open an Overview Window");
 		putValue("LONG_DESCRIPTION", "Add a new window to show an overview " +
 				"of the current graph.");

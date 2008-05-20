@@ -14,7 +14,7 @@ public class ZoomInAction extends AbstractAction {
 	public ZoomInAction(Julia f) {
 		super("Zoom In", new ImageIcon
 				(Thread.currentThread().getContextClassLoader().getResource
-						("Resources/viewmag+.png")));
+						("viewmag+.png")));
 		putValue("SHORT_DESCRIPTION", "Zoom In On Graph");
 		putValue("LONG_DESCRIPTION", "Zoom in on the visible section of the " +
 				"graph.");

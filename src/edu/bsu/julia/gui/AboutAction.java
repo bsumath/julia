@@ -13,7 +13,7 @@ public class AboutAction extends AbstractAction {
 	public AboutAction(Julia f) {
 		super("About..", new ImageIcon
 				(Thread.currentThread().getContextClassLoader().getResource
-						("Resources/smiley.png")));
+						("smiley.png")));
 		putValue("SHORT_DESCRIPTION", "About this Program");
 		putValue("LONG_DESCRIPTION", "General information about the " +
 				"program.");

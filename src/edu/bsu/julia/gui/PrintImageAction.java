@@ -18,7 +18,7 @@ public class PrintImageAction extends AbstractAction implements Printable {
 	public PrintImageAction (Julia f) {
 		super("Print Image", new ImageIcon
 				(Thread.currentThread().getContextClassLoader().getResource
-						("Resources/print.png")));
+						("print.png")));
 		putValue("SHORT_DESCRIPTION", "Print Image");
 		putValue("LONG_DESCRIPTION", "Print the visible graph");
 		parentFrame = f;

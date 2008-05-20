@@ -13,7 +13,7 @@ public class AddTabAction extends AbstractAction {
 	public AddTabAction(Julia f) {
 		super("Add Graph", new ImageIcon
 				(Thread.currentThread().getContextClassLoader().getResource
-						("Resources/addTab.png")));
+						("addTab.png")));
 		putValue("SHORT_DESCRIPTION", "Add a new graph tab");
 		putValue("LONG_DESCRIPTION", "Add a new tab to the central graph " +
 				"panel.");

@@ -17,7 +17,7 @@ public class SaveSessionAction extends AbstractAction {
 	public SaveSessionAction(Julia f) {
 		super("Save Session", new ImageIcon
 				(Thread.currentThread().getContextClassLoader().getResource
-						("Resources/sessionsave.png")));
+						("sessionsave.png")));
 		putValue("SHORT_DESCRIPTION", "Save Session");
 		putValue("LONG_DESCRIPTION", "Save the current session to disk.");
 		parentFrame = f;

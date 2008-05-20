@@ -13,7 +13,7 @@ public class ComplexCalculatorAction extends AbstractAction {
 	public ComplexCalculatorAction () {
 		super("Complex Calculator", new ImageIcon
 				(Thread.currentThread().getContextClassLoader().getResource
-				("Resources/calc.png")));
+				("calc.png")));
 		putValue("SHORT_DESCRIPTION", "Open Complex Number Calculator");
 		putValue("LONG_DESCRIPTION", "Open a calculator for complex number mathematics.");
 	}

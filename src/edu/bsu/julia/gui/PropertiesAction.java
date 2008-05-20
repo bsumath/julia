@@ -16,7 +16,7 @@ public class PropertiesAction extends AbstractAction {
 	public PropertiesAction(Julia f, DefaultListModel listModel, int i) {
 		super("Properties", new ImageIcon
 				(Thread.currentThread().getContextClassLoader().getResource
-						("Resources/prop.png")));
+						("resources/prop.png")));
 		putValue("SHORT_DESCRIPTION", "Properties");
 		putValue("LONG_DESCRIPTION", "Open the properties tab for the " +
 				"chosen function.");

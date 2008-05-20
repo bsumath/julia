@@ -16,7 +16,7 @@ public class LoadSessionAction extends AbstractAction {
 	public LoadSessionAction(Julia f) {
 		super("Open Session", new ImageIcon
 				(Thread.currentThread().getContextClassLoader().getResource
-						("Resources/loadSession.png")));
+						("loadSession.png")));
 		putValue("SHORT_DESCRIPTION", "Load a New Session");
 		putValue("LONG_DESCRIPTION", "Load a new session.  Data from the current " +
 				"session will be lost.");

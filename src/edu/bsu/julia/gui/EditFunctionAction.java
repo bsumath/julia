@@ -15,7 +15,7 @@ public class EditFunctionAction extends AbstractAction {
 	public EditFunctionAction(Julia f, DefaultListModel inList, int i) {
 		super("Edit Function", new ImageIcon
 				(Thread.currentThread().getContextClassLoader().getResource
-						("Resources/edit.png")));
+						("resources/edit.png")));
 		parentFrame = f;
 		inputList = inList;
 		index = i;

@@ -14,7 +14,7 @@ public class ResetZoomAction extends AbstractAction {
 	public ResetZoomAction(Julia f) {
 		super("Reset Zoom", new ImageIcon
 				(Thread.currentThread().getContextClassLoader().getResource
-						("Resources/viewmag.png")));
+						("viewmag.png")));
 		putValue("SHORT_DESCRIPTION", "Reset Zoom On Graph");
 		putValue("LONG_DESCRIPTION", "Reset the graph to its original size.");
 		parentFrame = f;
