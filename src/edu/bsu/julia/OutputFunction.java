@@ -32,12 +32,14 @@ public class OutputFunction {
 	
 	public OutputFunction(Session s, InputFunction[] i,
 			int type, ComplexNumber[] p) {
-		iterations = p.length;
+		//*********************new line
+		iterations = s.getIterations();
+		//************************
 		skips = s.getSkips();
 		seed = s.getSeedValue();
 		functionType = type;
 		if(functionType==OutputFunction.POST_CRITICAL) skips = 0;
-		iterations += skips;
+		//iterations += skips;
 		inputFunctions = i;
 		points = p;
 		c = getNextColor();
