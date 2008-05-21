@@ -1,9 +1,11 @@
 package edu.bsu.julia.gui;
 
-import java.awt.event.*;
-import javax.swing.*;
-import java.awt.*;
-import edu.bsu.julia.*;
+import java.awt.event.ActionEvent;
+
+import javax.swing.AbstractAction;
+import javax.swing.ImageIcon;
+
+import edu.bsu.julia.Julia;
 
 
 public class EditSessionAction extends AbstractAction {

@@ -7,7 +7,7 @@ public class FullInverseThread extends Thread {
 	
 	private Julia parentFrame;
 	private int progress;
-	private boolean stop;
+	private volatile boolean stop;
 	private InputFunction[] inputFns;
 	private OutputFunction[] outputFns;
 	
@@ -42,7 +42,11 @@ public class FullInverseThread extends Thread {
 						result.add(tempResult[m]);
 						progress++;
 					}
+					
+					if (stop) return;
 				}
+				
+				if (stop) return;
 			}
 			InputFunction[] oneInputFn = {inputFns[i]};
 			ComplexNumber[] resultPoints = new ComplexNumber[result.size()];
@@ -51,6 +55,8 @@ public class FullInverseThread extends Thread {
 				(s, oneInputFn, outputFns,
 				OutputFunction.INVERSE_FULL_JULIA, resultPoints);
 			s.addOutputFunction(fn);
+
+			if (stop) return;
 		}
 	}
 	
@@ -58,7 +64,7 @@ public class FullInverseThread extends Thread {
 		return progress;
 	}
 	
-	public void setStop() {
+	public synchronized void setStop() {
 		stop = true;
 	}
 

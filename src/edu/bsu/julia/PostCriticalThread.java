@@ -1,10 +1,10 @@
 package edu.bsu.julia;
 
-import java.util.Random;
 import java.util.Vector;
+
 import javax.swing.JOptionPane;
 
-import edu.bsu.julia.gui.*;
+import edu.bsu.julia.gui.JuliaError;
 
 
 

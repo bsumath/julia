@@ -7,7 +7,7 @@ public class ErgodicInverseThread extends Thread {
 	
 	private Julia parentFrame;
 	private int progress;
-	private boolean stop;
+	private volatile boolean stop;
 	private InputFunction[] inputFns;
 	private OutputFunction[] outputFns;
 	
@@ -39,7 +39,11 @@ public class ErgodicInverseThread extends Thread {
 					}
 					result.add(x);
 					progress++;
+					
+					if (stop) return;
 				}
+				
+				if (stop) return;
 			}
 			InputFunction[] oneInputFn = {inputFns[i]};
 			ComplexNumber[] resultPoints = new ComplexNumber[result.size()];
@@ -48,6 +52,8 @@ public class ErgodicInverseThread extends Thread {
 				(parentFrame.getCurrentSession(), oneInputFn, outputFns,
 				OutputFunction.INVERSE_ERGODIC_JULIA, resultPoints);
 			parentFrame.getCurrentSession().addOutputFunction(fn);
+			
+			if (stop) return;
 		}
 	}
 	
@@ -55,8 +61,8 @@ public class ErgodicInverseThread extends Thread {
 		return progress;
 	}
 	
-	public void setStop() {
+	public synchronized void setStop() {
 		stop = true;
-	}
+	}	
 
 }
