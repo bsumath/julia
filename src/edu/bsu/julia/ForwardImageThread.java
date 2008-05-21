@@ -8,7 +8,7 @@ public class ForwardImageThread extends Thread {
 	
 	private Julia parentFrame;
 	private int progress;
-	private boolean stop;
+	private volatile boolean stop;
 	
 	public ForwardImageThread(Julia f) {
 		parentFrame = f;
@@ -41,7 +41,9 @@ public class ForwardImageThread extends Thread {
 					}
 					result.add(x);
 					progress++;
+					if (stop) return;
 				}
+				if (stop) return;
 			}
 			InputFunction[] oneInputFn = {inputFns[i]};
 			ComplexNumber[] resultPoints = new ComplexNumber[result.size()];
@@ -50,6 +52,7 @@ public class ForwardImageThread extends Thread {
 				(parentFrame.getCurrentSession(), oneInputFn, outputFns,
 				OutputFunction.INVERSE_ATTR, resultPoints);
 			parentFrame.getCurrentSession().addOutputFunction(fn);
+			if (stop) return;
 		}
 	}
 	
@@ -57,7 +60,7 @@ public class ForwardImageThread extends Thread {
 		return progress;
 	}
 	
-	public void setStop() {
+	public synchronized void setStop() {
 		stop = true;
 	}
 

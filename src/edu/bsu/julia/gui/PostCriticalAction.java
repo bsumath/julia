@@ -1,16 +1,13 @@
 package edu.bsu.julia.gui;
 
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.event.ActionEvent;
 
-import java.awt.*;
-import java.util.*;
-import edu.bsu.julia.*;
+import javax.swing.AbstractAction;
 
-import java.beans.*;
+import edu.bsu.julia.Julia;
 
 public class PostCriticalAction extends AbstractAction {
-	
+	private static final long serialVersionUID = -2696427897141258816L;
 	private Julia parentFrame;
 
 

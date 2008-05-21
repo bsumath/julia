@@ -55,7 +55,7 @@ public class OptionsDialog extends JDialog implements ActionListener {
 		//Ok Button
 		JButton okButton = new JButton("Ok");
 		okButton.addActionListener(this);
-		okButton.setLocation(0, grilCheckboxLabel.SOUTH);
+		okButton.setLocation(0, SwingConstants.SOUTH);
 		add(okButton);
 		//Cancel Button
 		JButton cancelButton = new JButton("Cancel");

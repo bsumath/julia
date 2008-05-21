@@ -56,7 +56,7 @@ public class InputPanel extends JPanel implements PropertyChangeListener {
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
 
-		java.util.Set upKeys = new java.util.HashSet(1);
+		Set<AWTKeyStroke> upKeys = new HashSet<AWTKeyStroke>(1);
 		upKeys.add(AWTKeyStroke.getAWTKeyStroke(KeyEvent.VK_UP,0));
 		setFocusTraversalKeys(KeyboardFocusManager.UP_CYCLE_TRAVERSAL_KEYS, upKeys);
 		

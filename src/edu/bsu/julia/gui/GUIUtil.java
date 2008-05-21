@@ -1,12 +1,8 @@
 package edu.bsu.julia.gui;
 
-import javax.swing.JOptionPane;
-
-import edu.bsu.julia.Julia;
 
 public class GUIUtil {
-	
-	private static Julia parentFrame;
+	//private static Julia parentFrame;
 	public static final int NEW_DIALOG = 0;
 	public static final int EDIT_DIALOG = 1;
 	public static final int CLONE_DIALOG = 2;
