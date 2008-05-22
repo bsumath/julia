@@ -15,9 +15,11 @@ public class Session {
 	private Vector<OutputFunction> outputFunctions;
 	private int inputsubscript;
 	private int outputsubscript;
+	private boolean modified;
 	
 	public Session() {
 		this(50000, 20, new ComplexNumber(1,0));
+		modified = false;
 	}
 	
 	public Session(int iter, int sk, ComplexNumber seedValue) throws
@@ -35,6 +37,7 @@ public class Session {
 		outputFunctions = new Vector<OutputFunction>();
 		inputsubscript = 0;
 		outputsubscript = 0;
+		modified = true;
 	}
 	
 	public int getIterations() {
@@ -42,6 +45,7 @@ public class Session {
 	}
 	
 	public void setIterations(int iter) throws IllegalArgumentException {
+		modified = true;
 		if (iter<=0)throw new IllegalArgumentException("Iterations must be" +
 			"\na positive number.");
 		iterations = iter;
@@ -53,6 +57,7 @@ public class Session {
 	}
 	
 	public void setSkips(int sk) throws IllegalArgumentException {
+		modified = true;
 		if (sk<0)throw new IllegalArgumentException("Skips must be" +
 			"\na positive number.");
 		skips = sk;
@@ -62,33 +67,33 @@ public class Session {
 	public ComplexNumber getSeedValue() {
 		return seed;
 	}
-	
 
-	
 	public void setSeedValue(ComplexNumber seedValue) {
+		modified = true;
 		seed = seedValue;
 		support.firePropertyChange("seed", null, seed);
 	}
-	
-
 	
 	public Vector<InputFunction> getInputFunctions() {
 		return inputFunctions;
 	}
 	
 	public void replaceInputFunction(InputFunction oldFn, InputFunction newFn) {
+		modified = true;
 		inputFunctions.set(inputFunctions.indexOf(oldFn), newFn);
 		newFn.setSubscript(getNextInSubscript());
 		support.firePropertyChange("replaceInputFunction", oldFn, newFn);
 	}
 	
 	public void addInputFunction(InputFunction fn) {
+		modified = true;
 		inputFunctions.add(fn);
 		fn.setSubscript(getNextInSubscript());
 		support.firePropertyChange("addInputFunction", null, fn);
 	}
 	
 	public void deleteInputFunction(int fn) {
+		modified = true;
 		inputFunctions.remove(fn);
 		support.firePropertyChange("deleteInputFunction", null, fn);
 	}
@@ -98,12 +103,14 @@ public class Session {
 	}
 	
 	public void addOutputFunction(OutputFunction fn) {
+		modified = true;
 		outputFunctions.add(fn);
 		fn.setSubscript(getNextOutSubscript());
 		support.firePropertyChange("addOutputFunction", null, fn);
 	}
 	
 	public void deleteOutputFunction(int fn) {
+		modified = true;
 		outputFunctions.remove(fn);
 		support.firePropertyChange("deleteOutputFunction", null, fn);
 	}
@@ -201,6 +208,15 @@ public class Session {
 			System.err.println(e);
 			return false;
 		}
+		modified = false;
 		return true;	
+	}
+
+	public boolean isModified() {
+		return modified;
+	}
+
+	public void markUnmodified() {
+		modified = false;
 	}
 }
