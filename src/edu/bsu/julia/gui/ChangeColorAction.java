@@ -19,7 +19,7 @@ public class ChangeColorAction extends AbstractAction {
 	public ChangeColorAction(Julia f, DefaultListModel listModel, int i) {
 		super("Change Color", new ImageIcon
 				(Thread.currentThread().getContextClassLoader().getResource
-						("resources/color.png")));
+						("color.png")));
 		putValue("SHORT_DESCRIPTION", "Change Color");
 		putValue("LONG_DESCRIPTION", "Change the color used to display " +
 				"this function.");
