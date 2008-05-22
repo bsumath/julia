@@ -1,14 +1,46 @@
 package edu.bsu.julia.gui;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.AWTKeyStroke;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.KeyboardFocusManager;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Vector;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.JToggleButton;
+import javax.swing.ListSelectionModel;
 
-import java.util.*;
-import edu.bsu.julia.*;
-
-import java.beans.*;
+import edu.bsu.julia.ComplexNumber;
+import edu.bsu.julia.InputFunction;
+import edu.bsu.julia.Julia;
+import edu.bsu.julia.Session;
+import edu.bsu.julia.gui.actions.CopyFunctionAction;
+import edu.bsu.julia.gui.actions.CreateCompositeAction;
+import edu.bsu.julia.gui.actions.CreateIndAction;
+import edu.bsu.julia.gui.actions.DeleteAction;
+import edu.bsu.julia.gui.actions.DeleteSelectedAction;
+import edu.bsu.julia.gui.actions.EditFunctionAction;
+import edu.bsu.julia.gui.actions.PostCriticalAction;
+import edu.bsu.julia.gui.actions.ProcessAction;
 
 public class InputPanel extends JPanel implements PropertyChangeListener {
 	

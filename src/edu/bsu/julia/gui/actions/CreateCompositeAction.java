@@ -1,30 +1,41 @@
-package edu.bsu.julia.gui;
+package edu.bsu.julia.gui.actions;
 
-import java.awt.event.*;
-import javax.swing.*;
-import edu.bsu.julia.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class CreateIndAction extends AbstractAction {
+import javax.swing.AbstractAction;
+import javax.swing.ButtonGroup;
+import javax.swing.ProgressMonitor;
+import javax.swing.Timer;
+
+import edu.bsu.julia.CErgodicAttrThread;
+import edu.bsu.julia.CErgodicJuliaThread;
+import edu.bsu.julia.CFullAttrThread;
+import edu.bsu.julia.CFullJuliaThread;
+import edu.bsu.julia.Julia;
+import edu.bsu.julia.gui.InputPanel;
+
+public class CreateCompositeAction extends AbstractAction {
 	
 	private Julia parentFrame;
 	private ButtonGroup typeGroup;
 	private ButtonGroup methodGroup;
 	private InputPanel inputPanel;
 	private ProgressMonitor pm;
-	private IErgodicJuliaThread ejThread;
-	private IFullJuliaThread fjThread;
-	private IErgodicAttrThread eaThread;
-	private IFullAttrThread faThread;
+	private CErgodicJuliaThread ejThread;
+	private CFullJuliaThread fjThread;
+	private CErgodicAttrThread eaThread;
+	private CFullAttrThread faThread;
 	//for serializable interface: do not use
 	public static final long serialVersionUID = 0;
 	
-	public CreateIndAction(Julia f, ButtonGroup t, ButtonGroup m) {
-		super("Individual");
+	public CreateCompositeAction(Julia f, ButtonGroup t, ButtonGroup m) {
+		super("Composite");
 		parentFrame = f;
 		typeGroup = t;
 		methodGroup = m;
-		putValue("SHORT_DESCRIPTION", "Create Individual Sets");
-		putValue("LONG_DESCRIPTION", "Create Individual Sets " +
+		putValue("SHORT_DESCRIPTION", "Create Composite Set");
+		putValue("LONG_DESCRIPTION", "Create a Composite Set " +
 				"from the selected functions.");
 	}
 
@@ -53,7 +64,7 @@ public class CreateIndAction extends AbstractAction {
 		pm = new ProgressMonitor(parentFrame,
 			"Processing Functions...",
 			"", 0, (iterations)*(noOfFns+1));
-		ejThread = new IErgodicJuliaThread(parentFrame);
+		ejThread = new CErgodicJuliaThread(parentFrame);
 		ejThread.start();
 		Timer timer = new Timer(500, new TimerActionListener(0));
 		timer.start();
@@ -66,7 +77,7 @@ public class CreateIndAction extends AbstractAction {
 		pm = new ProgressMonitor(parentFrame,
 			"Processing Functions...",
 			"", 0, (iterations)*(noOfFns+1));
-		fjThread = new IFullJuliaThread(parentFrame);
+		fjThread = new CFullJuliaThread(parentFrame);
 		fjThread.start();
 		Timer timer = new Timer(500, new TimerActionListener(1));
 		timer.start();
@@ -79,7 +90,7 @@ public class CreateIndAction extends AbstractAction {
 		pm = new ProgressMonitor(parentFrame,
 			"Processing Functions...",
 			"", 0, (iterations)*(noOfFns+1));
-		eaThread = new IErgodicAttrThread(parentFrame);
+		eaThread = new CErgodicAttrThread(parentFrame);
 		eaThread.start();
 		Timer timer = new Timer(500, new TimerActionListener(2));
 		timer.start();
@@ -92,7 +103,7 @@ public class CreateIndAction extends AbstractAction {
 		pm = new ProgressMonitor(parentFrame,
 			"Processing Functions...",
 			"", 0, (iterations)*(noOfFns+1));
-		faThread = new IFullAttrThread(parentFrame);
+		faThread = new CFullAttrThread(parentFrame);
 		faThread.start();
 		Timer timer = new Timer(500, new TimerActionListener(3));
 		timer.start();

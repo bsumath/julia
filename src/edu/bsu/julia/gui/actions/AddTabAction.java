@@ -1,8 +1,13 @@
-package edu.bsu.julia.gui;
+package edu.bsu.julia.gui.actions;
 
-import java.awt.event.*;
-import javax.swing.*;
-import edu.bsu.julia.*;
+import java.awt.event.ActionEvent;
+
+import javax.swing.AbstractAction;
+import javax.swing.ImageIcon;
+
+import edu.bsu.julia.Julia;
+import edu.bsu.julia.gui.GraphScrollPane;
+import edu.bsu.julia.gui.GraphTabbedPane;
 
 public class AddTabAction extends AbstractAction {
 	

@@ -1,8 +1,12 @@
-package edu.bsu.julia.gui;
+package edu.bsu.julia.gui.actions;
 
-import java.awt.event.*;
-import edu.bsu.julia.*;
-import javax.swing.*;
+import java.awt.event.ActionEvent;
+
+import javax.swing.AbstractAction;
+import javax.swing.ImageIcon;
+
+import edu.bsu.julia.Julia;
+import edu.bsu.julia.gui.OverviewListener;
 
 public class OverviewWindowAction extends AbstractAction {
 	Julia parentFrame;

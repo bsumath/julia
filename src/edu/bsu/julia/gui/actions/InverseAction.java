@@ -1,9 +1,20 @@
- package edu.bsu.julia.gui;
+package edu.bsu.julia.gui.actions;
 
-import java.awt.event.*;
-import edu.bsu.julia.*;
-import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.AbstractAction;
+import javax.swing.ButtonGroup;
+import javax.swing.JList;
+import javax.swing.ProgressMonitor;
 import javax.swing.Timer;
+
+import edu.bsu.julia.ErgodicInverseThread;
+import edu.bsu.julia.FullInverseThread;
+import edu.bsu.julia.InputFunction;
+import edu.bsu.julia.Julia;
+import edu.bsu.julia.OutputFunction;
+import edu.bsu.julia.gui.InputPanel;
 
 public class InverseAction extends AbstractAction {
 	

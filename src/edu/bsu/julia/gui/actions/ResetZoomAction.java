@@ -1,8 +1,12 @@
-package edu.bsu.julia.gui;
+package edu.bsu.julia.gui.actions;
 
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.event.ActionEvent;
+
+import javax.swing.AbstractAction;
+import javax.swing.ImageIcon;
+
 import edu.bsu.julia.Julia;
+import edu.bsu.julia.gui.GraphTabbedPane;
 
 public class ResetZoomAction extends AbstractAction {
 	

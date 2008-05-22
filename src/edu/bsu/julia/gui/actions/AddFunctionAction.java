@@ -1,9 +1,27 @@
-package edu.bsu.julia.gui;
+package edu.bsu.julia.gui.actions;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import edu.bsu.julia.*;
+import java.awt.FlowLayout;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.AbstractAction;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
+
+import edu.bsu.julia.Julia;
+import edu.bsu.julia.gui.CubicDialog;
+import edu.bsu.julia.gui.GUIUtil;
+import edu.bsu.julia.gui.LinearDialog;
+import edu.bsu.julia.gui.MobiusDialog;
+import edu.bsu.julia.gui.QuadraticDialog;
+import edu.bsu.julia.gui.RealAfflineLinearDialog;
 
 public class AddFunctionAction extends AbstractAction {
 	
