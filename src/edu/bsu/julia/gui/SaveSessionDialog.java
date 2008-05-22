@@ -1,50 +1,41 @@
 package edu.bsu.julia.gui;
 
-import javax.swing.*;
+import javax.swing.JOptionPane;
 
-import java.awt.FlowLayout;
-import java.awt.Point;
-import java.awt.event.*;
-import edu.bsu.julia.*;
+import edu.bsu.julia.Julia;
 
-public class SaveSessionDialog extends JDialog implements ActionListener{
+public class SaveSessionDialog {
+	public static final int SESSION_SAVED = 0;
+	public static final int SESSION_DISCARDED = 1;
+	public static final int CANCELED = 2;
 	
 	private Julia parentFrame;
-	//for serializable interface: do not use
-	public static final long serialVersionUID = 0;
 	
 	public SaveSessionDialog(Julia f) {
-		super(f, "Save Current Session?", false);
 		parentFrame = f;
-		
-		setLocationRelativeTo(parentFrame);
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setLayout(new FlowLayout());
-		add(new JLabel("Would you like to save the current session?"));
-		
-		JButton finishButton = new JButton("Save");
-		finishButton.addActionListener(this);
-		add(finishButton);
-		
-		JButton cancelButton = new JButton("Cancel");
-		cancelButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				setVisible(false);
-				dispose();
-			}
-		});
-		add(cancelButton);
-		
-		setSize(280, 100);
-		Point p = getLocation();
-		p.x = p.x-140;
-		p.y = p.y-50;
-		setLocation(p);
-		setVisible(true);
 	}
 	
-	public void actionPerformed(ActionEvent event) {
-		
-	}
+	public int showSaveDialog(){
+		Object[] options = { "Save", "Discard", "Cancel" };
+		int choice = JOptionPane.showOptionDialog(parentFrame,
+				"The current session has been modified.\n"
+						+ "Do you want to save the session?",
+				"Session Modified", JOptionPane.YES_NO_CANCEL_OPTION,
+				JOptionPane.QUESTION_MESSAGE, null, options, options[2]);
 
+		switch (choice) {
+		case 0: // save
+			new SaveSessionAction(parentFrame).actionPerformed(null);
+			
+			//check to see if the session was actually saved
+			if (parentFrame.getCurrentSession().isModified())
+				return CANCELED;
+			else 
+				return SESSION_SAVED;
+		case 1: // discard
+			return SESSION_DISCARDED;
+		default: // cancel
+			return CANCELED;
+		}
+	}
 }
