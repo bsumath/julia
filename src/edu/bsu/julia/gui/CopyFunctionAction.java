@@ -15,7 +15,7 @@ public class CopyFunctionAction extends AbstractAction {
 	public CopyFunctionAction(Julia f, DefaultListModel inList, int i) {
 		super("Clone Function", new ImageIcon
 				(Thread.currentThread().getContextClassLoader().getResource
-						("resources/copyFn.png")));
+						("copyFn.png")));
 		parentFrame = f;
 		inputList = inList;
 		index = i;
