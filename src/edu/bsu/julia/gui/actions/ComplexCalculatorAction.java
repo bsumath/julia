@@ -1,4 +1,4 @@
-package edu.bsu.julia.gui;
+package edu.bsu.julia.gui.actions;
 
 import java.awt.event.ActionEvent;
 import javax.swing.*;

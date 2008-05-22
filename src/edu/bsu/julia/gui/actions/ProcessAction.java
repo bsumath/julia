@@ -1,9 +1,19 @@
-package edu.bsu.julia.gui;
+package edu.bsu.julia.gui.actions;
 
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.AbstractAction;
+import javax.swing.ButtonGroup;
+import javax.swing.ProgressMonitor;
 import javax.swing.Timer;
-import edu.bsu.julia.*;
+
+import edu.bsu.julia.ErgodicAttrThread;
+import edu.bsu.julia.ErgodicJuliaThread;
+import edu.bsu.julia.FullAttrThread;
+import edu.bsu.julia.FullJuliaThread;
+import edu.bsu.julia.Julia;
+import edu.bsu.julia.gui.InputPanel;
 
 public class ProcessAction extends AbstractAction {
 	

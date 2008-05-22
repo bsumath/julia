@@ -1,7 +1,27 @@
 package edu.bsu.julia.gui;
 
-import javax.swing.*;
-import edu.bsu.julia.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JToolBar;
+
+import edu.bsu.julia.Julia;
+import edu.bsu.julia.gui.actions.AddFunctionAction;
+import edu.bsu.julia.gui.actions.AddTabAction;
+import edu.bsu.julia.gui.actions.ComplexCalculatorAction;
+import edu.bsu.julia.gui.actions.EditSessionAction;
+import edu.bsu.julia.gui.actions.ExitAction;
+import edu.bsu.julia.gui.actions.HelpAction;
+import edu.bsu.julia.gui.actions.LoadSessionAction;
+import edu.bsu.julia.gui.actions.NewAction;
+import edu.bsu.julia.gui.actions.OptionsAction;
+import edu.bsu.julia.gui.actions.OverviewWindowAction;
+import edu.bsu.julia.gui.actions.PrintImageAction;
+import edu.bsu.julia.gui.actions.RemoveTabAction;
+import edu.bsu.julia.gui.actions.ResetZoomAction;
+import edu.bsu.julia.gui.actions.SaveImageAction;
+import edu.bsu.julia.gui.actions.SaveSessionAction;
+import edu.bsu.julia.gui.actions.ZoomInAction;
+import edu.bsu.julia.gui.actions.ZoomOutAction;
 
 public class MainToolBar extends JToolBar {
 	

@@ -1,10 +1,11 @@
-package edu.bsu.julia.gui;
+package edu.bsu.julia.gui.actions;
 
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
 import edu.bsu.julia.Julia;
+import edu.bsu.julia.gui.PostCriticalDialog;
 
 public class PostCriticalAction extends AbstractAction {
 	private static final long serialVersionUID = -2696427897141258816L;

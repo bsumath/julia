@@ -1,4 +1,4 @@
-package edu.bsu.julia.gui;
+package edu.bsu.julia.gui.actions;
 
 import java.awt.event.ActionEvent;
 
@@ -6,6 +6,8 @@ import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 
 import edu.bsu.julia.Julia;
+import edu.bsu.julia.gui.GUIUtil;
+import edu.bsu.julia.gui.SessionDialog;
 
 
 public class EditSessionAction extends AbstractAction {

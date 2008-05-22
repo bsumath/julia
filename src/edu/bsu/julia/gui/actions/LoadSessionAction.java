@@ -1,4 +1,4 @@
-package edu.bsu.julia.gui;
+package edu.bsu.julia.gui.actions;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -9,6 +9,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import edu.bsu.julia.Julia;
+import edu.bsu.julia.gui.SaveSessionDialog;
 
 public class LoadSessionAction extends AbstractAction {
 

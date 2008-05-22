@@ -1,11 +1,34 @@
 package edu.bsu.julia.gui;
 
-import javax.swing.*;
-import edu.bsu.julia.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.beans.*;
-import java.util.*;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Vector;
+
+import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
+
+import edu.bsu.julia.Julia;
+import edu.bsu.julia.OutputFunction;
+import edu.bsu.julia.Session;
+import edu.bsu.julia.gui.actions.ChangeColorAction;
+import edu.bsu.julia.gui.actions.DeleteAction;
+import edu.bsu.julia.gui.actions.DeleteSelectedAction;
+import edu.bsu.julia.gui.actions.ForwardImageAction;
+import edu.bsu.julia.gui.actions.InverseAction;
+import edu.bsu.julia.gui.actions.PropertiesAction;
+import edu.bsu.julia.gui.actions.SaveSetAction;
 
 public class OutputPanel extends JPanel implements PropertyChangeListener{
 	

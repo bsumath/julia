@@ -3,6 +3,7 @@ package edu.bsu.julia.gui;
 import javax.swing.JOptionPane;
 
 import edu.bsu.julia.Julia;
+import edu.bsu.julia.gui.actions.SaveSessionAction;
 
 public class SaveSessionDialog {
 	public static final int SESSION_SAVED = 0;

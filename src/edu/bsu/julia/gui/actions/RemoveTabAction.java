@@ -1,9 +1,13 @@
-package edu.bsu.julia.gui;
+package edu.bsu.julia.gui.actions;
 
-import java.awt.event.*;
-import javax.swing.*;
-import edu.bsu.julia.*;
-import javax.swing.event.*;
+import java.awt.event.ActionEvent;
+
+import javax.swing.AbstractAction;
+import javax.swing.ImageIcon;
+import javax.swing.event.ChangeEvent;
+
+import edu.bsu.julia.Julia;
+import edu.bsu.julia.gui.GraphTabbedPane;
 
 public class RemoveTabAction extends AbstractAction {
 	
