@@ -164,7 +164,7 @@ public class Julia extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent event) {
 				loseFocus();
-				
+
 				// check to see if the current session should be saved
 				if (currentSession.isModified()) {
 					SaveSessionDialog saveDialog = new SaveSessionDialog(
@@ -190,86 +190,66 @@ public class Julia extends JFrame {
 	public void loadSession(File f) {
 		try {
 			BufferedReader input = new BufferedReader(new FileReader(f));
-			String line;
-			line = input.readLine();
-			int it = Integer.parseInt(line);
-			line = input.readLine();
-			int sk = Integer.parseInt(line);
-			line = input.readLine();
-			double s1 = Double.parseDouble(line);
-			line = input.readLine();
-			double s2 = Double.parseDouble(line);
-			ComplexNumber seed = new ComplexNumber(s1, s2);
-			setCurrentSession(new Session(it, sk, seed));
-			line = input.readLine();
-			int size = Integer.parseInt(line);
+
+			int points = Integer.parseInt(input.readLine());
+			int skips = Integer.parseInt(input.readLine());
+			double x = Double.parseDouble(input.readLine());
+			double y = Double.parseDouble(input.readLine());
+			ComplexNumber seed = new ComplexNumber(x, y);
+			setCurrentSession(new Session(points, skips, seed));
+
+			int size = Integer.parseInt(input.readLine());
 			int m;
-			double x, y;
 			for (int i = 0; i < size; i++) {
-				line = input.readLine();
-				if (line.equals("linear")) {
-					line = input.readLine();
-					m = Integer.parseInt(line);
+				String type = input.readLine();
+				if (type.equals("linear")) {
+					m = Integer.parseInt(input.readLine());
 					ComplexNumber[] var = new ComplexNumber[2];
 					for (int j = 0; j < 2; j++) {
-						line = input.readLine();
-						x = Double.parseDouble(line);
-						line = input.readLine();
-						y = Double.parseDouble(line);
+						x = Double.parseDouble(input.readLine());
+						y = Double.parseDouble(input.readLine());
 						var[j] = new ComplexNumber(x, y);
 					}
 					currentSession.addInputFunction(new LinearInputFunction(m,
 							var[0], var[1]));
-				} else if (line.equals("cubic")) {
-					line = input.readLine();
-					m = Integer.parseInt(line);
+				} else if (type.equals("cubic")) {
+					m = Integer.parseInt(input.readLine());
 					ComplexNumber[] var = new ComplexNumber[2];
 					for (int j = 0; j < 2; j++) {
-						line = input.readLine();
-						x = Double.parseDouble(line);
-						line = input.readLine();
-						y = Double.parseDouble(line);
+						x = Double.parseDouble(input.readLine());
+						y = Double.parseDouble(input.readLine());
 						var[j] = new ComplexNumber(x, y);
 					}
 					currentSession.addInputFunction(new CubicInputFunction(m,
 							var[0], var[1]));
-				} else if (line.equals("matrix")) {
-					line = input.readLine();
-					m = Integer.parseInt(line);
+				} else if (type.equals("matrix")) {
+					m = Integer.parseInt(input.readLine());
 					ComplexNumber[] var = new ComplexNumber[6];
 					for (int j = 0; j < 6; j++) {
-						line = input.readLine();
-						x = Double.parseDouble(line);
-						line = input.readLine();
-						y = Double.parseDouble(line);
+						x = Double.parseDouble(input.readLine());
+						y = Double.parseDouble(input.readLine());
 						var[j] = new ComplexNumber(x, y);
 					}
 					currentSession
 							.addInputFunction(new RealAfflineLinearInputFunction(
 									m, var[0], var[1], var[2], var[3], var[4],
 									var[5]));
-				} else if (line.equals("mobius")) {
-					line = input.readLine();
-					m = Integer.parseInt(line);
+				} else if (type.equals("mobius")) {
+					m = Integer.parseInt(input.readLine());
 					ComplexNumber[] var = new ComplexNumber[4];
 					for (int j = 0; j < 4; j++) {
-						line = input.readLine();
-						x = Double.parseDouble(line);
-						line = input.readLine();
-						y = Double.parseDouble(line);
+						x = Double.parseDouble(input.readLine());
+						y = Double.parseDouble(input.readLine());
 						var[j] = new ComplexNumber(x, y);
 					}
 					currentSession.addInputFunction(new MobiusInputFunction(m,
 							var[0], var[1], var[2], var[3]));
-				} else if (line.equals("quad")) {
-					line = input.readLine();
-					m = Integer.parseInt(line);
+				} else if (type.equals("quad")) {
+					m = Integer.parseInt(input.readLine());
 					ComplexNumber[] var = new ComplexNumber[3];
 					for (int j = 0; j < 3; j++) {
-						line = input.readLine();
-						x = Double.parseDouble(line);
-						line = input.readLine();
-						y = Double.parseDouble(line);
+						x = Double.parseDouble(input.readLine());
+						y = Double.parseDouble(input.readLine());
 						var[j] = new ComplexNumber(x, y);
 					}
 					currentSession.addInputFunction(new QuadraticInputFunction(
