@@ -16,8 +16,8 @@ public class ForwardImageAction extends AbstractAction {
 		super("Forward Image");
 		parentFrame = f;
 		putValue("SHORT_DESCRIPTION", "Process Forward Image");
-		putValue("LONG_DESCRIPTION", "Create a forward image set from the given" +
-				" input and output functions.");
+		putValue("LONG_DESCRIPTION", "Create a forward image set of the selected" +
+				" Output Set(s) using the selected Input Function(s).");
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
