@@ -1,17 +1,23 @@
 package edu.bsu.julia.gui.actions;
 
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Stack;
 
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
@@ -24,17 +30,22 @@ public class HelpAction extends AbstractAction {
 	private static final int WIDTH = 835;
 	private static final int HEIGHT = 650;
 
-	private Julia parentFrame;
+	private final Julia parentFrame;
 	private final JDialog dialog;
 	private final JEditorPane editor;
-	private JScrollPane scrollPane;
-	private JOptionPane backupHelp;
+	private final JPanel panel;
+	private final JOptionPane backupHelp;
 	// for serializable interface: do not use
 	public static final long serialVersionUID = 0;
 
+	private final Stack<URL> backStack = new Stack<URL>();
+	private final Stack<URL> forwardStack = new Stack<URL>();
+	private final JButton home;
+	private final JButton back;
+	private final JButton forward;
+	private static final ClassLoader CL = Thread.currentThread().getContextClassLoader();
 	public HelpAction(Julia f) {
-		super("Help", new ImageIcon(Thread.currentThread()
-				.getContextClassLoader().getResource("help.png")));
+		super("Help", new ImageIcon(CL.getResource("help.png")));
 		putValue("SHORT_DESCRIPTION", "Open Help");
 		putValue("LONG_DESCRIPTION",
 				"Open the help file in the default web browser.");
@@ -42,6 +53,64 @@ public class HelpAction extends AbstractAction {
 
 		// create the dialog
 		dialog = new JDialog(parentFrame, "Help", true);
+
+		panel = new JPanel(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+
+		forward = new JButton(new AbstractAction("Forward") {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if (!forwardStack.empty()) {
+					try {
+						backStack.push(editor.getPage());
+						back.setEnabled(true);
+						editor.setPage(forwardStack.pop());
+						if (forwardStack.empty())
+							forward.setEnabled(false);
+					} catch (IOException e) {
+					}
+				}
+			}
+		});
+		forward.setEnabled(false);
+		forward.setIcon(new ImageIcon(CL.getResource("forward.png")));
+
+		back = new JButton(new AbstractAction("Back") {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if (!backStack.empty()) {
+					try {
+						forwardStack.push(editor.getPage());
+						forward.setEnabled(true);
+						editor.setPage(backStack.pop());
+						if (backStack.empty())
+							back.setEnabled(false);
+					} catch (IOException e) {
+					}
+				}
+			}
+		});
+		back.setEnabled(false);
+		back.setIcon(new ImageIcon(CL.getResource("back.png")));
+
+		home = new JButton(new AbstractAction("Home") {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					backStack.push(editor.getPage());
+					back.setEnabled(true);
+					editor.setPage(HELP_URL_BASE + HELP_URL_START);
+				} catch (IOException e) {
+				}
+			}
+		});
+		home.setIcon(new ImageIcon(CL.getResource("home.png")));
 
 		editor = new JEditorPane();
 		editor.setEditable(false);
@@ -51,16 +120,40 @@ public class HelpAction extends AbstractAction {
 				if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
 					try {
 						URL url = e.getURL();
-						if (url.toString().startsWith(HELP_URL_BASE))
+						if (url.toString().startsWith(HELP_URL_BASE)) {
+							backStack.push(editor.getPage());
+							back.setEnabled(true);
 							editor.setPage(url);
+						}
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
 				}
 			}
 		});
-		scrollPane = new JScrollPane(editor);
+
+		final JScrollPane scrollPane = new JScrollPane(editor);
 		scrollPane.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+
+		c.gridx = 0;
+		c.gridy = 0;
+		c.gridwidth = 1;
+		c.gridheight = 1;
+		panel.add(home, c);
+		c.gridx = 1;
+		c.gridy = 0;
+		panel.add(back, c);
+		c.gridx = 2;
+		c.gridy = 0;
+		panel.add(forward, c);
+		c.gridx = 3;
+		c.gridy = 0;
+		panel.add(new JLabel(), c);
+		c.fill = GridBagConstraints.NONE;
+		c.gridx = 0;
+		c.gridy = 1;
+		c.gridwidth = 4;
+		panel.add(scrollPane, c);
 
 		// create a backup help in case the html doesn't load
 		String output = "Help files are not currently available"
@@ -84,7 +177,7 @@ public class HelpAction extends AbstractAction {
 		// try to open the html
 		try {
 			editor.setPage(HELP_URL_BASE + HELP_URL_START);
-			dialog.setContentPane(scrollPane);
+			dialog.setContentPane(panel);
 		} catch (IOException e) {
 			dialog.setContentPane(backupHelp);
 		}
