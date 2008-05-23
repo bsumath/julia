@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <jnlp spec="1.0+"
 	codebase="http://julia.googlecode.com/svn/trunk/build/"
-	href="http://julia.googlecode.com/files/juliaBeta.jnlp">
+	href="http://julia.googlecode.com/svn/trunk/build/juliaBeta.jnlp">
 
 <information>
  	<title>Julia Fractal Drawing Program</title>
