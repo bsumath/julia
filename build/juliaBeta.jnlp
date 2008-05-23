@@ -22,7 +22,7 @@
 <resources>
 	<jar href="julia.jar"/>
 	<jar href="resources.jar"/>
-	<j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se" />
+	<j2se version="1.5+" href="http://java.sun.com/products/autodl/j2se" />
 
 	<extension name="jogl" href="http://download.java.net/media/jogl/builds/archive/jsr-231-webstart-current/jogl.jnlp" />
 </resources>

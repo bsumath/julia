@@ -178,7 +178,7 @@ public class RealAfflineLinearDialog extends JDialog implements ActionListener {
 	 * being used to edit a function).  Input functions are immutable objects.
 	 */
 	public void actionPerformed(ActionEvent arg0) {
-		if(mField.getText().isEmpty()) {
+		if(mField.getText().equals("")) {
 			new JuliaError(JuliaError.EMPTY_FIELD, parentFrame);
 			return;
 		}
@@ -195,9 +195,9 @@ public class RealAfflineLinearDialog extends JDialog implements ActionListener {
 		double d = 0;
 		double e = 0;
 		double f = 0;
-		if(aField.getText().isEmpty() || bField.getText().isEmpty() || 
-				cField.getText().isEmpty() || dField.getText().isEmpty() || 
-				eField.getText().isEmpty() || fField.getText().isEmpty()) {
+		if(aField.getText().equals("") || bField.getText().equals("") || 
+				cField.getText().equals("") || dField.getText().equals("") || 
+				eField.getText().equals("") || fField.getText().equals("")) {
 			new JuliaError(JuliaError.EMPTY_FIELD, parentFrame);
 			return;
 		}

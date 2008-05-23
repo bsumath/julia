@@ -17,7 +17,7 @@ public class TextFieldFocusListener implements FocusListener {
 
 	public void focusGained(FocusEvent e) {
 		String text = f.getText();
-		if(text.isEmpty()) return;
+		if(text.equals("")) return;
 		f.setSelectionStart(0);
 		f.setSelectionEnd(text.length());
 	}
