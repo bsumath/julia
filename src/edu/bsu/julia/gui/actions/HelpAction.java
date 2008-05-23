@@ -60,7 +60,6 @@ public class HelpAction extends AbstractAction {
 		forward = new JButton(new AbstractAction("Forward") {
 			private static final long serialVersionUID = 1L;
 
-			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if (!forwardStack.empty()) {
 					try {
@@ -80,7 +79,6 @@ public class HelpAction extends AbstractAction {
 		back = new JButton(new AbstractAction("Back") {
 			private static final long serialVersionUID = 1L;
 
-			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if (!backStack.empty()) {
 					try {
@@ -100,7 +98,6 @@ public class HelpAction extends AbstractAction {
 		home = new JButton(new AbstractAction("Home") {
 			private static final long serialVersionUID = 1L;
 
-			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				try {
 					backStack.push(editor.getPage());

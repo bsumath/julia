@@ -183,7 +183,7 @@ public class CubicDialog extends JDialog implements ActionListener {
 	 * being used to edit a function).  Input functions are immutable objects.
 	 */
 	public void actionPerformed(ActionEvent arg0) {
-		if(mField.getText().isEmpty()) {
+		if(mField.getText().equals("")) {
 			new JuliaError(JuliaError.EMPTY_FIELD, parentFrame);
 			return;
 		}
@@ -198,8 +198,8 @@ public class CubicDialog extends JDialog implements ActionListener {
 		double ay = 0;
 		double bx = 0;
 		double by = 0;
-		if(axField.getText().isEmpty() || ayField.getText().isEmpty() || 
-				bxField.getText().isEmpty() || byField.getText().isEmpty()) {
+		if(axField.getText().equals("") || ayField.getText().equals("") || 
+				bxField.getText().equals("") || byField.getText().equals("")) {
 			new JuliaError(JuliaError.EMPTY_FIELD, parentFrame);
 			return;
 		}

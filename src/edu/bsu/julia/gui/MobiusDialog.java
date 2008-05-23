@@ -247,7 +247,7 @@ public class MobiusDialog extends JDialog implements ActionListener {
 	 * being used to edit a function).  Input functions are immutable objects.
 	 */
 	public void actionPerformed(ActionEvent arg0) {
-		if(mField.getText().isEmpty()) {
+		if(mField.getText().equals("")) {
 			new JuliaError(JuliaError.EMPTY_FIELD, parentFrame);
 			return;
 		}
@@ -266,10 +266,10 @@ public class MobiusDialog extends JDialog implements ActionListener {
 		double cy = 0;
 		double dx = 0;
 		double dy = 0;
-		if(axField.getText().isEmpty() || ayField.getText().isEmpty() || 
-				bxField.getText().isEmpty() || byField.getText().isEmpty()
-				|| cxField.getText().isEmpty() || cyField.getText().isEmpty()
-				|| dxField.getText().isEmpty() || dyField.getText().isEmpty()) {
+		if(axField.getText().equals("") || ayField.getText().equals("") || 
+				bxField.getText().equals("") || byField.getText().equals("")
+				|| cxField.getText().equals("") || cyField.getText().equals("")
+				|| dxField.getText().equals("") || dyField.getText().equals("")) {
 			new JuliaError(JuliaError.EMPTY_FIELD, parentFrame);
 			return;
 		}

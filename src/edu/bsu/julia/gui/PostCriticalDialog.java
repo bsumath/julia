@@ -81,7 +81,7 @@ public class PostCriticalDialog extends JDialog implements ActionListener{
 	 * being used to edit a function).  Input functions are immutable objects.
 	 */
 	public void actionPerformed(ActionEvent event) {
-		if(tField.getText().isEmpty()) {
+		if(tField.getText().equals("")) {
 			new JuliaError(JuliaError.EMPTY_FIELD, parentFrame);
 			return;
 		}
