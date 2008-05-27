@@ -1,8 +1,10 @@
 package edu.bsu.julia;
 
 import java.util.Vector;
-import edu.bsu.julia.gui.*;
+
 import javax.swing.JList;
+
+import edu.bsu.julia.gui.JuliaError;
 
 public class ForwardImageThread extends Thread {
 	

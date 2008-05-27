@@ -1,7 +1,9 @@
 package edu.bsu.julia;
 
 import java.util.Random;
-import edu.bsu.julia.gui.*;
+
+import edu.bsu.julia.gui.JuliaError;
+import edu.bsu.julia.session.Session;
 
 public class ErgodicAttrThread extends Thread {
 	

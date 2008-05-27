@@ -1,8 +1,21 @@
-package edu.bsu.julia;
+package edu.bsu.julia.session;
 
-import java.beans.*;
-import java.util.*;
-import java.io.*;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.Vector;
+
+import edu.bsu.julia.ComplexNumber;
+import edu.bsu.julia.CubicInputFunction;
+import edu.bsu.julia.InputFunction;
+import edu.bsu.julia.LinearInputFunction;
+import edu.bsu.julia.MobiusInputFunction;
+import edu.bsu.julia.OutputFunction;
+import edu.bsu.julia.QuadraticInputFunction;
+import edu.bsu.julia.RealAfflineLinearInputFunction;
 
 public class Session {
 	

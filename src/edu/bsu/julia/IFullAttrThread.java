@@ -1,6 +1,7 @@
 package edu.bsu.julia;
 
-import edu.bsu.julia.gui.*;
+import edu.bsu.julia.gui.JuliaError;
+import edu.bsu.julia.session.Session;
 
 public class IFullAttrThread extends Thread {
 	

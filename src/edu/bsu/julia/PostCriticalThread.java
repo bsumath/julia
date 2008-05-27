@@ -5,6 +5,7 @@ import java.util.Vector;
 import javax.swing.JOptionPane;
 
 import edu.bsu.julia.gui.JuliaError;
+import edu.bsu.julia.session.Session;
 
 
 

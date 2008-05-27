@@ -1,7 +1,8 @@
 package edu.bsu.julia;
 
 import java.util.Vector;
-import edu.bsu.julia.gui.*;
+
+import edu.bsu.julia.gui.JuliaError;
 
 public class ErgodicInverseThread extends Thread {
 	

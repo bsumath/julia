@@ -1,12 +1,20 @@
 package edu.bsu.julia.gui.actions;
 
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.Vector;
-import edu.bsu.julia.*;
-import javax.swing.*;
+
+import javax.swing.AbstractAction;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+
+import edu.bsu.julia.ComplexNumber;
+import edu.bsu.julia.InputFunction;
+import edu.bsu.julia.Julia;
+import edu.bsu.julia.OutputFunction;
+import edu.bsu.julia.session.Session;
 
 
 public class SaveOutputFunctionAction extends AbstractAction {

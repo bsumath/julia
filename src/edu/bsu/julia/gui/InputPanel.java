@@ -32,7 +32,6 @@ import javax.swing.ListSelectionModel;
 import edu.bsu.julia.ComplexNumber;
 import edu.bsu.julia.InputFunction;
 import edu.bsu.julia.Julia;
-import edu.bsu.julia.Session;
 import edu.bsu.julia.gui.actions.CopyFunctionAction;
 import edu.bsu.julia.gui.actions.CreateCompositeAction;
 import edu.bsu.julia.gui.actions.CreateIndAction;
@@ -41,6 +40,7 @@ import edu.bsu.julia.gui.actions.DeleteSelectedAction;
 import edu.bsu.julia.gui.actions.EditFunctionAction;
 import edu.bsu.julia.gui.actions.PostCriticalAction;
 import edu.bsu.julia.gui.actions.ProcessAction;
+import edu.bsu.julia.session.Session;
 
 public class InputPanel extends JPanel implements PropertyChangeListener {
 	

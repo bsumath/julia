@@ -27,6 +27,7 @@ import edu.bsu.julia.gui.MainToolBar;
 import edu.bsu.julia.gui.OutputPanel;
 import edu.bsu.julia.gui.SaveSessionDialog;
 import edu.bsu.julia.gui.StatusBar;
+import edu.bsu.julia.session.Session;
 
 public class Julia extends JFrame {
 
