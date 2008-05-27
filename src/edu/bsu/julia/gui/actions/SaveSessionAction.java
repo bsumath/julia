@@ -2,6 +2,7 @@ package edu.bsu.julia.gui.actions;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
@@ -10,6 +11,7 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
 import edu.bsu.julia.Julia;
+import edu.bsu.julia.session.SessionFileExporter;
 
 public class SaveSessionAction extends AbstractAction {
 	private Julia parentFrame;
@@ -69,7 +71,18 @@ public class SaveSessionAction extends AbstractAction {
 					return false;
 			}
 			parentFrame.setFilePath(file.getAbsolutePath());
-			return parentFrame.getCurrentSession().writeToFile(file);
+			
+			// try to write to a file
+			SessionFileExporter exporter = new SessionFileExporter();
+			parentFrame.getCurrentSession().export(exporter);
+			try {
+				exporter.writeToFile(file);
+				return true;
+			} catch (IOException e) {
+				System.err.println(e);
+				return false;
+			}
+			
 		} else {
 			return false;
 		}

@@ -8,9 +8,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 
 import javax.swing.JFrame;
@@ -27,7 +25,10 @@ import edu.bsu.julia.gui.MainToolBar;
 import edu.bsu.julia.gui.OutputPanel;
 import edu.bsu.julia.gui.SaveSessionDialog;
 import edu.bsu.julia.gui.StatusBar;
+import edu.bsu.julia.session.EmptySessionImporter;
 import edu.bsu.julia.session.Session;
+import edu.bsu.julia.session.SessionFileImporter;
+import edu.bsu.julia.session.Session.InvalidSessionParametersException;
 
 public class Julia extends JFrame {
 
@@ -49,7 +50,14 @@ public class Julia extends JFrame {
 
 	public Julia() {
 		super("Julia");
-		currentSession = new Session();
+		
+		try {
+			currentSession = new Session(new EmptySessionImporter());
+		} catch (InvalidSessionParametersException e) {
+			/* this shouldn't happen */
+			e.printStackTrace();
+		}
+		
 		dotSize = 1;
 		axisTrigger = true;
 		grilTrigger = false;
@@ -57,17 +65,6 @@ public class Julia extends JFrame {
 		outputPanel = new OutputPanel(this);
 		createGUI();
 		setFocusable(true);
-		ComplexNumber a = new ComplexNumber(2, 0);
-		ComplexNumber b = new ComplexNumber(0, 0);
-		ComplexNumber c = new ComplexNumber(-1, 0);
-		ComplexNumber d = new ComplexNumber(-.5, -0.866);
-		LinearInputFunction linear1 = new LinearInputFunction(1, a, b);
-		currentSession.addInputFunction(linear1);
-		LinearInputFunction linear2 = new LinearInputFunction(1, a, c);
-		currentSession.addInputFunction(linear2);
-		LinearInputFunction linear3 = new LinearInputFunction(1, a, d);
-		currentSession.addInputFunction(linear3);
-		currentSession.markUnmodified();
 	}
 
 	public static void main(String[] args) {
@@ -190,76 +187,13 @@ public class Julia extends JFrame {
 
 	public void loadSession(File f) {
 		try {
-			BufferedReader input = new BufferedReader(new FileReader(f));
-
-			int points = Integer.parseInt(input.readLine());
-			int skips = Integer.parseInt(input.readLine());
-			double x = Double.parseDouble(input.readLine());
-			double y = Double.parseDouble(input.readLine());
-			ComplexNumber seed = new ComplexNumber(x, y);
-			setCurrentSession(new Session(points, skips, seed));
-
-			int size = Integer.parseInt(input.readLine());
-			int m;
-			for (int i = 0; i < size; i++) {
-				String type = input.readLine();
-				if (type.equals("linear")) {
-					m = Integer.parseInt(input.readLine());
-					ComplexNumber[] var = new ComplexNumber[2];
-					for (int j = 0; j < 2; j++) {
-						x = Double.parseDouble(input.readLine());
-						y = Double.parseDouble(input.readLine());
-						var[j] = new ComplexNumber(x, y);
-					}
-					currentSession.addInputFunction(new LinearInputFunction(m,
-							var[0], var[1]));
-				} else if (type.equals("cubic")) {
-					m = Integer.parseInt(input.readLine());
-					ComplexNumber[] var = new ComplexNumber[2];
-					for (int j = 0; j < 2; j++) {
-						x = Double.parseDouble(input.readLine());
-						y = Double.parseDouble(input.readLine());
-						var[j] = new ComplexNumber(x, y);
-					}
-					currentSession.addInputFunction(new CubicInputFunction(m,
-							var[0], var[1]));
-				} else if (type.equals("matrix")) {
-					m = Integer.parseInt(input.readLine());
-					ComplexNumber[] var = new ComplexNumber[6];
-					for (int j = 0; j < 6; j++) {
-						x = Double.parseDouble(input.readLine());
-						y = Double.parseDouble(input.readLine());
-						var[j] = new ComplexNumber(x, y);
-					}
-					currentSession
-							.addInputFunction(new RealAfflineLinearInputFunction(
-									m, var[0], var[1], var[2], var[3], var[4],
-									var[5]));
-				} else if (type.equals("mobius")) {
-					m = Integer.parseInt(input.readLine());
-					ComplexNumber[] var = new ComplexNumber[4];
-					for (int j = 0; j < 4; j++) {
-						x = Double.parseDouble(input.readLine());
-						y = Double.parseDouble(input.readLine());
-						var[j] = new ComplexNumber(x, y);
-					}
-					currentSession.addInputFunction(new MobiusInputFunction(m,
-							var[0], var[1], var[2], var[3]));
-				} else if (type.equals("quad")) {
-					m = Integer.parseInt(input.readLine());
-					ComplexNumber[] var = new ComplexNumber[3];
-					for (int j = 0; j < 3; j++) {
-						x = Double.parseDouble(input.readLine());
-						y = Double.parseDouble(input.readLine());
-						var[j] = new ComplexNumber(x, y);
-					}
-					currentSession.addInputFunction(new QuadraticInputFunction(
-							m, var[0], var[1], var[2]));
-				}
-			}
+			currentSession = new Session(new SessionFileImporter(f));
 		} catch (IOException ioe) {
 			JOptionPane.showMessageDialog(this, "Error Reading File",
 					"Error Reading File", JOptionPane.ERROR_MESSAGE);
+		} catch (InvalidSessionParametersException e) {
+			JOptionPane.showMessageDialog(this, "Corrupt .julia file",
+					"Corrupt .julia file", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
