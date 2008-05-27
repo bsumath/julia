@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 
+import edu.bsu.julia.session.Session;
+
 public class InverseOutputFunction extends OutputFunction {
 	
 	private OutputFunction[] outputFunctions;

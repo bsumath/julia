@@ -13,7 +13,7 @@ import javax.swing.JTextField;
 import edu.bsu.julia.ComplexNumber;
 import edu.bsu.julia.Julia;
 import edu.bsu.julia.RealAfflineLinearInputFunction;
-import edu.bsu.julia.Session;
+import edu.bsu.julia.session.Session;
 /**
  * 
  * <h3>Description</h3>

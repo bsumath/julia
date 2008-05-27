@@ -1,8 +1,14 @@
 package edu.bsu.julia;
 
-import java.beans.*;
-import java.awt.*;
-import java.io.*;
+import java.awt.Color;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+
+import edu.bsu.julia.session.Session;
 
 public class OutputFunction {
 	

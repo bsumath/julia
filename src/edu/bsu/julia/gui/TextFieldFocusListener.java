@@ -1,9 +1,14 @@
 package edu.bsu.julia.gui;
 
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
-import edu.bsu.julia.*;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+
+import edu.bsu.julia.ComplexNumber;
+import edu.bsu.julia.Julia;
+import edu.bsu.julia.session.Session;
 
 public class TextFieldFocusListener implements FocusListener {
 	

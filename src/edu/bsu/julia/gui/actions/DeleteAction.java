@@ -1,8 +1,14 @@
 package edu.bsu.julia.gui.actions;
 
-import java.awt.event.*;
-import javax.swing.*;
-import edu.bsu.julia.*;
+import java.awt.event.ActionEvent;
+
+import javax.swing.AbstractAction;
+import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+
+import edu.bsu.julia.Julia;
+import edu.bsu.julia.session.Session;
 
 public class DeleteAction extends AbstractAction{
 

@@ -21,7 +21,6 @@ import javax.swing.ListSelectionModel;
 
 import edu.bsu.julia.Julia;
 import edu.bsu.julia.OutputFunction;
-import edu.bsu.julia.Session;
 import edu.bsu.julia.gui.actions.ChangeColorAction;
 import edu.bsu.julia.gui.actions.DeleteAction;
 import edu.bsu.julia.gui.actions.DeleteSelectedAction;
@@ -29,6 +28,7 @@ import edu.bsu.julia.gui.actions.ForwardImageAction;
 import edu.bsu.julia.gui.actions.InverseAction;
 import edu.bsu.julia.gui.actions.PropertiesAction;
 import edu.bsu.julia.gui.actions.SaveSetAction;
+import edu.bsu.julia.session.Session;
 
 public class OutputPanel extends JPanel implements PropertyChangeListener{
 	
