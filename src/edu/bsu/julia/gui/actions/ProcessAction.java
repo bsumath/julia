@@ -8,12 +8,12 @@ import javax.swing.ButtonGroup;
 import javax.swing.ProgressMonitor;
 import javax.swing.Timer;
 
-import edu.bsu.julia.ErgodicAttrThread;
-import edu.bsu.julia.ErgodicJuliaThread;
-import edu.bsu.julia.FullAttrThread;
-import edu.bsu.julia.FullJuliaThread;
 import edu.bsu.julia.Julia;
 import edu.bsu.julia.gui.InputPanel;
+import edu.bsu.julia.threads.ErgodicAttrThread;
+import edu.bsu.julia.threads.ErgodicJuliaThread;
+import edu.bsu.julia.threads.FullAttrThread;
+import edu.bsu.julia.threads.FullJuliaThread;
 
 public class ProcessAction extends AbstractAction {
 	

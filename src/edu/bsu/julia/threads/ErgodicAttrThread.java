@@ -1,8 +1,12 @@
-package edu.bsu.julia;
+package edu.bsu.julia.threads;
 
 import java.util.Random;
 
+import edu.bsu.julia.ComplexNumber;
+import edu.bsu.julia.Julia;
 import edu.bsu.julia.gui.JuliaError;
+import edu.bsu.julia.input.InputFunction;
+import edu.bsu.julia.output.OutputFunction;
 import edu.bsu.julia.session.Session;
 
 public class ErgodicAttrThread extends Thread {

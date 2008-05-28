@@ -10,7 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import edu.bsu.julia.Julia;
-import edu.bsu.julia.PostCriticalThread;
+import edu.bsu.julia.threads.PostCriticalThread;
 
 /**
  * 

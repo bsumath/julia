@@ -1,4 +1,4 @@
-package edu.bsu.julia;
+package edu.bsu.julia.output;
 
 import java.awt.Color;
 import java.beans.PropertyChangeListener;
@@ -8,6 +8,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 
+import edu.bsu.julia.ComplexNumber;
+import edu.bsu.julia.input.InputFunction;
 import edu.bsu.julia.session.Session;
 
 public class OutputFunction {
@@ -134,7 +136,7 @@ public class OutputFunction {
 
 	public String toString() {
 		String s = "o" + sub + " = " + functionType.description();
-		
+
 		for (int x = 0; x < inputFunctions.length; x++) {
 			s = s + "f" + inputFunctions[x].getSubscript();
 			if (x != (inputFunctions.length - 1))
@@ -143,33 +145,33 @@ public class OutputFunction {
 		return s;
 	}
 
-	public boolean writeToFile(File f) {
-		FileOutputStream out;
-		PrintStream ps;
-
-		try {
-			out = new FileOutputStream(f);
-			ps = new PrintStream(out);
-			for (int i = 0; i < points.length; i++)
-				ps.println(points[i]);
-			ps.println(iterations);
-			ps.println(skips);
-			ps.println(seed);
-			ps.println(functionType);
-			for (int j = 0; j < inputFunctions.length; j++) {
-				ps.println(inputFunctions[j].getType());
-				ps.println(inputFunctions[j].getM());
-				ComplexNumber[] coefficients = inputFunctions[j]
-						.getCoefficients();
-				for (int k = 0; k < coefficients.length; k++)
-					ps.println(coefficients[k]);
+		public boolean writeToFile(File f) {
+			FileOutputStream out;
+			PrintStream ps;
+	
+			try {
+				out = new FileOutputStream(f);
+				ps = new PrintStream(out);
+				for (int i = 0; i < points.length; i++)
+					ps.println(points[i]);
+				ps.println(iterations);
+				ps.println(skips);
+				ps.println(seed);
+				ps.println(functionType);
+				for (int j = 0; j < inputFunctions.length; j++) {
+					ps.println(inputFunctions[j].getClass().getName());
+					ps.println(inputFunctions[j].getM());
+					ComplexNumber[] coefficients = inputFunctions[j]
+							.getCoefficients();
+					for (int k = 0; k < coefficients.length; k++)
+						ps.println(coefficients[k]);
+				}
+				ps.close();
+			} catch (IOException e) {
+				System.err.println(e);
+				return false;
 			}
-			ps.close();
-		} catch (IOException e) {
-			System.err.println(e);
-			return false;
+			return true;
 		}
-		return true;
-	}
 
 }

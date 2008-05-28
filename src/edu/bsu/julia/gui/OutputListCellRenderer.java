@@ -4,6 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.Border;
 import edu.bsu.julia.*;
+import edu.bsu.julia.output.OutputFunction;
 
 public class OutputListCellRenderer extends JPanel implements ListCellRenderer {
 	

@@ -1,4 +1,7 @@
-package edu.bsu.julia;
+package edu.bsu.julia.input;
+
+import edu.bsu.julia.ComplexNumber;
+
 /**
  * 
  * <h3>Description</h3>
@@ -33,7 +36,6 @@ public class RealAfflineLinearInputFunction extends InputFunction {
 		coefficientArray[3] = d;
 		coefficientArray[4] = e;
 		coefficientArray[5] = f;
-		super.setType(5);
 	}
 	/**
 	 * This method has no random element as the inverse of a real affline 

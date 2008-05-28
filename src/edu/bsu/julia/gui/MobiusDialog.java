@@ -13,7 +13,7 @@ import javax.swing.JTextField;
 
 import edu.bsu.julia.ComplexNumber;
 import edu.bsu.julia.Julia;
-import edu.bsu.julia.MobiusInputFunction;
+import edu.bsu.julia.input.MobiusInputFunction;
 import edu.bsu.julia.session.Session;
 
 /**

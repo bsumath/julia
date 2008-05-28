@@ -6,9 +6,9 @@ import java.util.Vector;
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
-import edu.bsu.julia.InputFunction;
 import edu.bsu.julia.Julia;
-import edu.bsu.julia.OutputFunction;
+import edu.bsu.julia.input.InputFunction;
+import edu.bsu.julia.output.OutputFunction;
 import edu.bsu.julia.session.Session;
 
 public class DeleteSelectedAction extends AbstractAction {

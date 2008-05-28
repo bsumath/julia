@@ -1,15 +1,19 @@
-package edu.bsu.julia;
+package edu.bsu.julia.threads;
 
+import edu.bsu.julia.ComplexNumber;
+import edu.bsu.julia.Julia;
 import edu.bsu.julia.gui.JuliaError;
+import edu.bsu.julia.input.InputFunction;
+import edu.bsu.julia.output.OutputFunction;
 import edu.bsu.julia.session.Session;
 
-public class IFullAttrThread extends Thread {
+public class IErgodicJuliaThread extends Thread {
 
 	private Julia parentFrame;
 	private int progress;
 	private boolean stop;
 
-	public IFullAttrThread(Julia f) {
+	public IErgodicJuliaThread(Julia f) {
 		parentFrame = f;
 		progress = 0;
 		stop = false;
@@ -20,32 +24,36 @@ public class IFullAttrThread extends Thread {
 				.getSelectedFunctions();
 		if (functions.length == 0)
 			return;
-		int functionsLength = functions.length;
 		Session s = parentFrame.getCurrentSession();
 		ComplexNumber seed = s.getSeedValue();
 		int iterations = s.getIterations();
+		int skips = s.getSkips();
 
-		for (int m = 0; m < functionsLength; m++) {
+		for (int i = 0; i < functions.length; i++) {
 			ComplexNumber w = seed.clone();
-			ComplexNumber[] results = new ComplexNumber[iterations];
-			for (int n = 0; n < iterations; n++) {
+			ComplexNumber[] points = new ComplexNumber[iterations - skips];
+			for (int j = 0; j < iterations; j++) {
 				try {
-					w = functions[m].evaluateForwards(w);
+					w = functions[i].evaluateBackwardsRandom(w);
 				} catch (ArithmeticException e) {
 					new JuliaError(JuliaError.DIV_BY_ZERO, parentFrame);
 					return;
 				}
-				results[n] = w;
+				if (w == null) {
+					new JuliaError(JuliaError.ZERO_DETERMINANT, parentFrame);
+					return;
+				}
+				if (j >= skips)
+					points[j - skips] = w;
 				progress++;
 				if (stop)
 					return;
 				Thread.yield();
 			}
-			ComplexNumber finalResults[] = { results[iterations - 1] };
 			InputFunction[] in = new InputFunction[1];
-			in[0] = functions[m];
+			in[0] = functions[i];
 			OutputFunction outFn = new OutputFunction(s, in,
-					OutputFunction.Type.FULL_ATTR, finalResults);
+					OutputFunction.Type.ERGODIC_JULIA, points);
 			s.addOutputFunction(outFn);
 			Thread.yield();
 		}

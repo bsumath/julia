@@ -5,8 +5,8 @@ import java.beans.PropertyChangeSupport;
 import java.util.Vector;
 
 import edu.bsu.julia.ComplexNumber;
-import edu.bsu.julia.InputFunction;
-import edu.bsu.julia.OutputFunction;
+import edu.bsu.julia.input.InputFunction;
+import edu.bsu.julia.output.OutputFunction;
 
 public class Session {
 	/**
@@ -51,7 +51,6 @@ public class Session {
 	 * with invalid parameters
 	 * 
 	 * @author benjamin
-	 * 
 	 */
 	public class InvalidSessionParametersException extends Exception {
 		private static final long serialVersionUID = 1L;

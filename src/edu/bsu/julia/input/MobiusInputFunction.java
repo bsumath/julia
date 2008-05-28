@@ -1,4 +1,7 @@
-package edu.bsu.julia;
+package edu.bsu.julia.input;
+
+import edu.bsu.julia.ComplexNumber;
+
 /**
  * 
  * <h3>Description</h3>
@@ -26,7 +29,6 @@ public class MobiusInputFunction extends InputFunction {
 		coefficientArray[1] = b;
 		coefficientArray[2] = c;
 		coefficientArray[3] = d;
-		super.setType(4);
 	}
 	
 	/**

@@ -3,6 +3,9 @@ package edu.bsu.julia.gui.actions;
 import java.awt.event.*;
 import javax.swing.*;
 import edu.bsu.julia.*;
+import edu.bsu.julia.input.InputFunction;
+import edu.bsu.julia.output.OutputFunction;
+import edu.bsu.julia.threads.ForwardImageThread;
 
 public class ForwardImageAction extends AbstractAction {
 	

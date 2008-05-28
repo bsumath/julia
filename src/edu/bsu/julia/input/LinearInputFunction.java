@@ -1,4 +1,7 @@
-package edu.bsu.julia;
+package edu.bsu.julia.input;
+
+import edu.bsu.julia.ComplexNumber;
+
 /**
  * 
  * <h3>Description</h3>
@@ -24,7 +27,6 @@ public class LinearInputFunction extends InputFunction {
 		if (a.isZero()) throw new IllegalArgumentException("a zero");
 		coefficientArray[0] = a;
 		coefficientArray[1] = b;
-		super.setType(3);
 	}
 	
 	/**

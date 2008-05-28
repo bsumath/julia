@@ -10,8 +10,8 @@ import java.util.Scanner;
 import java.util.Vector;
 
 import edu.bsu.julia.ComplexNumber;
-import edu.bsu.julia.InputFunction;
-import edu.bsu.julia.OutputFunction;
+import edu.bsu.julia.input.InputFunction;
+import edu.bsu.julia.output.OutputFunction;
 import edu.bsu.julia.session.Session.Importer;
 
 public class SessionFileImporter implements Importer {

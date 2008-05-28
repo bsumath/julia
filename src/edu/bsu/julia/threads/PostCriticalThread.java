@@ -1,10 +1,16 @@
-package edu.bsu.julia;
+package edu.bsu.julia.threads;
 
 import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
+import edu.bsu.julia.ComplexNumber;
+import edu.bsu.julia.Julia;
 import edu.bsu.julia.gui.JuliaError;
+import edu.bsu.julia.input.CubicInputFunction;
+import edu.bsu.julia.input.InputFunction;
+import edu.bsu.julia.input.QuadraticInputFunction;
+import edu.bsu.julia.output.OutputFunction;
 import edu.bsu.julia.session.Session;
 
 public class PostCriticalThread extends Thread {
@@ -40,10 +46,10 @@ public class PostCriticalThread extends Thread {
 
 			Vector<ComplexNumber> startVector = new Vector<ComplexNumber>();
 			for (int vi = 0; vi < functions.length; vi++) {
-				if (functions[vi].getType() == 1) {
+				if (functions[vi] instanceof CubicInputFunction) {
 					flag = 1;
 					rFlag = 1;
-				} else if (functions[vi].getType() == 2) {
+				} else if (functions[vi] instanceof QuadraticInputFunction) {
 					ComplexNumber[] coefficients = functions[vi]
 							.getCoefficients();
 					seed = (coefficients[1].multiply(NEG_ONE))

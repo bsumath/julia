@@ -8,12 +8,12 @@ import javax.swing.ButtonGroup;
 import javax.swing.ProgressMonitor;
 import javax.swing.Timer;
 
-import edu.bsu.julia.IErgodicAttrThread;
-import edu.bsu.julia.IErgodicJuliaThread;
-import edu.bsu.julia.IFullAttrThread;
-import edu.bsu.julia.IFullJuliaThread;
 import edu.bsu.julia.Julia;
 import edu.bsu.julia.gui.InputPanel;
+import edu.bsu.julia.threads.IErgodicAttrThread;
+import edu.bsu.julia.threads.IErgodicJuliaThread;
+import edu.bsu.julia.threads.IFullAttrThread;
+import edu.bsu.julia.threads.IFullJuliaThread;
 
 public class CreateIndAction extends AbstractAction {
 	

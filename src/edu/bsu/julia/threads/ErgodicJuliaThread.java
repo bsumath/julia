@@ -1,15 +1,21 @@
-package edu.bsu.julia;
+package edu.bsu.julia.threads;
 
+import java.util.Random;
+
+import edu.bsu.julia.ComplexNumber;
+import edu.bsu.julia.Julia;
 import edu.bsu.julia.gui.JuliaError;
+import edu.bsu.julia.input.InputFunction;
+import edu.bsu.julia.output.OutputFunction;
 import edu.bsu.julia.session.Session;
 
-public class IErgodicJuliaThread extends Thread {
+public class ErgodicJuliaThread extends Thread {
 
 	private Julia parentFrame;
 	private int progress;
 	private boolean stop;
 
-	public IErgodicJuliaThread(Julia f) {
+	public ErgodicJuliaThread(Julia f) {
 		parentFrame = f;
 		progress = 0;
 		stop = false;
@@ -24,6 +30,39 @@ public class IErgodicJuliaThread extends Thread {
 		ComplexNumber seed = s.getSeedValue();
 		int iterations = s.getIterations();
 		int skips = s.getSkips();
+
+		if (functions.length > 1) {
+			ComplexNumber start = seed.clone();
+			ComplexNumber[] compositePoints = new ComplexNumber[iterations
+					- skips];
+			Random generator = new Random();
+			int functionsLength = functions.length;
+
+			for (int k = 0; k < iterations; k++) {
+				int randomIndex = generator.nextInt(functionsLength);
+				try {
+					start = functions[randomIndex]
+							.evaluateBackwardsRandom(start);
+				} catch (ArithmeticException e) {
+					new JuliaError(JuliaError.DIV_BY_ZERO, parentFrame);
+					return;
+				}
+				if (start == null) {
+					new JuliaError(JuliaError.ZERO_DETERMINANT, parentFrame);
+					return;
+				}
+				if (k >= skips)
+					compositePoints[k - skips] = start;
+				progress++;
+				if (stop)
+					return;
+				Thread.yield();
+			}
+
+			OutputFunction compOutFn = new OutputFunction(s, functions,
+					OutputFunction.Type.ERGODIC_JULIA, compositePoints);
+			s.addOutputFunction(compOutFn);
+		}
 
 		for (int i = 0; i < functions.length; i++) {
 			ComplexNumber w = seed.clone();
@@ -44,14 +83,12 @@ public class IErgodicJuliaThread extends Thread {
 				progress++;
 				if (stop)
 					return;
-				Thread.yield();
 			}
 			InputFunction[] in = new InputFunction[1];
 			in[0] = functions[i];
 			OutputFunction outFn = new OutputFunction(s, in,
 					OutputFunction.Type.ERGODIC_JULIA, points);
 			s.addOutputFunction(outFn);
-			Thread.yield();
 		}
 	}
 

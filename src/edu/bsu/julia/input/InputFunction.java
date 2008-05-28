@@ -1,4 +1,6 @@
-package edu.bsu.julia;
+package edu.bsu.julia.input;
+
+import edu.bsu.julia.ComplexNumber;
 
 /**
  * 
@@ -24,29 +26,22 @@ package edu.bsu.julia;
  * 
  */
 public abstract class InputFunction {
-
-	public static final int CUBIC_INPUT = 1;
-	public static final int LINEAR_INPUT = 3;
-	public static final int MOBIUS_INPUT = 4;
-	public static final int QUADRATIC_INPUT = 2;
-	public static final int REAL_AFFLINE_LINEAR_INPUT = 5;
-
 	/**
 	 * m represents the number of times the function is composed with itself.
 	 */
 	private int m;
+	
 	/**
 	 * This array contains the coefficients of the function in order from the
 	 * beginning of the function, left to right. It is protected so that
 	 * subclasses can access it without a function call.
 	 */
 	protected ComplexNumber[] coefficientArray;
+	
 	/**
 	 * The subscript number identifying this function within the session.
 	 */
 	private int sub = 0;
-
-	private int functionType;
 
 	/**
 	 * This constructor must be called as the first line of any subclass
@@ -65,14 +60,6 @@ public abstract class InputFunction {
 			throw new IllegalArgumentException("m neg");
 		m = mValue;
 		coefficientArray = new ComplexNumber[coefficients];
-	}
-
-	public int getType() {
-		return functionType;
-	}
-
-	public void setType(int type) {
-		functionType = type;
 	}
 
 	/**

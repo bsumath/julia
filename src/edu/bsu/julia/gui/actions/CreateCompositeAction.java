@@ -8,12 +8,12 @@ import javax.swing.ButtonGroup;
 import javax.swing.ProgressMonitor;
 import javax.swing.Timer;
 
-import edu.bsu.julia.CErgodicAttrThread;
-import edu.bsu.julia.CErgodicJuliaThread;
-import edu.bsu.julia.CFullAttrThread;
-import edu.bsu.julia.CFullJuliaThread;
 import edu.bsu.julia.Julia;
 import edu.bsu.julia.gui.InputPanel;
+import edu.bsu.julia.threads.CErgodicAttrThread;
+import edu.bsu.julia.threads.CErgodicJuliaThread;
+import edu.bsu.julia.threads.CFullAttrThread;
+import edu.bsu.julia.threads.CFullJuliaThread;
 
 public class CreateCompositeAction extends AbstractAction {
 	

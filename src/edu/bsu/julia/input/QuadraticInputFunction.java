@@ -1,6 +1,8 @@
-package edu.bsu.julia;
+package edu.bsu.julia.input;
 
 import java.util.Vector;
+
+import edu.bsu.julia.ComplexNumber;
 /**
  * 
  * <h3>Description</h3>
@@ -43,7 +45,6 @@ public class QuadraticInputFunction extends InputFunction {
 		coefficientArray[0] = a;
 		coefficientArray[1] = b;
 		coefficientArray[2] = c;
-		super.setType(2);
 	}
 	
 	public ComplexNumber evaluateBackwardsRandom(ComplexNumber seed){
