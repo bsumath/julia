@@ -3,6 +3,7 @@ package edu.bsu.julia.gui.actions;
 import java.awt.event.*;
 import java.io.File;
 import edu.bsu.julia.*;
+import edu.bsu.julia.output.OutputFunction;
 
 import javax.swing.*;
 

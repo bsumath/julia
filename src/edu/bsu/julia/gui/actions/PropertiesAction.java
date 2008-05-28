@@ -4,6 +4,8 @@ import java.awt.event.*;
 import javax.swing.*;
 import java.awt.*;
 import edu.bsu.julia.*;
+import edu.bsu.julia.input.InputFunction;
+import edu.bsu.julia.output.OutputFunction;
 
 public class PropertiesAction extends AbstractAction {
 	

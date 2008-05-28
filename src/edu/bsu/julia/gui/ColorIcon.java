@@ -3,6 +3,8 @@ package edu.bsu.julia.gui;
 import javax.swing.*;
 import java.awt.*;
 import edu.bsu.julia.*;
+import edu.bsu.julia.output.OutputFunction;
+
 import java.beans.*;
 
 public class ColorIcon extends JPanel implements PropertyChangeListener{

@@ -1,10 +1,15 @@
-package edu.bsu.julia;
+package edu.bsu.julia.threads;
 
 import java.util.Vector;
 
 import javax.swing.JList;
 
+import edu.bsu.julia.ComplexNumber;
+import edu.bsu.julia.Julia;
 import edu.bsu.julia.gui.JuliaError;
+import edu.bsu.julia.input.InputFunction;
+import edu.bsu.julia.output.InverseOutputFunction;
+import edu.bsu.julia.output.OutputFunction;
 
 public class ForwardImageThread extends Thread {
 

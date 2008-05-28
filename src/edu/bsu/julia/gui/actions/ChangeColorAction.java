@@ -9,7 +9,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JColorChooser;
 
 import edu.bsu.julia.Julia;
-import edu.bsu.julia.OutputFunction;
+import edu.bsu.julia.output.OutputFunction;
 
 public class ChangeColorAction extends AbstractAction {
 

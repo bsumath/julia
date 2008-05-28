@@ -6,19 +6,19 @@ import javax.swing.AbstractAction;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 
-import edu.bsu.julia.CubicInputFunction;
-import edu.bsu.julia.InputFunction;
 import edu.bsu.julia.Julia;
-import edu.bsu.julia.LinearInputFunction;
-import edu.bsu.julia.MobiusInputFunction;
-import edu.bsu.julia.QuadraticInputFunction;
-import edu.bsu.julia.RealAfflineLinearInputFunction;
 import edu.bsu.julia.gui.CubicDialog;
 import edu.bsu.julia.gui.GUIUtil;
 import edu.bsu.julia.gui.LinearDialog;
 import edu.bsu.julia.gui.MobiusDialog;
 import edu.bsu.julia.gui.QuadraticDialog;
 import edu.bsu.julia.gui.RealAfflineLinearDialog;
+import edu.bsu.julia.input.CubicInputFunction;
+import edu.bsu.julia.input.InputFunction;
+import edu.bsu.julia.input.LinearInputFunction;
+import edu.bsu.julia.input.MobiusInputFunction;
+import edu.bsu.julia.input.QuadraticInputFunction;
+import edu.bsu.julia.input.RealAfflineLinearInputFunction;
 
 public class CopyFunctionAction extends AbstractAction {
 	

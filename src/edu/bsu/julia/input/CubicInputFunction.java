@@ -1,6 +1,8 @@
-package edu.bsu.julia;
+package edu.bsu.julia.input;
 
 import java.util.Vector;
+
+import edu.bsu.julia.ComplexNumber;
 /**
  * 
  * <h3>Description</h3>
@@ -26,7 +28,6 @@ public class CubicInputFunction extends InputFunction {
 		if (a.isZero()) throw new IllegalArgumentException("a zero");
 		coefficientArray[0] = a;
 		coefficientArray[1] = b;
-		super.setType(1); 
 	}
 	
 	public ComplexNumber evaluateBackwardsRandom(ComplexNumber seed){

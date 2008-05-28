@@ -7,6 +7,7 @@ import javax.media.opengl.glu.GLU;
 import javax.swing.*;
 import java.awt.event.*;
 import edu.bsu.julia.*;
+import edu.bsu.julia.output.OutputFunction;
 
 public class OverviewListener implements GLEventListener, PropertyChangeListener,
 	MouseListener, MouseMotionListener {

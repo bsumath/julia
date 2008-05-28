@@ -1,10 +1,12 @@
-package edu.bsu.julia;
+package edu.bsu.julia.output;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 
+import edu.bsu.julia.ComplexNumber;
+import edu.bsu.julia.input.InputFunction;
 import edu.bsu.julia.session.Session;
 
 public class InverseOutputFunction extends OutputFunction {
@@ -25,7 +27,7 @@ public class InverseOutputFunction extends OutputFunction {
 		String s = "o" + getSubscript() + " = " + functionType.description();
 		
 		for(int x = 0; x<outputFunctions.length; x++) {
-			s = s + "g" + outputFunctions[x].getSubscript();
+			s = s + "o" + outputFunctions[x].getSubscript();
 			if(x!=(outputFunctions.length - 1)) s = s + ", ";
 		}
 		s = s + " using ";
@@ -51,7 +53,7 @@ public class InverseOutputFunction extends OutputFunction {
             ps.println(functionType);
             InputFunction[] functions = getInputFunctions();
             for(int j = 0; j<functions.length; j++){
-            	ps.println(functions[j].getType());
+            	ps.println(functions[j].getClass().getName());
             	ps.println(functions[j].getM());
             	ComplexNumber[] coefficients = functions[j].getCoefficients();
             	for(int k = 0; k<coefficients.length; k++) 

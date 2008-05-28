@@ -9,12 +9,12 @@ import javax.swing.JList;
 import javax.swing.ProgressMonitor;
 import javax.swing.Timer;
 
-import edu.bsu.julia.ErgodicInverseThread;
-import edu.bsu.julia.FullInverseThread;
-import edu.bsu.julia.InputFunction;
 import edu.bsu.julia.Julia;
-import edu.bsu.julia.OutputFunction;
 import edu.bsu.julia.gui.InputPanel;
+import edu.bsu.julia.input.InputFunction;
+import edu.bsu.julia.output.OutputFunction;
+import edu.bsu.julia.threads.ErgodicInverseThread;
+import edu.bsu.julia.threads.FullInverseThread;
 
 public class InverseAction extends AbstractAction {
 	
