@@ -104,6 +104,9 @@ public class OutputPanel extends JPanel implements PropertyChangeListener {
 		outputList.setName("Sets output by processing.  Ctrl/Shift + click "
 				+ "selects multiple sets.");
 
+		if (!listModel.isEmpty()){
+			outputList.addMouseListener(mouseListener);
+		}
 		outputList.addMouseListener(parentFrame.getStatusBar());
 
 		JScrollPane scroller = new JScrollPane(outputList);
@@ -156,7 +159,24 @@ public class OutputPanel extends JPanel implements PropertyChangeListener {
 		} else if (name.equals("session")) {
 			s = (Session) event.getNewValue();
 			outputList.clearSelection();
+			
+			//turn things off and clear the listModel
+			if (!listModel.isEmpty()) {
+				inverseButton.setEnabled(false);
+				forwardButton.setEnabled(false);
+				outputList.removeMouseListener(mouseListener);
+			}
 			listModel.clear();
+			
+			//populate the listModel and turn things on
+			for (OutputFunction o: s.getOutputFunctions())
+				listModel.addElement(o);
+			if (!listModel.isEmpty()) {
+				inverseButton.setEnabled(true);
+				forwardButton.setEnabled(true);
+				outputList.addMouseListener(mouseListener);
+			}
+
 			inverseButton.setEnabled(false);
 			forwardButton.setEnabled(false);
 			outputList.setCellRenderer(new OutputListCellRenderer());

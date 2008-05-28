@@ -205,6 +205,9 @@ public class InputPanel extends JPanel implements PropertyChangeListener {
 		inputList.setName("The current input functions.  Ctrl + click "
 				+ "selects multiple functions.");
 
+		if (!listModel.isEmpty()){
+			inputList.addMouseListener(mouseListener);
+		}
 		inputList.addMouseListener(parentFrame.getStatusBar());
 
 		JScrollPane scroller = new JScrollPane(inputList);
@@ -318,7 +321,28 @@ public class InputPanel extends JPanel implements PropertyChangeListener {
 			skipsField.setText("" + s.getSkips());
 			seedField1.setText("" + ((ComplexNumber) s.getSeedValue()).getX());
 			seedField2.setText("" + ((ComplexNumber) s.getSeedValue()).getY());
+			
+			//turn things off and clear the listModel
+			if (!listModel.isEmpty()) {
+				processButton.setEnabled(false);
+				postCriticalButton.setEnabled(false);
+				createCompButton.setEnabled(false);
+				createIndButton.setEnabled(false);
+				inputList.removeMouseListener(mouseListener);
+			}
 			listModel.clear();
+			
+			//populate the listModel and turn things on
+			for (InputFunction f : s.getInputFunctions())
+				listModel.addElement(f);
+			if (!listModel.isEmpty()) {
+				processButton.setEnabled(true);
+				postCriticalButton.setEnabled(true);
+				createCompButton.setEnabled(true);
+				createIndButton.setEnabled(true);
+				inputList.addMouseListener(mouseListener);
+			}
+
 			processButton.setEnabled(false);
 			inputList.setCellRenderer(new InputListCellRenderer());
 			s.addListener(this);
