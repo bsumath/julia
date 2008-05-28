@@ -43,9 +43,10 @@ public class CErgodicAttrThread extends Thread {
 			if(k>=skips) compositePoints[k-skips] = start;
 			progress++;
 			if(stop) return;
+			Thread.yield();
 		}
 		OutputFunction compOutFn = new OutputFunction(s, functions, 
-				OutputFunction.ERGODIC_ATTR, compositePoints);
+				OutputFunction.Type.ERGODIC_ATTR, compositePoints);
 		s.addOutputFunction(compOutFn);
 
 		
