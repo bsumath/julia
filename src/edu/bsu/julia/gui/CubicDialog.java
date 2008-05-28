@@ -15,13 +15,15 @@ import edu.bsu.julia.ComplexNumber;
 import edu.bsu.julia.CubicInputFunction;
 import edu.bsu.julia.Julia;
 import edu.bsu.julia.session.Session;
+
 /**
  * 
  * <h3>Description</h3>
- * <p>Creates a dialog box for the function type: az^3 + b.  This dialog 
- * is used when creating a new cubic function, editing an existing function, 
- * or cloneing an existing function.
- *
+ * <p>
+ * Creates a dialog box for the function type: az^3 + b. This dialog is used
+ * when creating a new cubic function, editing an existing function, or cloneing
+ * an existing function.
+ * 
  */
 public class CubicDialog extends JDialog implements ActionListener {
 	/**
@@ -29,17 +31,16 @@ public class CubicDialog extends JDialog implements ActionListener {
 	 */
 	private Julia parentFrame;
 	/**
-	 * One of three types defined in a utility class, GUIUtil:  
-	 * {@link GUIUtil#NEW_DIALOG}, 
-	 * {@link GUIUtil#EDIT_DIALOG}, and 
-	 * {@link GUIUtil#CLONE_DIALOG}. It indicates the use to 
-	 * which this dialog is being put.
+	 * One of three types defined in a utility class, GUIUtil:
+	 * {@link GUIUtil#NEW_DIALOG}, {@link GUIUtil#EDIT_DIALOG}, and
+	 * {@link GUIUtil#CLONE_DIALOG}. It indicates the use to which this dialog
+	 * is being put.
 	 */
 	private int dialogType;
 	/**
-	 * If this dialog is being used to edit or clone an existing function, 
-	 * the function that is being modified.  If the dialog is being used 
-	 * to create a new function, this field is <b>null</b>.
+	 * If this dialog is being used to edit or clone an existing function, the
+	 * function that is being modified. If the dialog is being used to create a
+	 * new function, this field is <b>null</b>.
 	 */
 	private CubicInputFunction function;
 	/**
@@ -47,122 +48,138 @@ public class CubicDialog extends JDialog implements ActionListener {
 	 */
 	private JTextField mField = new JTextField(5);
 	/**
-	 * The text field in which the user enters the real portion of the 
+	 * The text field in which the user enters the real portion of the
 	 * function's 'a' coefficient.
 	 */
 	private JTextField axField = new JTextField(3);
 	/**
-	 * The text field in which the user enters the number which, multiplied 
-	 * by i, is the imaginary portion of the function's 'a' coefficient.
+	 * The text field in which the user enters the number which, multiplied by
+	 * i, is the imaginary portion of the function's 'a' coefficient.
 	 */
 	private JTextField ayField = new JTextField(3);
 	/**
-	 * The text field in which the user enters the real portion of the 
+	 * The text field in which the user enters the real portion of the
 	 * function's 'b' coefficient.
 	 */
 	private JTextField bxField = new JTextField(3);
 	/**
-	 * The text field in which the user enters the number which, multiplied 
-	 * by i, is the imaginary portion of the function's 'b' coefficient.
+	 * The text field in which the user enters the number which, multiplied by
+	 * i, is the imaginary portion of the function's 'b' coefficient.
 	 */
 	private JTextField byField = new JTextField(3);
-	//for serializable interface: do not use
+	// for serializable interface: do not use
 	public static final long serialVersionUID = 0;
-	
+
 	private Checkbox polarCheckBox;
-	
+
 	/**
-	 * Builds the dialog for a cubic input function and makes it visible 
-	 * on the screen.  'type' indicates whether the dialog will be used for 
-	 * editing or cloneing an existing function or creating a new function.  
-	 * If editing or cloneing an existing function, that function is passed 
-	 * to the constructor as 'fn'.  When creating a new function, 'fn' can be 
-	 * <b>null</b>.
-	 * @param f reference to the main program and its frame
-	 * @param type constant indicating whether the dialog will be used to 
-	 * edit, clone, or create a new function
-	 * @param fn the function to be edited or cloned
+	 * Builds the dialog for a cubic input function and makes it visible on the
+	 * screen. 'type' indicates whether the dialog will be used for editing or
+	 * cloneing an existing function or creating a new function. If editing or
+	 * cloneing an existing function, that function is passed to the constructor
+	 * as 'fn'. When creating a new function, 'fn' can be <b>null</b>.
+	 * 
+	 * @param f
+	 *            reference to the main program and its frame
+	 * @param type
+	 *            constant indicating whether the dialog will be used to edit,
+	 *            clone, or create a new function
+	 * @param fn
+	 *            the function to be edited or cloned
 	 */
 	public CubicDialog(Julia f, int type, CubicInputFunction fn) {
 		super(f, "Create a Cubic Function", false);
 		parentFrame = f;
 		dialogType = type;
 		function = fn;
-		
+
 		ComplexNumber[] coefficients = new ComplexNumber[2];
-		if (dialogType == GUIUtil.EDIT_DIALOG||dialogType==GUIUtil.CLONE_DIALOG) 
+		if (dialogType == GUIUtil.EDIT_DIALOG
+				|| dialogType == GUIUtil.CLONE_DIALOG)
 			coefficients = function.getCoefficients();
-		
+
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setLayout(new FlowLayout());
-		
+
 		add(new JLabel("Enter the m value:  "));
-		if (dialogType == GUIUtil.EDIT_DIALOG||dialogType==GUIUtil.CLONE_DIALOG) 
-			mField.setText(""+function.getM());
-		else mField.setText("1");
-		mField.addFocusListener(new TextFieldFocusListener(mField, parentFrame));
+		if (dialogType == GUIUtil.EDIT_DIALOG
+				|| dialogType == GUIUtil.CLONE_DIALOG)
+			mField.setText("" + function.getM());
+		else
+			mField.setText("1");
+		mField
+				.addFocusListener(new TextFieldFocusListener(mField,
+						parentFrame));
 		add(mField);
-		
+
 		add(new JLabel("Enter the function coefficients:"));
 		JPanel functionPanel = new JPanel();
-		//format all labels in HTML
+		// format all labels in HTML
 		functionPanel.add(new JLabel("<html>(</html>"));
-		if (dialogType == GUIUtil.EDIT_DIALOG||dialogType==GUIUtil.CLONE_DIALOG) 
-			{
+		if (dialogType == GUIUtil.EDIT_DIALOG
+				|| dialogType == GUIUtil.CLONE_DIALOG) {
 			String show = String.valueOf(coefficients[0].getX());
 			String showShort = show;
-			if (show.length()>5) showShort = show.substring(0, 5);
+			if (show.length() > 5)
+				showShort = show.substring(0, 5);
 			axField.setText(showShort);
-			}
-		else axField.setText("1");
-		axField.addFocusListener(new TextFieldFocusListener(axField, parentFrame));
+		} else
+			axField.setText("1");
+		axField.addFocusListener(new TextFieldFocusListener(axField,
+				parentFrame));
 		functionPanel.add(axField);
 		functionPanel.add(new JLabel(", "));
-		if (dialogType == GUIUtil.EDIT_DIALOG||dialogType==GUIUtil.CLONE_DIALOG) 
-			{
+		if (dialogType == GUIUtil.EDIT_DIALOG
+				|| dialogType == GUIUtil.CLONE_DIALOG) {
 			String show = String.valueOf(coefficients[0].getY());
 			String showShort = show;
-			if (show.length()>5) showShort = show.substring(0, 5);
+			if (show.length() > 5)
+				showShort = show.substring(0, 5);
 			ayField.setText(showShort);
-			}
-		else ayField.setText("0");
-		ayField.addFocusListener(new TextFieldFocusListener(ayField, parentFrame));
+		} else
+			ayField.setText("0");
+		ayField.addFocusListener(new TextFieldFocusListener(ayField,
+				parentFrame));
 		functionPanel.add(ayField);
 		functionPanel.add(new JLabel("<html>) z<sup>3</sup> + (</html>"));
-		if (dialogType == GUIUtil.EDIT_DIALOG||dialogType==GUIUtil.CLONE_DIALOG) 
-			{
+		if (dialogType == GUIUtil.EDIT_DIALOG
+				|| dialogType == GUIUtil.CLONE_DIALOG) {
 			String show = String.valueOf(coefficients[1].getX());
 			String showShort = show;
-			if (show.length()>5) showShort = show.substring(0, 5);
+			if (show.length() > 5)
+				showShort = show.substring(0, 5);
 			bxField.setText(showShort);
-			}
-		else bxField.setText("0");
-		bxField.addFocusListener(new TextFieldFocusListener(bxField, parentFrame));
+		} else
+			bxField.setText("0");
+		bxField.addFocusListener(new TextFieldFocusListener(bxField,
+				parentFrame));
 		functionPanel.add(bxField);
 		functionPanel.add(new JLabel(", "));
-		if (dialogType == GUIUtil.EDIT_DIALOG||dialogType==GUIUtil.CLONE_DIALOG) 
-			{
+		if (dialogType == GUIUtil.EDIT_DIALOG
+				|| dialogType == GUIUtil.CLONE_DIALOG) {
 			String show = String.valueOf(coefficients[1].getY());
 			String showShort = show;
-			if (show.length()>5) showShort = show.substring(0, 5);
+			if (show.length() > 5)
+				showShort = show.substring(0, 5);
 			byField.setText(showShort);
-			}
-		else byField.setText("0");
-		byField.addFocusListener(new TextFieldFocusListener(byField, parentFrame));
+		} else
+			byField.setText("0");
+		byField.addFocusListener(new TextFieldFocusListener(byField,
+				parentFrame));
 		functionPanel.add(byField);
 		functionPanel.add(new JLabel("<html>)</html>"));
 		add(functionPanel);
-		
-		JLabel polarCheckboxLabel = new JLabel("Coefficient Value Use Polar Coordinates",JLabel.LEFT);
+
+		JLabel polarCheckboxLabel = new JLabel(
+				"Coefficient Value Use Polar Coordinates", JLabel.LEFT);
 		add(polarCheckboxLabel);
-		polarCheckBox = new Checkbox("",false);
+		polarCheckBox = new Checkbox("", false);
 		add(polarCheckBox);
-		
-		
+
 		JButton finishButton = new JButton("Finish");
 		finishButton.addActionListener(this);
 		add(finishButton);
-		
+
 		JButton cancelButton = new JButton("Cancel");
 		cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
@@ -171,26 +188,28 @@ public class CubicDialog extends JDialog implements ActionListener {
 			}
 		});
 		add(cancelButton);
-		
+
 		setSize(270, 200);
 		setLocationRelativeTo(parentFrame);
-		setVisible(true);	
+		setVisible(true);
 	}
+
 	/**
-	 * Triggered when the user hits "Finish" on the dialog box.  Builds the 
-	 * function and then either adds it to the {@link edu.bsu.julia.Session}'s 
-	 * input function list or replaces the old function on the list (if it is 
-	 * being used to edit a function).  Input functions are immutable objects.
+	 * Triggered when the user hits "Finish" on the dialog box. Builds the
+	 * function and then either adds it to the
+	 * {@link edu.bsu.julia.session.Session}'s input function list or replaces
+	 * the old function on the list (if it is being used to edit a function).
+	 * Input functions are immutable objects.
 	 */
 	public void actionPerformed(ActionEvent arg0) {
-		if(mField.getText().equals("")) {
+		if (mField.getText().equals("")) {
 			new JuliaError(JuliaError.EMPTY_FIELD, parentFrame);
 			return;
 		}
 		int m = 0;
 		try {
 			m = Integer.parseInt(GUIUtil.removeCommas(mField.getText()));
-		}catch(NumberFormatException e){
+		} catch (NumberFormatException e) {
 			new JuliaError(JuliaError.M_INTEGER_ERROR, parentFrame);
 			return;
 		}
@@ -198,50 +217,53 @@ public class CubicDialog extends JDialog implements ActionListener {
 		double ay = 0;
 		double bx = 0;
 		double by = 0;
-		if(axField.getText().equals("") || ayField.getText().equals("") || 
-				bxField.getText().equals("") || byField.getText().equals("")) {
+		if (axField.getText().equals("") || ayField.getText().equals("")
+				|| bxField.getText().equals("") || byField.getText().equals("")) {
 			new JuliaError(JuliaError.EMPTY_FIELD, parentFrame);
 			return;
 		}
-	    String axString = GUIUtil.removeCommas(axField.getText());
-	    axString = GUIUtil.parsePI(axString);
-	    String ayString = GUIUtil.removeCommas(ayField.getText());
-	    ayString = GUIUtil.parsePI(ayString);
-	    String bxString = GUIUtil.removeCommas(bxField.getText());
-	    bxString = GUIUtil.parsePI(bxString);
-	    String byString = GUIUtil.removeCommas(byField.getText());
-	    byString = GUIUtil.parsePI(byString);
+		String axString = GUIUtil.removeCommas(axField.getText());
+		axString = GUIUtil.parsePI(axString);
+		String ayString = GUIUtil.removeCommas(ayField.getText());
+		ayString = GUIUtil.parsePI(ayString);
+		String bxString = GUIUtil.removeCommas(bxField.getText());
+		bxString = GUIUtil.parsePI(bxString);
+		String byString = GUIUtil.removeCommas(byField.getText());
+		byString = GUIUtil.parsePI(byString);
 		try {
 			ax = Double.parseDouble(axString);
 			ay = Double.parseDouble(ayString);
 			bx = Double.parseDouble(bxString);
 			by = Double.parseDouble(byString);
-		}catch(NumberFormatException e) {
+		} catch (NumberFormatException e) {
 			new JuliaError(JuliaError.COEFFICIENT_FORMAT_ERROR, parentFrame);
 			return;
 		}
-		
+
 		ComplexNumber a = new ComplexNumber(ax, ay);
 		ComplexNumber b = new ComplexNumber(bx, by);
-		if(polarCheckBox.getState()){
+		if (polarCheckBox.getState()) {
 			a = a.polarConvertion(a);
 			b = b.polarConvertion(b);
 		}
 		CubicInputFunction newFunction;
 		try {
-			newFunction = new CubicInputFunction(m,a,b);
-		}catch(IllegalArgumentException e) {
-			if(e.getMessage().equals("a zero"))
+			newFunction = new CubicInputFunction(m, a, b);
+		} catch (IllegalArgumentException e) {
+			if (e.getMessage().equals("a zero"))
 				new JuliaError(JuliaError.CUBIC_ILLEGAL_ARGUMENT, parentFrame);
-			else new JuliaError(JuliaError.M_NEG_ERROR, parentFrame);
+			else
+				new JuliaError(JuliaError.M_NEG_ERROR, parentFrame);
 			return;
 		}
-		
+
 		Session s = parentFrame.getCurrentSession();
-		if (dialogType == GUIUtil.NEW_DIALOG||dialogType==GUIUtil.CLONE_DIALOG) 
+		if (dialogType == GUIUtil.NEW_DIALOG
+				|| dialogType == GUIUtil.CLONE_DIALOG)
 			s.addInputFunction(newFunction);
-		else s.replaceInputFunction(function, newFunction);
-		
+		else
+			s.replaceInputFunction(function, newFunction);
+
 		setVisible(false);
 		dispose();
 	}

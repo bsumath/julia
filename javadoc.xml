@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="javadoc">
+    <target name="javadoc">
+        <javadoc access="public" author="true" classpath="lib/gluegen-rt.jar;lib/jogl.jar" destdir="javadoc" doctitle="Julia - Javadoc" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="edu.bsu.julia,edu.bsu.julia.gui.actions,edu.bsu.julia.gui,edu.bsu.julia.session" source="1.5" sourcepath="resources;src" splitindex="true" use="true" version="true">
+            <link href="http://download.java.net/media/jogl/builds/nightly/javadoc_public/"/>
+            <link href="http://java.sun.com/j2se/1.5.0/docs/api/"/>
+        </javadoc>
+    </target>
+</project>
