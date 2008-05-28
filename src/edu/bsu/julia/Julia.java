@@ -8,12 +8,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.File;
-import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JSplitPane;
 
 import edu.bsu.julia.gui.GLListener;
@@ -27,7 +24,6 @@ import edu.bsu.julia.gui.SaveSessionDialog;
 import edu.bsu.julia.gui.StatusBar;
 import edu.bsu.julia.session.EmptySessionImporter;
 import edu.bsu.julia.session.Session;
-import edu.bsu.julia.session.SessionFileImporter;
 import edu.bsu.julia.session.Session.InvalidSessionParametersException;
 
 public class Julia extends JFrame {
@@ -183,18 +179,6 @@ public class Julia extends JFrame {
 		glList.setPaneHeight(aPane.getHeight());
 		glList.setPaneWidth(aPane.getWidth());
 		glList.resetZoom();
-	}
-
-	public void loadSession(File f) {
-		try {
-			setCurrentSession(new Session(new SessionFileImporter(f)));
-		} catch (IOException ioe) {
-			JOptionPane.showMessageDialog(this, "Error Reading File",
-					"Error Reading File", JOptionPane.ERROR_MESSAGE);
-		} catch (InvalidSessionParametersException e) {
-			JOptionPane.showMessageDialog(this, "Corrupt .julia file",
-					"Corrupt .julia file", JOptionPane.ERROR_MESSAGE);
-		}
 	}
 
 	/**
