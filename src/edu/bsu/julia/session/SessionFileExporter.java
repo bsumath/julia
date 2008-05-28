@@ -7,13 +7,8 @@ import java.io.PrintStream;
 import java.util.Vector;
 
 import edu.bsu.julia.ComplexNumber;
-import edu.bsu.julia.CubicInputFunction;
 import edu.bsu.julia.InputFunction;
-import edu.bsu.julia.LinearInputFunction;
-import edu.bsu.julia.MobiusInputFunction;
 import edu.bsu.julia.OutputFunction;
-import edu.bsu.julia.QuadraticInputFunction;
-import edu.bsu.julia.RealAfflineLinearInputFunction;
 import edu.bsu.julia.session.Session.Exporter;
 
 public class SessionFileExporter implements Exporter {
@@ -48,65 +43,30 @@ public class SessionFileExporter implements Exporter {
 		FileOutputStream out = new FileOutputStream(f);
 		PrintStream ps = new PrintStream(out);
 
-		ps.println(iterations);
-		ps.println(skips);
-		ps.println(seed.getX());
-		ps.println(seed.getY());
-		ps.println(inputFunctions.size());
+		ps.println("iterations: " + iterations);
+		ps.println("skips: " + skips);
+		ps.println("seed: " + seed.getX() + ", " + seed.getY());
+		ps.println();
 
-		for (int i = 0; i < inputFunctions.size(); i++) {
-			if (inputFunctions.elementAt(i) instanceof LinearInputFunction) {
-				LinearInputFunction lFn = (LinearInputFunction) inputFunctions
-						.elementAt(i);
-				ps.println("linear");
-				ps.println(lFn.getM());
-				ComplexNumber[] variables = lFn.getCoefficients();
-				for (int j = 0; j < variables.length; j++) {
-					ps.println(variables[j].getX());
-					ps.println(variables[j].getY());
-				}
-			} else if (inputFunctions.elementAt(i) instanceof CubicInputFunction) {
-				CubicInputFunction cFn = (CubicInputFunction) inputFunctions
-						.elementAt(i);
-				ps.println("cubic");
-				ps.println(cFn.getM());
-				ComplexNumber[] variables = cFn.getCoefficients();
-				for (int j = 0; j < variables.length; j++) {
-					ps.println(variables[j].getX());
-					ps.println(variables[j].getY());
-				}
-			} else if (inputFunctions.elementAt(i) instanceof RealAfflineLinearInputFunction) {
-				RealAfflineLinearInputFunction mFn = (RealAfflineLinearInputFunction) inputFunctions
-						.elementAt(i);
-				ps.println("matrix");
-				ps.println(mFn.getM());
-				ComplexNumber[] variables = mFn.getCoefficients();
-				for (int j = 0; j < variables.length; j++) {
-					ps.println(variables[j].getX());
-					ps.println(variables[j].getY());
-				}
-			} else if (inputFunctions.elementAt(i) instanceof MobiusInputFunction) {
-				MobiusInputFunction bFn = (MobiusInputFunction) inputFunctions
-						.elementAt(i);
-				ps.println("mobius");
-				ps.println(bFn.getM());
-				ComplexNumber[] variables = bFn.getCoefficients();
-				for (int j = 0; j < variables.length; j++) {
-					ps.println(variables[j].getX());
-					ps.println(variables[j].getY());
-				}
-			} else if (inputFunctions.elementAt(i) instanceof QuadraticInputFunction) {
-				QuadraticInputFunction qFn = (QuadraticInputFunction) inputFunctions
-						.elementAt(i);
-				ps.println("quad");
-				ps.println(qFn.getM());
-				ComplexNumber[] variables = qFn.getCoefficients();
-				for (int j = 0; j < variables.length; j++) {
-					ps.println(variables[j].getX());
-					ps.println(variables[j].getY());
-				}
+		for (InputFunction function : inputFunctions) {
+			ps.print("start_input_function: ");
+			ps.println(function.getClass().getName());
+			ps.println("\tm:" + function.getM());
+			for (ComplexNumber var : function.getCoefficients()) {
+				ps.println("\tcoefficient: " + var.getX() + ", " + var.getY());
 			}
+			ps.println("end_input_function");
+			ps.println();
 		}
+		
+		for (OutputFunction function : outputFunctions){
+			ps.print("start_output_function");
+			ps.println(function.getClass().getName());
+			// TODO output the information about the output function
+			ps.println("end_output_function");
+			ps.println();
+		}
+
 		ps.close();
 		out.close();
 

@@ -2,7 +2,6 @@ package edu.bsu.julia.gui.actions;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.io.IOException;
 
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
@@ -13,7 +12,6 @@ import edu.bsu.julia.Julia;
 import edu.bsu.julia.gui.SaveSessionDialog;
 import edu.bsu.julia.session.Session;
 import edu.bsu.julia.session.SessionFileImporter;
-import edu.bsu.julia.session.Session.InvalidSessionParametersException;
 
 public class LoadSessionAction extends AbstractAction {
 
@@ -63,12 +61,10 @@ public class LoadSessionAction extends AbstractAction {
 		try {
 			SessionFileImporter importer = new SessionFileImporter(file);
 			parentFrame.setCurrentSession(new Session(importer));
-		} catch (IOException ioe) {
+		} catch (Exception e) {
 			JOptionPane.showMessageDialog(parentFrame, "Error Reading File",
 					"Error Reading File", JOptionPane.ERROR_MESSAGE);
-		} catch (InvalidSessionParametersException e) {
-			JOptionPane.showMessageDialog(parentFrame, "Corrupt .julia file",
-					"Corrupt .julia file", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
 		}
 		parentFrame.setFilePath(file.getAbsolutePath());
 	}
