@@ -26,6 +26,10 @@ public class Session {
 		public Vector<InputFunction> provideInputFunctions();
 
 		public Vector<OutputFunction> provideOutputFunctions();
+		
+		public int provideInputSubscript();
+		
+		public int provideOutputSubscript();
 	}
 
 	/**
@@ -43,7 +47,7 @@ public class Session {
 
 		public void addInputFunctions(Vector<InputFunction> i);
 
-		public void addOutputFunctions(Vector<OutputFunction> o);
+		public void addOutputFunctions(Vector<OutputFunction> o);		
 	}
 
 	/**
@@ -76,8 +80,8 @@ public class Session {
 		seed = importer.provideSeedValue();
 		inputFunctions = importer.provideInputFunctions();
 		outputFunctions = importer.provideOutputFunctions();
-		inputsubscript = 0;
-		outputsubscript = 0;
+		inputsubscript = importer.provideInputSubscript();
+		outputsubscript = importer.provideOutputSubscript();
 
 		if (iterations <= 0)
 			throw new InvalidSessionParametersException(

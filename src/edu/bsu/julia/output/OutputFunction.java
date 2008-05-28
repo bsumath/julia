@@ -50,15 +50,13 @@ public class OutputFunction {
 
 	public OutputFunction(Session s, InputFunction[] i, Type type,
 			ComplexNumber[] p) {
-		// *********************new line
 		iterations = s.getIterations();
-		// ************************
 		skips = s.getSkips();
 		seed = s.getSeedValue();
 		functionType = type;
 		if (functionType == Type.POST_CRITICAL)
 			skips = 0;
-		// iterations += skips;
+
 		inputFunctions = i;
 		points = p;
 		c = getNextColor();

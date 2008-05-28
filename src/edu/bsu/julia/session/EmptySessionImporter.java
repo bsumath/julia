@@ -16,11 +16,29 @@ public class EmptySessionImporter implements Importer {
 	private final int iterations;
 	private final int skips;
 	private final ComplexNumber seed;
+	private final Vector<InputFunction> inputFunctions = new Vector<InputFunction>();
 
 	public EmptySessionImporter() {
 		iterations = DEFAULT_ITERATIONS;
 		skips = DEFAULT_SKIPS;
 		seed = DEFAULT_SEED;
+
+		ComplexNumber a = new ComplexNumber(2, 0);
+		ComplexNumber b = new ComplexNumber(0, 0);
+		ComplexNumber c = new ComplexNumber(-1, 0);
+		ComplexNumber d = new ComplexNumber(-.5, -0.866);
+
+		InputFunction function = new LinearInputFunction(1, a, b);
+		function.setSubscript(inputFunctions.size());
+		inputFunctions.add(function);
+
+		function = new LinearInputFunction(1, a, c);
+		function.setSubscript(inputFunctions.size());
+		inputFunctions.add(function);
+		
+		function = new LinearInputFunction(1, a, d);
+		function.setSubscript(inputFunctions.size());
+		inputFunctions.add(function);
 	}
 
 	public EmptySessionImporter(int iter, int sk, ComplexNumber sd) {
@@ -30,17 +48,6 @@ public class EmptySessionImporter implements Importer {
 	}
 
 	public Vector<InputFunction> provideInputFunctions() {
-		Vector<InputFunction> inputFunctions = new Vector<InputFunction>();
-
-		ComplexNumber a = new ComplexNumber(2, 0);
-		ComplexNumber b = new ComplexNumber(0, 0);
-		ComplexNumber c = new ComplexNumber(-1, 0);
-		ComplexNumber d = new ComplexNumber(-.5, -0.866);
-
-		inputFunctions.add(new LinearInputFunction(1, a, b));
-		inputFunctions.add(new LinearInputFunction(1, a, c));
-		inputFunctions.add(new LinearInputFunction(1, a, d));
-
 		return inputFunctions;
 	}
 
@@ -58,6 +65,14 @@ public class EmptySessionImporter implements Importer {
 
 	public int provideSkips() {
 		return skips;
+	}
+
+	public int provideInputSubscript() {
+		return inputFunctions.size() - 1;
+	}
+
+	public int provideOutputSubscript() {
+		return 0;
 	}
 
 }
