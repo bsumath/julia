@@ -110,7 +110,9 @@ public class SessionFileImporter implements Importer {
 				for (int i = 1; i < args.length; i++) {
 					args[i] = coefficients.get(i - 1);
 				}
-				inputFunctions.add((InputFunction) c.newInstance(args));
+				InputFunction function =(InputFunction) c.newInstance(args);
+				function.setSubscript(inputFunctions.size());
+				inputFunctions.add(function);
 			}
 		}
 	}
@@ -150,5 +152,13 @@ public class SessionFileImporter implements Importer {
 
 	public int provideSkips() {
 		return skips;
+	}
+
+	public int provideInputSubscript() {
+		return inputFunctions.size() - 1;
+	}
+
+	public int provideOutputSubscript() {
+		return outputFunctions.size() - 1;
 	}
 }
