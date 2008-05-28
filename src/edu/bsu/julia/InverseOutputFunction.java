@@ -12,7 +12,7 @@ public class InverseOutputFunction extends OutputFunction {
 	private OutputFunction[] outputFunctions;
 
 	public InverseOutputFunction(Session s, InputFunction[] i, 
-			OutputFunction[] o, int type, ComplexNumber[] p) {
+			OutputFunction[] o, Type type, ComplexNumber[] p) {
 		super(s, i, type, p);
 		outputFunctions = o;
 	}
@@ -22,13 +22,8 @@ public class InverseOutputFunction extends OutputFunction {
 	}
 	
 	public String toString() {
-		String s = "o" + getSubscript() + " = ";
-		if(super.getFunctionType() == OutputFunction.INVERSE_ATTR)
-			s= s + "Forward Image of ";
-		else if(super.getFunctionType() == OutputFunction.INVERSE_ERGODIC_JULIA)
-			s = s + "Inverse Random Julia Set of ";
-		else if(super.getFunctionType() == OutputFunction.INVERSE_FULL_JULIA)
-			s = s + "Inverse Full Julia Set of ";
+		String s = "o" + getSubscript() + " = " + functionType.description();
+		
 		for(int x = 0; x<outputFunctions.length; x++) {
 			s = s + "g" + outputFunctions[x].getSubscript();
 			if(x!=(outputFunctions.length - 1)) s = s + ", ";
@@ -53,7 +48,7 @@ public class InverseOutputFunction extends OutputFunction {
             ps.println(getIterations());
             ps.println(getSkips());
             ps.println(getSeedValue());
-            ps.println(getFunctionType());
+            ps.println(functionType);
             InputFunction[] functions = getInputFunctions();
             for(int j = 0; j<functions.length; j++){
             	ps.println(functions[j].getType());
