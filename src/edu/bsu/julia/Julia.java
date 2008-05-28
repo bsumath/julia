@@ -50,14 +50,14 @@ public class Julia extends JFrame {
 
 	public Julia() {
 		super("Julia");
-		
+
 		try {
 			currentSession = new Session(new EmptySessionImporter());
 		} catch (InvalidSessionParametersException e) {
 			/* this shouldn't happen */
 			e.printStackTrace();
 		}
-		
+
 		dotSize = 1;
 		axisTrigger = true;
 		grilTrigger = false;
@@ -187,7 +187,7 @@ public class Julia extends JFrame {
 
 	public void loadSession(File f) {
 		try {
-			currentSession = new Session(new SessionFileImporter(f));
+			setCurrentSession(new Session(new SessionFileImporter(f)));
 		} catch (IOException ioe) {
 			JOptionPane.showMessageDialog(this, "Error Reading File",
 					"Error Reading File", JOptionPane.ERROR_MESSAGE);
