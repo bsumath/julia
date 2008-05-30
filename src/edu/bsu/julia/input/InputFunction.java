@@ -30,14 +30,14 @@ public abstract class InputFunction {
 	 * m represents the number of times the function is composed with itself.
 	 */
 	private int m;
-	
+
 	/**
 	 * This array contains the coefficients of the function in order from the
 	 * beginning of the function, left to right. It is protected so that
 	 * subclasses can access it without a function call.
 	 */
 	protected ComplexNumber[] coefficientArray;
-	
+
 	/**
 	 * The subscript number identifying this function within the session.
 	 */
@@ -146,4 +146,36 @@ public abstract class InputFunction {
 	 */
 	public abstract String toString();
 
+	/**
+	 * hashcode method
+	 */
+	public int hashCode() {
+		int hash = 1;
+		hash *= 31 + coefficientArray.hashCode();
+		hash *= 13 + m;
+		return hash;
+	}
+
+	/**
+	 * object comparison
+	 */
+	public boolean equals(Object o) {
+		try {
+			InputFunction f = (InputFunction) o;
+			if (!f.getClass().getName().equals(this.getClass().getName()))
+				return false;
+			if (f.m != this.m)
+				return false;
+			if (f.coefficientArray.length != this.coefficientArray.length)
+				return false;
+			for (int i = 0; i < coefficientArray.length; i++) {
+				if (!f.coefficientArray[i].equals(this.coefficientArray[i]))
+					return false;
+			}
+			return true;
+		} catch (ClassCastException e) {
+			return false;
+		}
+
+	}
 }
