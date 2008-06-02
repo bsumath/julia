@@ -74,6 +74,10 @@ public class OutputFunction {
 		c = getNextColor();
 	}
 
+	public Type getType(){
+		return functionType;
+	}
+	
 	public int getSubscript() {
 		return sub;
 	}
