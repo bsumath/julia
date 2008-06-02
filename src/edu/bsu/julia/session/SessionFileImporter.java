@@ -22,6 +22,8 @@ public class SessionFileImporter implements Importer {
 
 	private Vector<InputFunction> inputFunctions = new Vector<InputFunction>();
 	private Vector<OutputFunction> outputFunctions = new Vector<OutputFunction>();
+	private int inputSubscript = 0;
+	private int outputSubscript = 0;
 
 	public SessionFileImporter(File f) throws IOException,
 			ClassNotFoundException, IllegalArgumentException,
@@ -50,9 +52,15 @@ public class SessionFileImporter implements Importer {
 			} else if (lineParts[0].equalsIgnoreCase("seed")) {
 				seed = stringToComplexNumber(lineParts[1]);
 			} else if (lineParts[0].equalsIgnoreCase("start_input_function")) {
-				readInputFunction(in, lineParts[1]);
+				InputFunction function = readInputFunction(in, lineParts[1]);
+				if (function != null){
+					inputFunctions.add(function);
+				}
 			} else if (lineParts[0].equalsIgnoreCase("start_output_function")) {
-				readOutputFunction(in, lineParts[1]);
+				OutputFunction function = readOutputFunction(in, lineParts[1]);
+				if (function != null){
+					outputFunctions.add(function);
+				}
 			}
 		}
 	}
@@ -73,7 +81,7 @@ public class SessionFileImporter implements Importer {
 		return new ComplexNumber(x, y);
 	}
 
-	private void readInputFunction(Scanner in, String className)
+	private InputFunction readInputFunction(Scanner in, String className)
 			throws IOException, ClassNotFoundException,
 			IllegalArgumentException, InstantiationException,
 			IllegalAccessException, InvocationTargetException {
@@ -110,14 +118,15 @@ public class SessionFileImporter implements Importer {
 				for (int i = 1; i < args.length; i++) {
 					args[i] = coefficients.get(i - 1);
 				}
-				InputFunction function =(InputFunction) c.newInstance(args);
-				function.setSubscript(inputFunctions.size());
-				inputFunctions.add(function);
+				InputFunction function = (InputFunction) c.newInstance(args);
+				function.setSubscript(nextInputSubscript());
+				return function;
 			}
 		}
+		return null;
 	}
 
-	private void readOutputFunction(Scanner in, String className)
+	private OutputFunction readOutputFunction(Scanner in, String className)
 			throws IOException, ClassNotFoundException,
 			IllegalArgumentException, InstantiationException,
 			IllegalAccessException, InvocationTargetException {
@@ -131,9 +140,19 @@ public class SessionFileImporter implements Importer {
 				break;
 			
 			// TODO read things about the output function
+			
 		}
+		return null;
 	}
 
+	private int nextInputSubscript(){
+		return inputSubscript++;
+	}
+	
+	private int nextOutputSubscript(){
+		return outputSubscript++;
+	}
+	
 	public Vector<InputFunction> provideInputFunctions() {
 		return inputFunctions;
 	}
