@@ -79,7 +79,7 @@ public class SessionFileExporter implements Exporter {
 		if (function instanceof InverseOutputFunction) {
 			for (OutputFunction outFunc : ((InverseOutputFunction) function)
 					.getOutputFunctions()) {
-				writeOutputFunction(ps, outFunc);
+				ps.println(generateTabs() + "output_function: "+ outFunc.hashCode());
 			}
 		}
 		for (ComplexNumber point : function.getPoints()) {
