@@ -13,7 +13,7 @@ import edu.bsu.julia.input.InputFunction;
 import edu.bsu.julia.session.Session;
 
 public class OutputFunction {
-	public enum Type {
+	public static enum Type {
 		BASIC("Basic Output Set of "), FULL_JULIA(
 				"Full Composite Julia Set of "), ERGODIC_JULIA(
 				"Random Composite Julia Set of "), FULL_ATTR(
@@ -74,10 +74,10 @@ public class OutputFunction {
 		c = getNextColor();
 	}
 
-	public Type getType(){
+	public Type getType() {
 		return functionType;
 	}
-	
+
 	public int getSubscript() {
 		return sub;
 	}
@@ -147,33 +147,44 @@ public class OutputFunction {
 		return s;
 	}
 
-		public boolean writeToFile(File f) {
-			FileOutputStream out;
-			PrintStream ps;
+	public int hashCode(){
+		int hash = 1;
+		hash *= 31 + points.hashCode();
+		hash *= 29 + inputFunctions.hashCode();
+		hash *= 23 + functionType.hashCode();
+		hash *= 19 + seed.hashCode();
+		hash *= 17 + skips;
+		hash *= 13 + iterations;
+		return hash;
+	}
 	
-			try {
-				out = new FileOutputStream(f);
-				ps = new PrintStream(out);
-				for (int i = 0; i < points.length; i++)
-					ps.println(points[i]);
-				ps.println(iterations);
-				ps.println(skips);
-				ps.println(seed);
-				ps.println(functionType);
-				for (int j = 0; j < inputFunctions.length; j++) {
-					ps.println(inputFunctions[j].getClass().getName());
-					ps.println(inputFunctions[j].getM());
-					ComplexNumber[] coefficients = inputFunctions[j]
-							.getCoefficients();
-					for (int k = 0; k < coefficients.length; k++)
-						ps.println(coefficients[k]);
-				}
-				ps.close();
-			} catch (IOException e) {
-				System.err.println(e);
-				return false;
+	public boolean writeToFile(File f) {
+		FileOutputStream out;
+		PrintStream ps;
+
+		try {
+			out = new FileOutputStream(f);
+			ps = new PrintStream(out);
+			for (int i = 0; i < points.length; i++)
+				ps.println(points[i]);
+			ps.println(iterations);
+			ps.println(skips);
+			ps.println(seed);
+			ps.println(functionType);
+			for (int j = 0; j < inputFunctions.length; j++) {
+				ps.println(inputFunctions[j].getClass().getName());
+				ps.println(inputFunctions[j].getM());
+				ComplexNumber[] coefficients = inputFunctions[j]
+						.getCoefficients();
+				for (int k = 0; k < coefficients.length; k++)
+					ps.println(coefficients[k]);
 			}
-			return true;
+			ps.close();
+		} catch (IOException e) {
+			System.err.println(e);
+			return false;
 		}
+		return true;
+	}
 
 }
