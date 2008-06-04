@@ -4,6 +4,8 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Vector;
 
+import javax.swing.JFrame;
+
 import edu.bsu.julia.ComplexNumber;
 import edu.bsu.julia.input.InputFunction;
 import edu.bsu.julia.output.OutputFunction;
@@ -64,6 +66,9 @@ public class Session {
 		}
 	}
 
+	private static final String UNMODIFIED_TITLE = "Julia";
+	private static final String MODIFIED_TITLE = "Julia *session modified*";
+
 	private PropertyChangeSupport support = new PropertyChangeSupport(this);
 	private int iterations;
 	private int skips;
@@ -72,9 +77,12 @@ public class Session {
 	private Vector<OutputFunction> outputFunctions;
 	private int inputsubscript;
 	private int outputsubscript;
-	private boolean modified;
-
-	public Session(Importer importer) throws InvalidSessionParametersException {
+	private boolean modified = false;
+	private final JFrame parentFrame;
+	
+	public Session(JFrame frame, Importer importer) throws InvalidSessionParametersException {
+		parentFrame = frame;
+		
 		iterations = importer.provideIterations();
 		skips = importer.provideSkips();
 		seed = importer.provideSeedValue();
@@ -92,6 +100,8 @@ public class Session {
 		if (skips >= iterations)
 			throw new InvalidSessionParametersException(
 					"Skips must be less than Points to Plot.");
+		
+		markUnmodified();
 	}
 
 	public int getIterations() {
@@ -99,7 +109,7 @@ public class Session {
 	}
 
 	public void setIterations(int iter) throws IllegalArgumentException {
-		modified = true;
+		markModified();
 		if (iter <= 0)
 			throw new IllegalArgumentException("Iterations must be"
 					+ "\na positive number.");
@@ -112,7 +122,7 @@ public class Session {
 	}
 
 	public void setSkips(int sk) throws IllegalArgumentException {
-		modified = true;
+		markModified();
 		if (sk < 0)
 			throw new IllegalArgumentException("Skips must be"
 					+ "\na positive number.");
@@ -125,7 +135,7 @@ public class Session {
 	}
 
 	public void setSeedValue(ComplexNumber seedValue) {
-		modified = true;
+		markModified();
 		seed = seedValue;
 		support.firePropertyChange("seed", null, seed);
 	}
@@ -135,21 +145,21 @@ public class Session {
 	}
 
 	public void replaceInputFunction(InputFunction oldFn, InputFunction newFn) {
-		modified = true;
+		markModified();
 		inputFunctions.set(inputFunctions.indexOf(oldFn), newFn);
 		newFn.setSubscript(getNextInSubscript());
 		support.firePropertyChange("replaceInputFunction", oldFn, newFn);
 	}
 
 	public void addInputFunction(InputFunction fn) {
-		modified = true;
+		markModified();
 		inputFunctions.add(fn);
 		fn.setSubscript(getNextInSubscript());
 		support.firePropertyChange("addInputFunction", null, fn);
 	}
 
 	public void deleteInputFunction(int fn) {
-		modified = true;
+		markModified();
 		inputFunctions.remove(fn);
 		support.firePropertyChange("deleteInputFunction", null, fn);
 	}
@@ -159,14 +169,14 @@ public class Session {
 	}
 
 	public void addOutputFunction(OutputFunction fn) {
-		modified = true;
+		markModified();
 		outputFunctions.add(fn);
 		fn.setSubscript(getNextOutSubscript());
 		support.firePropertyChange("addOutputFunction", null, fn);
 	}
 
 	public void deleteOutputFunction(int fn) {
-		modified = true;
+		markModified();
 		outputFunctions.remove(fn);
 		support.firePropertyChange("deleteOutputFunction", null, fn);
 	}
@@ -197,6 +207,12 @@ public class Session {
 
 	public void markUnmodified() {
 		modified = false;
+		parentFrame.setTitle(UNMODIFIED_TITLE);
+	}
+	
+	private void markModified(){
+		modified = true;
+		parentFrame.setTitle(MODIFIED_TITLE);
 	}
 
 }

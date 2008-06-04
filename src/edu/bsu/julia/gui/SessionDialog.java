@@ -180,7 +180,7 @@ public class SessionDialog extends JDialog implements ActionListener {
 		ComplexNumber seedValue = new ComplexNumber(seed1, seed2);
 		try {
 			if (sessionType == GUIUtil.NEW_DIALOG) {
-				parentFrame.setCurrentSession(new Session(
+				parentFrame.setCurrentSession(new Session(parentFrame,
 						new EmptySessionImporter(iter, sk, seedValue)));
 			} else {
 				Session s = parentFrame.getCurrentSession();

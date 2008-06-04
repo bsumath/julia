@@ -9,6 +9,8 @@ import java.util.Scanner;
 import java.util.Vector;
 import java.util.zip.ZipInputStream;
 
+import javax.swing.JFrame;
+
 import edu.bsu.julia.ComplexNumber;
 import edu.bsu.julia.input.InputFunction;
 import edu.bsu.julia.output.InverseOutputFunction;
@@ -186,7 +188,7 @@ public class SessionFileImporter implements Importer {
 		final ComplexNumber sd = seed;
 		Session tempSession;
 		try {
-			tempSession = new Session(new Session.Importer() {
+			tempSession = new Session(new JFrame(), new Session.Importer() {
 				public Vector<InputFunction> provideInputFunctions() {
 					return null;
 				}
