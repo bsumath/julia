@@ -48,7 +48,7 @@ public class Julia extends JFrame {
 		super("Julia");
 
 		try {
-			currentSession = new Session(new EmptySessionImporter());
+			currentSession = new Session(this, new EmptySessionImporter());
 		} catch (InvalidSessionParametersException e) {
 			/* this shouldn't happen */
 			e.printStackTrace();

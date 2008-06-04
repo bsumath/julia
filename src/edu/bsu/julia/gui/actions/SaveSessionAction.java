@@ -77,6 +77,7 @@ public class SaveSessionAction extends AbstractAction {
 			parentFrame.getCurrentSession().export(exporter);
 			try {
 				exporter.writeToFile(file);
+				parentFrame.getCurrentSession().markUnmodified();
 				return true;
 			} catch (IOException e) {
 				System.err.println(e);
