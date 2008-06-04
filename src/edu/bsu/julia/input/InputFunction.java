@@ -147,32 +147,24 @@ public abstract class InputFunction {
 	public abstract String toString();
 
 	/**
-	 * hashcode method
-	 */
-	public int hashCode() {
-		int hash = 1;
-		hash *= 31 + coefficientArray.hashCode();
-		hash *= 13 + m;
-		return hash;
-	}
-
-	/**
 	 * object comparison
 	 */
 	public boolean equals(Object o) {
 		try {
 			InputFunction f = (InputFunction) o;
-			if (!f.getClass().getName().equals(this.getClass().getName()))
-				return false;
-			if (f.m != this.m)
-				return false;
-			if (f.coefficientArray.length != this.coefficientArray.length)
-				return false;
-			for (int i = 0; i < coefficientArray.length; i++) {
-				if (!f.coefficientArray[i].equals(this.coefficientArray[i]))
-					return false;
+
+			boolean result = f.getClass().getName()
+					.equals(getClass().getName());
+			result = result && f.m == m;
+			result = result
+					&& f.coefficientArray.length == coefficientArray.length;
+
+			for (int i = 0; result && i < coefficientArray.length; i++) {
+				result = result
+						&& f.coefficientArray[i].equals(coefficientArray[i]);
 			}
-			return true;
+
+			return result;
 		} catch (ClassCastException e) {
 			return false;
 		}

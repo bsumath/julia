@@ -61,8 +61,8 @@ public class ForwardImageThread extends Thread {
 			ComplexNumber[] resultPoints = new ComplexNumber[result.size()];
 			result.toArray(resultPoints);
 			InverseOutputFunction fn = new InverseOutputFunction(parentFrame
-					.getCurrentSession(), oneInputFn, outputFns,
-					OutputFunction.Type.INVERSE_ATTR, resultPoints);
+					.getCurrentSession(), oneInputFn,
+					OutputFunction.Type.INVERSE_ATTR, resultPoints, outputFns);
 			parentFrame.getCurrentSession().addOutputFunction(fn);
 			if (stop)
 				return;

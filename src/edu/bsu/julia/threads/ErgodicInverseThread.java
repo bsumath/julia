@@ -59,8 +59,9 @@ public class ErgodicInverseThread extends Thread {
 			ComplexNumber[] resultPoints = new ComplexNumber[result.size()];
 			result.toArray(resultPoints);
 			InverseOutputFunction fn = new InverseOutputFunction(parentFrame
-					.getCurrentSession(), oneInputFn, outputFns,
-					OutputFunction.Type.INVERSE_ERGODIC_JULIA, resultPoints);
+					.getCurrentSession(), oneInputFn,
+					OutputFunction.Type.INVERSE_ERGODIC_JULIA, resultPoints,
+					outputFns);
 			parentFrame.getCurrentSession().addOutputFunction(fn);
 
 			if (stop)

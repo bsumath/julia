@@ -230,17 +230,6 @@ public class ComplexNumber {
 	}
 
 	/**
-	 * provide hashCode method for Complex Numbers
-	 */
-	public int hashCode() {
-		int hash = 1;
-		hash *= 29 + toString().hashCode();
-		hash *= 17 + x;
-		hash *= 13 + y;
-		return hash;
-	}
-
-	/**
 	 * object comparison
 	 */
 	public boolean equals(Object o) {
