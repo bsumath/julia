@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 
 import edu.bsu.julia.Julia;
 import edu.bsu.julia.gui.SaveSessionDialog;
+import edu.bsu.julia.session.LegacyFileImporter;
 import edu.bsu.julia.session.Session;
 import edu.bsu.julia.session.SessionFileImporter;
 
@@ -59,7 +60,11 @@ public class LoadSessionAction extends AbstractAction {
 					"Invalid File Name", JOptionPane.ERROR_MESSAGE);
 
 		try {
-			SessionFileImporter importer = new SessionFileImporter(file);
+			Session.Importer importer;
+			if (file.getName().endsWith(".julia.z"))
+				importer = new SessionFileImporter(file);
+			else
+				importer = new LegacyFileImporter(file);
 			parentFrame.setCurrentSession(new Session(importer));
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(parentFrame, "Error Reading File",
@@ -72,11 +77,12 @@ public class LoadSessionAction extends AbstractAction {
 	private class JuliaFileFilter extends javax.swing.filechooser.FileFilter {
 		public boolean accept(File file) {
 			return file.getName().toLowerCase().endsWith(".julia")
+					|| file.getName().toLowerCase().endsWith(".julia.z")
 					|| file.isDirectory();
 		}
 
 		public String getDescription() {
-			return "Julia files (*.julia)";
+			return "Julia files (*.julia, *.julia.z)";
 		}
 	}
 

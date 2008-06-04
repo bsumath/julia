@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Vector;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import edu.bsu.julia.ComplexNumber;
 import edu.bsu.julia.input.InputFunction;
@@ -42,8 +44,11 @@ public class SessionFileExporter implements Exporter {
 	}
 
 	public void writeToFile(File f) throws IOException {
-		FileOutputStream out = new FileOutputStream(f);
+		//FileOutputStream out = new FileOutputStream(f);
+		ZipOutputStream out = new ZipOutputStream(new FileOutputStream(f));
+		out.putNextEntry(new ZipEntry(f.getName().replaceAll(".julia.z", "")));
 		PrintStream ps = new PrintStream(out);
+		
 		tabDepth = 0;
 
 		ps.println("iterations: " + iterations);

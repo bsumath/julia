@@ -1,19 +1,22 @@
 package edu.bsu.julia.gui.actions;
 
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
 import java.io.File;
-import edu.bsu.julia.*;
-import edu.bsu.julia.output.OutputFunction;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.DefaultListModel;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+
+import edu.bsu.julia.Julia;
 
 public class SaveSetAction extends AbstractAction {
 	
 	private JSetFileFilter jsetFileFilter = new JSetFileFilter();
 	private Julia parentFrame;
 	private File file = null;
-	private DefaultListModel outputList;
-	private int index;
+	//private DefaultListModel outputList;
+	//private int index;
 	//for serializable interface: do not use
 	public static final long serialVersionUID = 0;
 	
@@ -22,8 +25,8 @@ public class SaveSetAction extends AbstractAction {
 		putValue("SHORT_DESCRIPTION", "Save Output Set");
 		putValue("LONG_DESCRIPTION", "Save this output set to a file.");
 		parentFrame = f;
-		outputList = listModel;
-		index = i;
+		//outputList = listModel;
+		//index = i;
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
@@ -56,7 +59,7 @@ public class SaveSetAction extends AbstractAction {
 				if (response == JOptionPane.CANCEL_OPTION) return false;
 			}
 			parentFrame.setFilePath(file.getAbsolutePath());
-			OutputFunction fn = (OutputFunction)outputList.getElementAt(index);
+			//OutputFunction fn = (OutputFunction)outputList.getElementAt(index);
 			return true; //fn.writeToFile(file);
 			//TODO fix this
 		}

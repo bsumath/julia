@@ -1,9 +1,16 @@
 package edu.bsu.julia.gui;
 
-import java.awt.*;
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+
+import javax.swing.BorderFactory;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.ListCellRenderer;
 import javax.swing.border.Border;
-import edu.bsu.julia.*;
+
 import edu.bsu.julia.output.OutputFunction;
 
 public class OutputListCellRenderer extends JPanel implements ListCellRenderer {
