@@ -42,12 +42,12 @@ public class SaveSessionAction extends AbstractAction {
 		JFileChooser filechooser = new JFileChooser();
 		filechooser.setFileFilter(new FileFilter() {
 			public boolean accept(File file) {
-				return file.getName().toLowerCase().endsWith(".julia")
+				return file.getName().toLowerCase().endsWith(".julia.z")
 						|| file.isDirectory();
 			}
 
 			public String getDescription() {
-				return "Julia files (*.julia)";
+				return "Julia files (*.julia.z)";
 			}
 		});
 
@@ -59,8 +59,8 @@ public class SaveSessionAction extends AbstractAction {
 			return true;
 		} else if (result == JFileChooser.APPROVE_OPTION) {
 			file = filechooser.getSelectedFile();
-			if (!(file.getName().endsWith(".julia"))) {
-				file = new File(file.getAbsolutePath() + ".julia");
+			if (!(file.getName().endsWith(".julia.z"))) {
+				file = new File(file.getAbsolutePath() + ".julia.z");
 			}
 			if (file.exists()) {
 				int response = JOptionPane.showConfirmDialog(null,

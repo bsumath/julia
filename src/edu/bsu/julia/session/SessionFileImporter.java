@@ -1,13 +1,13 @@
 package edu.bsu.julia.session;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Scanner;
 import java.util.Vector;
+import java.util.zip.ZipInputStream;
 
 import edu.bsu.julia.ComplexNumber;
 import edu.bsu.julia.input.InputFunction;
@@ -33,7 +33,9 @@ public class SessionFileImporter implements Importer {
 			InvocationTargetException {
 
 		// open the file and set up a scanner
-		Scanner in = new Scanner(new BufferedReader(new FileReader(f)));
+		ZipInputStream zipStream = new ZipInputStream(new FileInputStream(f));
+		zipStream.getNextEntry();
+		Scanner in = new Scanner(zipStream);
 
 		while (in.hasNextLine()) {
 			// read the next line and ignore any comment lines
@@ -218,7 +220,7 @@ public class SessionFileImporter implements Importer {
 			return null;
 		}
 
-		//create the output function
+		// create the output function
 		OutputFunction function;
 		if (className.endsWith("InverseOutputFunction")) {
 			function = new InverseOutputFunction(tempSession, inFunctions

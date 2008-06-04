@@ -1,11 +1,13 @@
 package edu.bsu.julia.gui;
 
-import javax.swing.*;
-import java.awt.*;
-import edu.bsu.julia.*;
-import edu.bsu.julia.output.OutputFunction;
+import java.awt.Color;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-import java.beans.*;
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
+
+import edu.bsu.julia.output.OutputFunction;
 
 public class ColorIcon extends JPanel implements PropertyChangeListener{
 	
