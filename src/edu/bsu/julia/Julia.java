@@ -187,10 +187,13 @@ public class Julia extends JFrame {
 	 */
 	public void loseFocus() {
 		Component focusOwner = getFocusOwner();
-		FocusListener[] listeners = focusOwner.getFocusListeners();
-		FocusEvent focusLost = new FocusEvent(focusOwner, FocusEvent.FOCUS_LOST);
-		for (FocusListener l : listeners) {
-			l.focusLost(focusLost);
+		if (focusOwner != null) {
+			FocusListener[] listeners = focusOwner.getFocusListeners();
+			FocusEvent focusLost = new FocusEvent(focusOwner,
+					FocusEvent.FOCUS_LOST);
+			for (FocusListener l : listeners) {
+				l.focusLost(focusLost);
+			}
 		}
 	}
 

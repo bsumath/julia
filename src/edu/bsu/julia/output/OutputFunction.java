@@ -3,10 +3,6 @@ package edu.bsu.julia.output;
 import java.awt.Color;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
 
 import edu.bsu.julia.ComplexNumber;
 import edu.bsu.julia.input.InputFunction;
@@ -39,8 +35,8 @@ public class OutputFunction {
 	private int skips;
 	private ComplexNumber seed;
 	protected Type functionType;
-	private InputFunction[] inputFunctions;
-	private ComplexNumber[] points;
+	private InputFunction[] inputFunctions = new InputFunction[] {};
+	private ComplexNumber[] points = new ComplexNumber[] {};
 	private Color c;
 	private final static Color[] colorSet = { Color.BLACK, Color.BLUE,
 			Color.RED, Color.DARK_GRAY, Color.GREEN, Color.ORANGE,
@@ -58,18 +54,6 @@ public class OutputFunction {
 			skips = 0;
 
 		inputFunctions = i;
-		points = p;
-		c = getNextColor();
-	}
-
-	public OutputFunction(int sk, ComplexNumber sd, Type type, ComplexNumber[] p) {
-		iterations = p.length;
-		skips = sk;
-		seed = sd;
-		functionType = type;
-		if (functionType == Type.POST_CRITICAL)
-			skips = 0;
-		iterations += skips;
 		points = p;
 		c = getNextColor();
 	}
@@ -147,44 +131,27 @@ public class OutputFunction {
 		return s;
 	}
 
-	public int hashCode(){
-		int hash = 1;
-		hash *= 31 + points.hashCode();
-		hash *= 29 + inputFunctions.hashCode();
-		hash *= 23 + functionType.hashCode();
-		hash *= 19 + seed.hashCode();
-		hash *= 17 + skips;
-		hash *= 13 + iterations;
-		return hash;
-	}
-	
-	public boolean writeToFile(File f) {
-		FileOutputStream out;
-		PrintStream ps;
-
+	public boolean equals(Object obj) {
 		try {
-			out = new FileOutputStream(f);
-			ps = new PrintStream(out);
-			for (int i = 0; i < points.length; i++)
-				ps.println(points[i]);
-			ps.println(iterations);
-			ps.println(skips);
-			ps.println(seed);
-			ps.println(functionType);
-			for (int j = 0; j < inputFunctions.length; j++) {
-				ps.println(inputFunctions[j].getClass().getName());
-				ps.println(inputFunctions[j].getM());
-				ComplexNumber[] coefficients = inputFunctions[j]
-						.getCoefficients();
-				for (int k = 0; k < coefficients.length; k++)
-					ps.println(coefficients[k]);
+			OutputFunction other = (OutputFunction) obj;
+			boolean result = iterations == other.iterations;
+			result = result && skips == other.skips;
+			result = result && seed.equals(other.seed);
+			result = result && functionType.equals(other.functionType);
+			result = result && inputFunctions.length == other.inputFunctions.length;
+			result = result && points.length == other.points.length;
+			
+			for (int i=0; result && i<inputFunctions.length; i++){
+				result = result && inputFunctions[i].equals(other.inputFunctions[i]);
 			}
-			ps.close();
-		} catch (IOException e) {
-			System.err.println(e);
+			
+			for (int i=0; result && i<points.length; i++){
+				result = result && points[i].equals(other.points[i]);
+			}
+			
+			return result;
+		} catch (ClassCastException e) {
 			return false;
 		}
-		return true;
 	}
-
 }

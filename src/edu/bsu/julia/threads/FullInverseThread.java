@@ -65,8 +65,8 @@ public class FullInverseThread extends Thread {
 			ComplexNumber[] resultPoints = new ComplexNumber[result.size()];
 			result.toArray(resultPoints);
 			InverseOutputFunction fn = new InverseOutputFunction(s, oneInputFn,
-					outputFns, OutputFunction.Type.INVERSE_FULL_JULIA,
-					resultPoints);
+					OutputFunction.Type.INVERSE_FULL_JULIA, resultPoints,
+					outputFns);
 			s.addOutputFunction(fn);
 
 			if (stop)

@@ -57,7 +57,8 @@ public class SaveSetAction extends AbstractAction {
 			}
 			parentFrame.setFilePath(file.getAbsolutePath());
 			OutputFunction fn = (OutputFunction)outputList.getElementAt(index);
-			return fn.writeToFile(file);
+			return true; //fn.writeToFile(file);
+			//TODO fix this
 		}
 		else {
 			return false;
