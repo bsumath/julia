@@ -165,7 +165,7 @@ public class FullJuliaThread extends Thread {
 				Thread.yield();
 			}
 			OutputFunction outFn = new OutputFunction(s, in,
-					OutputFunction.Type.FULL_JULIA, resultsOutArray);
+					OutputFunction.Type.IND_FULL_JULIA, resultsOutArray);
 			s.addOutputFunction(outFn);
 		}
 	}

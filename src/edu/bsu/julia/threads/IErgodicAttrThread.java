@@ -49,7 +49,7 @@ public class IErgodicAttrThread extends Thread {
 			InputFunction[] in = new InputFunction[1];
 			in[0] = functions[i];
 			OutputFunction outFn = new OutputFunction(s, in,
-					OutputFunction.Type.ERGODIC_ATTR, points);
+					OutputFunction.Type.IND_ERGODIC_ATTR, points);
 			s.addOutputFunction(outFn);
 			Thread.yield();
 		}

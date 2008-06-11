@@ -111,7 +111,7 @@ public class IFullJuliaThread extends Thread {
 			for (int y = 0; y < resultsOutArray.length; y++)
 				resultsOutArray[y] = results.elementAt(y);
 			OutputFunction outFn = new OutputFunction(s, in,
-					OutputFunction.Type.FULL_JULIA, resultsOutArray);
+					OutputFunction.Type.IND_FULL_JULIA, resultsOutArray);
 			s.addOutputFunction(outFn);
 		}
 	}

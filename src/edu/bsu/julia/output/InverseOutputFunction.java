@@ -24,7 +24,8 @@ public class InverseOutputFunction extends OutputFunction {
 	}
 
 	public String toString() {
-		String s = "o" + getSubscript() + " = " + functionType.description();
+		String s = "o" + getSubscript() + " = " + functionType.description()
+				+ " of ";
 
 		for (int x = 0; x < outputFunctions.length; x++) {
 			s = s + "o" + outputFunctions[x].getSubscript();
