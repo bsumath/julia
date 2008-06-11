@@ -49,7 +49,7 @@ public class IFullAttrThread extends Thread {
 			InputFunction[] in = new InputFunction[1];
 			in[0] = functions[m];
 			OutputFunction outFn = new OutputFunction(s, in,
-					OutputFunction.Type.FULL_ATTR, finalResults);
+					OutputFunction.Type.IND_FULL_ATTR, finalResults);
 			s.addOutputFunction(outFn);
 			Thread.yield();
 		}

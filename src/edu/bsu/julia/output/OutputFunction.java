@@ -10,15 +10,32 @@ import edu.bsu.julia.session.Session;
 
 public class OutputFunction {
 	public static enum Type {
-		BASIC("Basic Output Set of "), FULL_JULIA(
-				"Full Composite Julia Set of "), ERGODIC_JULIA(
-				"Random Composite Julia Set of "), FULL_ATTR(
-				"Full Composite Attractor Set of "), ERGODIC_ATTR(
-				"Random Composite Attractor Set of "), INVERSE_ATTR(
-				"Forward Image of "), INVERSE_ERGODIC_JULIA(
-				"Inverse Random Julia Set of "), INVERSE_FULL_JULIA(
-				"Inverse Full Julia Set of "), POST_CRITICAL(
-				"Post Critical Set of ");
+		BASIC("Basic Output Set"),
+
+		FULL_JULIA("Full Composite Julia Set"),
+
+		ERGODIC_JULIA("Random Composite Julia Set"),
+
+		FULL_ATTR("Full Composite Attractor Set"),
+
+		ERGODIC_ATTR("Random Composite Attractor Set"),
+
+		INVERSE_ATTR("Forward Image"),
+
+		INVERSE_ERGODIC_JULIA("Random Inverse Julia Set"),
+
+		INVERSE_FULL_JULIA("Full Inverse Julia Set"),
+
+		IND_FULL_JULIA("Full Individual Julia Set"),
+
+		IND_ERGODIC_JULIA("Random Individual Julia Set"),
+
+		IND_FULL_ATTR("Full Individual Attractor Set"),
+
+		IND_ERGODIC_ATTR("Random Individual Attractor Set"),
+
+		POST_CRITICAL("Post Critical Set");
+
 		private String description;
 
 		private Type(String d) {
@@ -121,7 +138,7 @@ public class OutputFunction {
 	}
 
 	public String toString() {
-		String s = "o" + sub + " = " + functionType.description();
+		String s = "o" + sub + " = " + functionType.description() + " of ";
 
 		for (int x = 0; x < inputFunctions.length; x++) {
 			s = s + "f" + inputFunctions[x].getSubscript();
@@ -138,17 +155,19 @@ public class OutputFunction {
 			result = result && skips == other.skips;
 			result = result && seed.equals(other.seed);
 			result = result && functionType.equals(other.functionType);
-			result = result && inputFunctions.length == other.inputFunctions.length;
+			result = result
+					&& inputFunctions.length == other.inputFunctions.length;
 			result = result && points.length == other.points.length;
-			
-			for (int i=0; result && i<inputFunctions.length; i++){
-				result = result && inputFunctions[i].equals(other.inputFunctions[i]);
+
+			for (int i = 0; result && i < inputFunctions.length; i++) {
+				result = result
+						&& inputFunctions[i].equals(other.inputFunctions[i]);
 			}
-			
-			for (int i=0; result && i<points.length; i++){
+
+			for (int i = 0; result && i < points.length; i++) {
 				result = result && points[i].equals(other.points[i]);
 			}
-			
+
 			return result;
 		} catch (ClassCastException e) {
 			return false;
