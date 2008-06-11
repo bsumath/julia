@@ -5,7 +5,9 @@ import java.util.Vector;
 import edu.bsu.julia.ComplexNumber;
 import edu.bsu.julia.Julia;
 import edu.bsu.julia.gui.JuliaError;
+import edu.bsu.julia.input.CubicInputFunction;
 import edu.bsu.julia.input.InputFunction;
+import edu.bsu.julia.input.QuadraticInputFunction;
 import edu.bsu.julia.output.OutputFunction;
 import edu.bsu.julia.session.Session;
 
@@ -36,10 +38,8 @@ public class IFullJuliaThread extends Thread {
 			Vector<ComplexNumber> results = new Vector<ComplexNumber>();
 			Vector<ComplexNumber> interimResults = new Vector<ComplexNumber>();
 			interimResults.add(w);
-			if (functions[m].getClass().getName().equals(
-					"edu.bsu.julia.CubicInputFunction")
-					|| functions[m].getClass().getName().equals(
-							"edu.bsu.julia.QuadraticInputFunction")) {
+			if (functions[m] instanceof CubicInputFunction
+					|| functions[m] instanceof QuadraticInputFunction) {
 				do {
 					results.clear();
 					for (int n = 0; n < interimResults.size(); n++) {
@@ -52,7 +52,7 @@ public class IFullJuliaThread extends Thread {
 							new JuliaError(JuliaError.DIV_BY_ZERO, parentFrame);
 							return;
 						}
-						for (int p = 0; p < tempResults.length; p++){
+						for (int p = 0; p < tempResults.length; p++) {
 							results.add(tempResults[p]);
 							Thread.yield();
 						}
@@ -62,7 +62,7 @@ public class IFullJuliaThread extends Thread {
 						Thread.yield();
 					}
 					interimResults.clear();
-					for (int i = 0; i < results.size(); i++){
+					for (int i = 0; i < results.size(); i++) {
 						interimResults.add(results.elementAt(i));
 						Thread.yield();
 					}
@@ -87,7 +87,7 @@ public class IFullJuliaThread extends Thread {
 									parentFrame);
 							return;
 						}
-						for (int p = 0; p < tempResults.length; p++){
+						for (int p = 0; p < tempResults.length; p++) {
 							results.add(tempResults[p]);
 							Thread.yield();
 						}
@@ -97,7 +97,7 @@ public class IFullJuliaThread extends Thread {
 						Thread.yield();
 					}
 					interimResults.clear();
-					for (int i = 0; i < results.size(); i++){
+					for (int i = 0; i < results.size(); i++) {
 						interimResults.add(results.elementAt(i));
 						Thread.yield();
 					}
