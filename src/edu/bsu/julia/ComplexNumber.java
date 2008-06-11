@@ -65,14 +65,6 @@ public class ComplexNumber {
 		return y;
 	}
 
-	public void setX(double xValue) {
-		x = xValue;
-	}
-
-	public void setY(double yValue) {
-		y = yValue;
-	}
-
 	/**
 	 * Checks to see if this complex number is of the form 0 + 0 * i. The x and
 	 * y values are doubles, so the checking this method does is highly inexact.
