@@ -22,9 +22,9 @@ public class OutputFunction {
 
 		INVERSE_ATTR("Forward Image"),
 
-		INVERSE_ERGODIC_JULIA("Random Inverse Julia Set"),
+		INVERSE_ERGODIC_JULIA("Random Inverse Image"),
 
-		INVERSE_FULL_JULIA("Full Inverse Julia Set"),
+		INVERSE_FULL_JULIA("Full Inverse Image"),
 
 		IND_FULL_JULIA("Full Individual Julia Set"),
 

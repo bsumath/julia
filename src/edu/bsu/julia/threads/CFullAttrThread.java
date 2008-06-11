@@ -36,6 +36,7 @@ public class CFullAttrThread extends Thread {
 		Vector<ComplexNumber> interimPoints = new Vector<ComplexNumber>();
 		interimPoints.add(start);
 
+		int iterationCounter = 0;
 		do {
 			compositePoints.clear();
 			for (int i = 0; i < interimPoints.size(); i++) {
@@ -54,15 +55,17 @@ public class CFullAttrThread extends Thread {
 				Thread.yield();
 			}
 			interimPoints.clear();
-			for (int i = 0; i < compositePoints.size(); i++){
+			for (int i = 0; i < compositePoints.size(); i++) {
 				interimPoints.add(compositePoints.elementAt(i));
 				Thread.yield();
 			}
 			Thread.yield();
-		} while (compositePoints.size() <= iterations);
+			iterationCounter += 1;
+		} while (!(functions.length == 1 && iterationCounter >= iterations)
+				&& compositePoints.size() < iterations);
 		progress = progress + compositePoints.size();
 		ComplexNumber[] compOutArray = new ComplexNumber[compositePoints.size()];
-		for (int x = 0; x < compOutArray.length; x++){
+		for (int x = 0; x < compOutArray.length; x++) {
 			compOutArray[x] = compositePoints.elementAt(x);
 			Thread.yield();
 		}

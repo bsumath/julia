@@ -35,6 +35,8 @@ public class CFullJuliaThread extends Thread {
 		Vector<ComplexNumber> compositePoints = new Vector<ComplexNumber>();
 		Vector<ComplexNumber> interimPoints = new Vector<ComplexNumber>();
 		interimPoints.add(start);
+		
+		int iterationCounter = 0;
 		do {
 			compositePoints.clear();
 			for (int i = 0; i < interimPoints.size(); i++) {
@@ -68,7 +70,10 @@ public class CFullJuliaThread extends Thread {
 				Thread.yield();
 			}
 			Thread.yield();
-		} while (compositePoints.size() < iterations);
+			iterationCounter += 1;
+		} while (!(functions.length == 1 && iterationCounter >= iterations)
+				&& compositePoints.size() < iterations);
+		
 		progress = progress + compositePoints.size();
 		ComplexNumber[] compOutArray = new ComplexNumber[compositePoints.size()];
 		for (int x = 0; x < compOutArray.length; x++)

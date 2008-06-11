@@ -341,6 +341,7 @@ public class InputPanel extends JPanel implements PropertyChangeListener {
 				createCompButton.setEnabled(true);
 				createIndButton.setEnabled(true);
 				inputList.addMouseListener(mouseListener);
+				inputList.addSelectionInterval(0, listModel.size() - 1);
 			}
 
 			inputList.setCellRenderer(new InputListCellRenderer());
