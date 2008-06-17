@@ -36,11 +36,11 @@ public class ErgodicInverseThread extends Thread {
 					try {
 						x = inputFns[i].evaluateBackwardsRandom(points[k]);
 					} catch (ArithmeticException e) {
-						new JuliaError(JuliaError.DIV_BY_ZERO, parentFrame);
+						JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
 						return;
 					}
 					if (x == null) {
-						new JuliaError(JuliaError.ZERO_DETERMINANT, parentFrame);
+						JuliaError.ZERO_DETERMINANT.showDialog(parentFrame);
 						return;
 					}
 					result.add(x);

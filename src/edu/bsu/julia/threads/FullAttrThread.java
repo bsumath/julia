@@ -46,7 +46,7 @@ public class FullAttrThread extends Thread {
 									.evaluateForwards(interimPoints
 											.elementAt(i)));
 						} catch (ArithmeticException e) {
-							new JuliaError(JuliaError.DIV_BY_ZERO, parentFrame);
+							JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
 							return;
 						}
 						if (stop)
@@ -81,7 +81,7 @@ public class FullAttrThread extends Thread {
 				try {
 					w = functions[m].evaluateForwards(w);
 				} catch (ArithmeticException e) {
-					new JuliaError(JuliaError.DIV_BY_ZERO, parentFrame);
+					JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
 					return;
 				}
 				results[n] = w;

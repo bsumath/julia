@@ -48,12 +48,11 @@ public class FullJuliaThread extends Thread {
 									.evaluateBackwardsFull(interimPoints
 											.elementAt(i));
 						} catch (ArithmeticException e) {
-							new JuliaError(JuliaError.DIV_BY_ZERO, parentFrame);
+							JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
 							return;
 						}
 						if (interResults == null) {
-							new JuliaError(JuliaError.ZERO_DETERMINANT,
-									parentFrame);
+							JuliaError.ZERO_DETERMINANT.showDialog(parentFrame);
 							return;
 						}
 						for (int k = 0; k < interResults.length; k++) {
@@ -101,7 +100,7 @@ public class FullJuliaThread extends Thread {
 									.evaluateBackwardsFull(interimResults
 											.elementAt(n));
 						} catch (ArithmeticException e) {
-							new JuliaError(JuliaError.DIV_BY_ZERO, parentFrame);
+							JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
 							return;
 						}
 						for (int p = 0; p < tempResults.length; p++) {
@@ -131,12 +130,11 @@ public class FullJuliaThread extends Thread {
 									.evaluateBackwardsFull(interimResults
 											.elementAt(n));
 						} catch (ArithmeticException e) {
-							new JuliaError(JuliaError.DIV_BY_ZERO, parentFrame);
+							JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
 							return;
 						}
 						if (tempResults == null) {
-							new JuliaError(JuliaError.ZERO_DETERMINANT,
-									parentFrame);
+							JuliaError.ZERO_DETERMINANT.showDialog(parentFrame);
 							return;
 						}
 						for (int p = 0; p < tempResults.length; p++) {

@@ -39,11 +39,11 @@ public class FullInverseThread extends Thread {
 						tempResult = inputFns[i]
 								.evaluateBackwardsFull(points[k]);
 					} catch (ArithmeticException e) {
-						new JuliaError(JuliaError.DIV_BY_ZERO, parentFrame);
+						JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
 						return;
 					}
 					if (tempResult == null) {
-						new JuliaError(JuliaError.ZERO_DETERMINANT, parentFrame);
+						JuliaError.ZERO_DETERMINANT.showDialog(parentFrame);
 						return;
 					}
 					for (int m = 0; m < tempResult.length; m++) {

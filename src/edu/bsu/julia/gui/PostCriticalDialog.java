@@ -82,19 +82,19 @@ public class PostCriticalDialog extends JDialog implements ActionListener {
 	 */
 	public void actionPerformed(ActionEvent event) {
 		if (tField.getText().equals("")) {
-			new JuliaError(JuliaError.EMPTY_FIELD, parentFrame);
+			JuliaError.EMPTY_FIELD.showDialog(parentFrame);
 			return;
 		}
 		int t = 0;
 		try {
 			t = Integer.parseInt(GUIUtil.removeCommas(tField.getText()));
 		} catch (NumberFormatException e) {
-			new JuliaError(JuliaError.T_INTEGER_ERROR, parentFrame);
+			JuliaError.T_INTEGER_ERROR.showDialog(parentFrame);
 			return;
 		}
 
 		if (t <= 0) {
-			new JuliaError(JuliaError.T_INTEGER_ERROR, parentFrame);
+			JuliaError.T_INTEGER_ERROR.showDialog(parentFrame);
 			return;
 		}
 
