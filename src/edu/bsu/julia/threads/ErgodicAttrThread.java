@@ -42,7 +42,7 @@ public class ErgodicAttrThread extends Thread {
 				try {
 					start = functions[randomIndex].evaluateForwards(start);
 				} catch (ArithmeticException e) {
-					new JuliaError(JuliaError.DIV_BY_ZERO, parentFrame);
+					JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
 					return;
 				}
 				if (k >= skips)
@@ -64,7 +64,7 @@ public class ErgodicAttrThread extends Thread {
 				try {
 					w = functions[i].evaluateForwards(w);
 				} catch (ArithmeticException e) {
-					new JuliaError(JuliaError.DIV_BY_ZERO, parentFrame);
+					JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
 					return;
 				}
 				if (j >= skips)

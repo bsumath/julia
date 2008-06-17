@@ -36,7 +36,7 @@ public class IErgodicAttrThread extends Thread {
 				try {
 					w = functions[i].evaluateForwards(w);
 				} catch (ArithmeticException e) {
-					new JuliaError(JuliaError.DIV_BY_ZERO, parentFrame);
+					JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
 					return;
 				}
 				if (j >= skips)

@@ -41,11 +41,11 @@ public class CErgodicJuliaThread extends Thread {
 			try {
 				start = functions[randomIndex].evaluateBackwardsRandom(start);
 			} catch (ArithmeticException e) {
-				new JuliaError(JuliaError.DIV_BY_ZERO, parentFrame);
+				JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
 				return;
 			}
 			if (start == null) {
-				new JuliaError(JuliaError.ZERO_DETERMINANT, parentFrame);
+				JuliaError.ZERO_DETERMINANT.showDialog(parentFrame);
 				return;
 			}
 			if (k >= skips)

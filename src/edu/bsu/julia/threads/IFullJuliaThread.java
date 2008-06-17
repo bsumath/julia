@@ -49,7 +49,7 @@ public class IFullJuliaThread extends Thread {
 									.evaluateBackwardsFull(interimResults
 											.elementAt(n));
 						} catch (ArithmeticException e) {
-							new JuliaError(JuliaError.DIV_BY_ZERO, parentFrame);
+							JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
 							return;
 						}
 						for (int p = 0; p < tempResults.length; p++) {
@@ -79,12 +79,11 @@ public class IFullJuliaThread extends Thread {
 									.evaluateBackwardsFull(interimResults
 											.elementAt(n));
 						} catch (ArithmeticException e) {
-							new JuliaError(JuliaError.DIV_BY_ZERO, parentFrame);
+							JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
 							return;
 						}
 						if (tempResults == null) {
-							new JuliaError(JuliaError.ZERO_DETERMINANT,
-									parentFrame);
+							JuliaError.ZERO_DETERMINANT.showDialog(parentFrame);
 							return;
 						}
 						for (int p = 0; p < tempResults.length; p++) {

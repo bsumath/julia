@@ -208,14 +208,14 @@ public class RealAfflineLinearDialog extends JDialog implements ActionListener {
 	 */
 	public void actionPerformed(ActionEvent arg0) {
 		if (mField.getText().equals("")) {
-			new JuliaError(JuliaError.EMPTY_FIELD, parentFrame);
+			JuliaError.EMPTY_FIELD.showDialog(parentFrame);
 			return;
 		}
 		int m = 0;
 		try {
 			m = Integer.parseInt(GUIUtil.removeCommas(mField.getText()));
 		} catch (NumberFormatException except) {
-			new JuliaError(JuliaError.M_INTEGER_ERROR, parentFrame);
+			JuliaError.M_INTEGER_ERROR.showDialog(parentFrame);
 			return;
 		}
 		double a = 0;
@@ -227,7 +227,7 @@ public class RealAfflineLinearDialog extends JDialog implements ActionListener {
 		if (aField.getText().equals("") || bField.getText().equals("")
 				|| cField.getText().equals("") || dField.getText().equals("")
 				|| eField.getText().equals("") || fField.getText().equals("")) {
-			new JuliaError(JuliaError.EMPTY_FIELD, parentFrame);
+			JuliaError.EMPTY_FIELD.showDialog(parentFrame);
 			return;
 		}
 		try {
@@ -238,7 +238,7 @@ public class RealAfflineLinearDialog extends JDialog implements ActionListener {
 			e = Double.parseDouble(GUIUtil.removeCommas(eField.getText()));
 			f = Double.parseDouble(GUIUtil.removeCommas(fField.getText()));
 		} catch (NumberFormatException except) {
-			new JuliaError(JuliaError.COEFFICIENT_FORMAT_ERROR, parentFrame);
+			JuliaError.COEFFICIENT_FORMAT_ERROR.showDialog(parentFrame);
 			return;
 		}
 
@@ -253,7 +253,7 @@ public class RealAfflineLinearDialog extends JDialog implements ActionListener {
 			newFunction = new RealAfflineLinearInputFunction(m, aComp, bComp,
 					cComp, dComp, eComp, fComp);
 		} catch (IllegalArgumentException except) {
-			new JuliaError(JuliaError.M_NEG_ERROR, parentFrame);
+			JuliaError.M_NEG_ERROR.showDialog(parentFrame);
 			return;
 		}
 

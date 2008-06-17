@@ -84,7 +84,7 @@ public class PostCriticalThread extends Thread {
 									.evaluateForwards(interimPoints
 											.elementAt(i)));
 						} catch (ArithmeticException e) {
-							new JuliaError(JuliaError.DIV_BY_ZERO, parentFrame);
+							JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
 							return;
 						}
 						if (stop)

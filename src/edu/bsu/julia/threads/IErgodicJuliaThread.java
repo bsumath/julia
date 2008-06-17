@@ -36,11 +36,11 @@ public class IErgodicJuliaThread extends Thread {
 				try {
 					w = functions[i].evaluateBackwardsRandom(w);
 				} catch (ArithmeticException e) {
-					new JuliaError(JuliaError.DIV_BY_ZERO, parentFrame);
+					JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
 					return;
 				}
 				if (w == null) {
-					new JuliaError(JuliaError.ZERO_DETERMINANT, parentFrame);
+					JuliaError.ZERO_DETERMINANT.showDialog(parentFrame);
 					return;
 				}
 				if (j >= skips)

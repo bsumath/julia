@@ -203,14 +203,14 @@ public class CubicDialog extends JDialog implements ActionListener {
 	 */
 	public void actionPerformed(ActionEvent arg0) {
 		if (mField.getText().equals("")) {
-			new JuliaError(JuliaError.EMPTY_FIELD, parentFrame);
+			JuliaError.EMPTY_FIELD.showDialog(parentFrame);
 			return;
 		}
 		int m = 0;
 		try {
 			m = Integer.parseInt(GUIUtil.removeCommas(mField.getText()));
 		} catch (NumberFormatException e) {
-			new JuliaError(JuliaError.M_INTEGER_ERROR, parentFrame);
+			JuliaError.M_INTEGER_ERROR.showDialog(parentFrame);
 			return;
 		}
 		double ax = 0;
@@ -219,7 +219,7 @@ public class CubicDialog extends JDialog implements ActionListener {
 		double by = 0;
 		if (axField.getText().equals("") || ayField.getText().equals("")
 				|| bxField.getText().equals("") || byField.getText().equals("")) {
-			new JuliaError(JuliaError.EMPTY_FIELD, parentFrame);
+			JuliaError.EMPTY_FIELD.showDialog(parentFrame);
 			return;
 		}
 		String axString = GUIUtil.removeCommas(axField.getText());
@@ -236,7 +236,7 @@ public class CubicDialog extends JDialog implements ActionListener {
 			bx = Double.parseDouble(bxString);
 			by = Double.parseDouble(byString);
 		} catch (NumberFormatException e) {
-			new JuliaError(JuliaError.COEFFICIENT_FORMAT_ERROR, parentFrame);
+			JuliaError.COEFFICIENT_FORMAT_ERROR.showDialog(parentFrame);
 			return;
 		}
 
@@ -251,9 +251,9 @@ public class CubicDialog extends JDialog implements ActionListener {
 			newFunction = new CubicInputFunction(m, a, b);
 		} catch (IllegalArgumentException e) {
 			if (e.getMessage().equals("a zero"))
-				new JuliaError(JuliaError.CUBIC_ILLEGAL_ARGUMENT, parentFrame);
+				JuliaError.CUBIC_ILLEGAL_ARGUMENT.showDialog(parentFrame);
 			else
-				new JuliaError(JuliaError.M_NEG_ERROR, parentFrame);
+				JuliaError.M_NEG_ERROR.showDialog(parentFrame);
 			return;
 		}
 

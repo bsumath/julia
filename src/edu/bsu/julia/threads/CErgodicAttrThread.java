@@ -41,7 +41,7 @@ public class CErgodicAttrThread extends Thread {
 			try {
 				start = functions[randomIndex].evaluateForwards(start);
 			}catch(ArithmeticException e) {
-				new JuliaError(JuliaError.DIV_BY_ZERO, parentFrame);
+				JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
 				return;
 			}
 			if(k>=skips) compositePoints[k-skips] = start;

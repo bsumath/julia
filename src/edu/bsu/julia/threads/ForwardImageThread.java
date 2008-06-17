@@ -44,7 +44,7 @@ public class ForwardImageThread extends Thread {
 					try {
 						x = inputFns[i].evaluateForwards(points[k]);
 					} catch (ArithmeticException e) {
-						new JuliaError(JuliaError.DIV_BY_ZERO, parentFrame);
+						JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
 						return;
 					}
 					result.add(x);
