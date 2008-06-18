@@ -75,8 +75,8 @@ public class Session {
 	private ComplexNumber seed;
 	private Vector<InputFunction> inputFunctions;
 	private Vector<OutputFunction> outputFunctions;
-	private int inputsubscript;
-	private int outputsubscript;
+	private int inputSubscript;
+	private int outputSubscript;
 	private boolean modified = false;
 	private final JFrame parentFrame;
 	
@@ -88,8 +88,8 @@ public class Session {
 		seed = importer.provideSeedValue();
 		inputFunctions = importer.provideInputFunctions();
 		outputFunctions = importer.provideOutputFunctions();
-		inputsubscript = importer.provideInputSubscript();
-		outputsubscript = importer.provideOutputSubscript();
+		inputSubscript = importer.provideInputSubscript();
+		outputSubscript = importer.provideOutputSubscript();
 
 		if (iterations <= 0)
 			throw new InvalidSessionParametersException(
@@ -186,11 +186,11 @@ public class Session {
 	}
 
 	public int getNextInSubscript() {
-		return ++inputsubscript;
+		return ++inputSubscript;
 	}
 
 	public int getNextOutSubscript() {
-		return ++outputsubscript;
+		return ++outputSubscript;
 	}
 
 	public void export(Exporter exporter){
