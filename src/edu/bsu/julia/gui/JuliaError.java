@@ -42,7 +42,11 @@ public enum JuliaError {
 			+ "function cannot be zero.", "Illegal Coefficient Error"),
 
 	T_INTEGER_ERROR("T values must be positive " + "\ninteger values.",
-			"Number Format Error");
+			"Number Format Error"),
+
+	OUT_OF_MEMORY("Julia is running out of memory.\n"
+			+ "Delete any unneeded output sets and try again.",
+			"Out Of Memory Error");
 
 	private final String message;
 	private final String title;

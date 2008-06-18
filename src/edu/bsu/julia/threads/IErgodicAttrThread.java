@@ -20,38 +20,42 @@ public class IErgodicAttrThread extends Thread {
 	}
 
 	public void run() {
-		InputFunction[] functions = parentFrame.getInputPanel()
-				.getSelectedFunctions();
-		if (functions.length == 0)
-			return;
-		Session s = parentFrame.getCurrentSession();
-		ComplexNumber seed = s.getSeedValue();
-		int iterations = s.getIterations();
-		int skips = s.getSkips();
+		try {
+			InputFunction[] functions = parentFrame.getInputPanel()
+					.getSelectedFunctions();
+			if (functions.length == 0)
+				return;
+			Session s = parentFrame.getCurrentSession();
+			ComplexNumber seed = s.getSeedValue();
+			int iterations = s.getIterations();
+			int skips = s.getSkips();
 
-		for (int i = 0; i < functions.length; i++) {
-			ComplexNumber w = seed.clone();
-			ComplexNumber[] points = new ComplexNumber[iterations - skips];
-			for (int j = 0; j < iterations; j++) {
-				try {
-					w = functions[i].evaluateForwards(w);
-				} catch (ArithmeticException e) {
-					JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
-					return;
+			for (int i = 0; i < functions.length; i++) {
+				ComplexNumber w = seed.clone();
+				ComplexNumber[] points = new ComplexNumber[iterations - skips];
+				for (int j = 0; j < iterations; j++) {
+					try {
+						w = functions[i].evaluateForwards(w);
+					} catch (ArithmeticException e) {
+						JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
+						return;
+					}
+					if (j >= skips)
+						points[j - skips] = w;
+					progress++;
+					if (stop)
+						return;
+					Thread.yield();
 				}
-				if (j >= skips)
-					points[j - skips] = w;
-				progress++;
-				if (stop)
-					return;
+				InputFunction[] in = new InputFunction[1];
+				in[0] = functions[i];
+				OutputFunction outFn = new OutputFunction(s, in,
+						OutputFunction.Type.IND_ERGODIC_ATTR, points);
+				s.addOutputFunction(outFn);
 				Thread.yield();
 			}
-			InputFunction[] in = new InputFunction[1];
-			in[0] = functions[i];
-			OutputFunction outFn = new OutputFunction(s, in,
-					OutputFunction.Type.IND_ERGODIC_ATTR, points);
-			s.addOutputFunction(outFn);
-			Thread.yield();
+		} catch (OutOfMemoryError e) {
+			JuliaError.OUT_OF_MEMORY.showDialog(parentFrame);
 		}
 	}
 
