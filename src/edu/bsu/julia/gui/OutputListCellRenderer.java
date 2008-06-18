@@ -13,36 +13,39 @@ import javax.swing.border.Border;
 
 import edu.bsu.julia.output.OutputFunction;
 
-public class OutputListCellRenderer extends JPanel implements ListCellRenderer {
-	
+public class OutputListCellRenderer implements ListCellRenderer {
 	private Border raised = BorderFactory.createRaisedBevelBorder();
 	private Border lowered = BorderFactory.createLoweredBevelBorder();
 	private JTextArea functionDescription = new JTextArea(3, 13);
 	private ColorIcon icon = new ColorIcon(Color.WHITE);
-	//for serializable interface: do not use
-	public static final long serialVersionUID = 0;
+	private final JPanel panel = new JPanel();
 	
+	// for serializable interface: do not use
+	public static final long serialVersionUID = 0;
+
 	public OutputListCellRenderer() {
-		setLayout(new BorderLayout());
+		panel.setLayout(new BorderLayout());
 		functionDescription.setEditable(false);
 		functionDescription.setLineWrap(true);
 		functionDescription.setWrapStyleWord(true);
-		functionDescription.setBackground(getBackground());
-		add(functionDescription, BorderLayout.CENTER);
+		functionDescription.setBackground(panel.getBackground());
+		panel.add(functionDescription, BorderLayout.CENTER);
 		JPanel iconPanel = new JPanel();
 		iconPanel.add(icon);
-		add(iconPanel, BorderLayout.WEST);
+		panel.add(iconPanel, BorderLayout.WEST);
 	}
-	
+
 	public Component getListCellRendererComponent(JList list, Object fn,
 			int index, boolean selected, boolean focus) {
-		OutputFunction function = (OutputFunction)fn;
+		OutputFunction function = (OutputFunction) fn;
 		functionDescription.setText(function.toString());
 		icon.setFunction(function);
 		icon.setColor(function.getColor());
-		if(selected) setBorder(lowered);
-		else setBorder(raised);
-		return this;
+		if (selected)
+			panel.setBorder(lowered);
+		else
+			panel.setBorder(raised);
+		return panel;
 	}
 
 }
