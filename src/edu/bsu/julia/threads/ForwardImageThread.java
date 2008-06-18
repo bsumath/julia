@@ -24,49 +24,54 @@ public class ForwardImageThread extends Thread {
 	}
 
 	public void run() {
-		InputFunction[] inputFns = parentFrame.getInputPanel()
-				.getSelectedFunctions();
-		JList outList = parentFrame.getOutputFunctionList();
-		Object[] outObjs = outList.getSelectedValues();
-		outList.clearSelection();
-		OutputFunction[] outputFns = new OutputFunction[outObjs.length];
-		for (int i = 0; i < outputFns.length; i++) {
-			outputFns[i] = (OutputFunction) outObjs[i];
-			Thread.yield();
-		}
+		try {
+			InputFunction[] inputFns = parentFrame.getInputPanel()
+					.getSelectedFunctions();
+			JList outList = parentFrame.getOutputFunctionList();
+			Object[] outObjs = outList.getSelectedValues();
+			outList.clearSelection();
+			OutputFunction[] outputFns = new OutputFunction[outObjs.length];
+			for (int i = 0; i < outputFns.length; i++) {
+				outputFns[i] = (OutputFunction) outObjs[i];
+				Thread.yield();
+			}
 
-		ComplexNumber x;
-		for (int i = 0; i < inputFns.length; i++) {
-			Vector<ComplexNumber> result = new Vector<ComplexNumber>();
-			for (int j = 0; j < outputFns.length; j++) {
-				ComplexNumber[] points = outputFns[j].getPoints();
-				for (int k = 0; k < points.length; k++) {
-					try {
-						x = inputFns[i].evaluateForwards(points[k]);
-					} catch (ArithmeticException e) {
-						JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
-						return;
+			ComplexNumber x;
+			for (int i = 0; i < inputFns.length; i++) {
+				Vector<ComplexNumber> result = new Vector<ComplexNumber>();
+				for (int j = 0; j < outputFns.length; j++) {
+					ComplexNumber[] points = outputFns[j].getPoints();
+					for (int k = 0; k < points.length; k++) {
+						try {
+							x = inputFns[i].evaluateForwards(points[k]);
+						} catch (ArithmeticException e) {
+							JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
+							return;
+						}
+						result.add(x);
+						progress++;
+						if (stop)
+							return;
+						Thread.yield();
 					}
-					result.add(x);
-					progress++;
 					if (stop)
 						return;
 					Thread.yield();
 				}
+				InputFunction[] oneInputFn = { inputFns[i] };
+				ComplexNumber[] resultPoints = new ComplexNumber[result.size()];
+				result.toArray(resultPoints);
+				InverseOutputFunction fn = new InverseOutputFunction(
+						parentFrame.getCurrentSession(), oneInputFn,
+						OutputFunction.Type.INVERSE_ATTR, resultPoints,
+						outputFns);
+				parentFrame.getCurrentSession().addOutputFunction(fn);
 				if (stop)
 					return;
 				Thread.yield();
 			}
-			InputFunction[] oneInputFn = { inputFns[i] };
-			ComplexNumber[] resultPoints = new ComplexNumber[result.size()];
-			result.toArray(resultPoints);
-			InverseOutputFunction fn = new InverseOutputFunction(parentFrame
-					.getCurrentSession(), oneInputFn,
-					OutputFunction.Type.INVERSE_ATTR, resultPoints, outputFns);
-			parentFrame.getCurrentSession().addOutputFunction(fn);
-			if (stop)
-				return;
-			Thread.yield();
+		} catch (OutOfMemoryError e) {
+			JuliaError.OUT_OF_MEMORY.showDialog(parentFrame);
 		}
 	}
 

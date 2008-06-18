@@ -28,27 +28,33 @@ public class FullInverseThread extends Thread {
 	}
 
 	public void run() {
-		Session s = parentFrame.getCurrentSession();
-		for (int i = 0; i < inputFns.length; i++) {
-			Vector<ComplexNumber> result = new Vector<ComplexNumber>();
-			for (int j = 0; j < outputFns.length; j++) {
-				ComplexNumber[] points = outputFns[j].getPoints();
-				for (int k = 0; k < points.length; k++) {
-					ComplexNumber[] tempResult;
-					try {
-						tempResult = inputFns[i]
-								.evaluateBackwardsFull(points[k]);
-					} catch (ArithmeticException e) {
-						JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
-						return;
-					}
-					if (tempResult == null) {
-						JuliaError.ZERO_DETERMINANT.showDialog(parentFrame);
-						return;
-					}
-					for (int m = 0; m < tempResult.length; m++) {
-						result.add(tempResult[m]);
-						progress++;
+		try {
+			Session s = parentFrame.getCurrentSession();
+			for (int i = 0; i < inputFns.length; i++) {
+				Vector<ComplexNumber> result = new Vector<ComplexNumber>();
+				for (int j = 0; j < outputFns.length; j++) {
+					ComplexNumber[] points = outputFns[j].getPoints();
+					for (int k = 0; k < points.length; k++) {
+						ComplexNumber[] tempResult;
+						try {
+							tempResult = inputFns[i]
+									.evaluateBackwardsFull(points[k]);
+						} catch (ArithmeticException e) {
+							JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
+							return;
+						}
+						if (tempResult == null) {
+							JuliaError.ZERO_DETERMINANT.showDialog(parentFrame);
+							return;
+						}
+						for (int m = 0; m < tempResult.length; m++) {
+							result.add(tempResult[m]);
+							progress++;
+							Thread.yield();
+						}
+
+						if (stop)
+							return;
 						Thread.yield();
 					}
 
@@ -56,22 +62,20 @@ public class FullInverseThread extends Thread {
 						return;
 					Thread.yield();
 				}
+				InputFunction[] oneInputFn = { inputFns[i] };
+				ComplexNumber[] resultPoints = new ComplexNumber[result.size()];
+				result.toArray(resultPoints);
+				InverseOutputFunction fn = new InverseOutputFunction(s,
+						oneInputFn, OutputFunction.Type.INVERSE_FULL_JULIA,
+						resultPoints, outputFns);
+				s.addOutputFunction(fn);
 
 				if (stop)
 					return;
 				Thread.yield();
 			}
-			InputFunction[] oneInputFn = { inputFns[i] };
-			ComplexNumber[] resultPoints = new ComplexNumber[result.size()];
-			result.toArray(resultPoints);
-			InverseOutputFunction fn = new InverseOutputFunction(s, oneInputFn,
-					OutputFunction.Type.INVERSE_FULL_JULIA, resultPoints,
-					outputFns);
-			s.addOutputFunction(fn);
-
-			if (stop)
-				return;
-			Thread.yield();
+		} catch (OutOfMemoryError e) {
+			JuliaError.OUT_OF_MEMORY.showDialog(parentFrame);
 		}
 	}
 

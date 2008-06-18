@@ -22,64 +22,68 @@ public class ErgodicAttrThread extends Thread {
 	}
 
 	public void run() {
-		InputFunction[] functions = parentFrame.getInputPanel()
-				.getSelectedFunctions();
-		if (functions.length == 0)
-			return;
-		int functionsLength = functions.length;
-		Session s = parentFrame.getCurrentSession();
-		ComplexNumber seed = s.getSeedValue();
-		int iterations = s.getIterations();
-		int skips = s.getSkips();
+		try {
+			InputFunction[] functions = parentFrame.getInputPanel()
+					.getSelectedFunctions();
+			if (functions.length == 0)
+				return;
+			int functionsLength = functions.length;
+			Session s = parentFrame.getCurrentSession();
+			ComplexNumber seed = s.getSeedValue();
+			int iterations = s.getIterations();
+			int skips = s.getSkips();
 
-		if (functionsLength > 1) {
-			ComplexNumber start = seed.clone();
-			ComplexNumber[] compositePoints = new ComplexNumber[iterations
-					- skips];
-			Random generator = new Random();
-			for (int k = 0; k < iterations; k++) {
-				int randomIndex = generator.nextInt(functionsLength);
-				try {
-					start = functions[randomIndex].evaluateForwards(start);
-				} catch (ArithmeticException e) {
-					JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
-					return;
+			if (functionsLength > 1) {
+				ComplexNumber start = seed.clone();
+				ComplexNumber[] compositePoints = new ComplexNumber[iterations
+						- skips];
+				Random generator = new Random();
+				for (int k = 0; k < iterations; k++) {
+					int randomIndex = generator.nextInt(functionsLength);
+					try {
+						start = functions[randomIndex].evaluateForwards(start);
+					} catch (ArithmeticException e) {
+						JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
+						return;
+					}
+					if (k >= skips)
+						compositePoints[k - skips] = start;
+					progress++;
+					if (stop)
+						return;
+					Thread.yield();
 				}
-				if (k >= skips)
-					compositePoints[k - skips] = start;
-				progress++;
-				if (stop)
-					return;
+				OutputFunction compOutFn = new OutputFunction(s, functions,
+						OutputFunction.Type.ERGODIC_ATTR, compositePoints);
+				s.addOutputFunction(compOutFn);
+			}
+
+			for (int i = 0; i < functions.length; i++) {
+				ComplexNumber w = seed.clone();
+				ComplexNumber[] points = new ComplexNumber[iterations - skips];
+				for (int j = 0; j < iterations; j++) {
+					try {
+						w = functions[i].evaluateForwards(w);
+					} catch (ArithmeticException e) {
+						JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
+						return;
+					}
+					if (j >= skips)
+						points[j - skips] = w;
+					progress++;
+					if (stop)
+						return;
+					Thread.yield();
+				}
+				InputFunction[] in = new InputFunction[1];
+				in[0] = functions[i];
+				OutputFunction outFn = new OutputFunction(s, in,
+						OutputFunction.Type.IND_ERGODIC_ATTR, points);
+				s.addOutputFunction(outFn);
 				Thread.yield();
 			}
-			OutputFunction compOutFn = new OutputFunction(s, functions,
-					OutputFunction.Type.ERGODIC_ATTR, compositePoints);
-			s.addOutputFunction(compOutFn);
-		}
-
-		for (int i = 0; i < functions.length; i++) {
-			ComplexNumber w = seed.clone();
-			ComplexNumber[] points = new ComplexNumber[iterations - skips];
-			for (int j = 0; j < iterations; j++) {
-				try {
-					w = functions[i].evaluateForwards(w);
-				} catch (ArithmeticException e) {
-					JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
-					return;
-				}
-				if (j >= skips)
-					points[j - skips] = w;
-				progress++;
-				if (stop)
-					return;
-				Thread.yield();
-			}
-			InputFunction[] in = new InputFunction[1];
-			in[0] = functions[i];
-			OutputFunction outFn = new OutputFunction(s, in,
-					OutputFunction.Type.IND_ERGODIC_ATTR, points);
-			s.addOutputFunction(outFn);
-			Thread.yield();
+		} catch (OutOfMemoryError e) {
+			JuliaError.OUT_OF_MEMORY.showDialog(parentFrame);
 		}
 	}
 
