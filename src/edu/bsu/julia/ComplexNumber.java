@@ -12,16 +12,19 @@ package edu.bsu.julia;
  * as well as get methods.
  * </p>
  * 
+ * <p>
+ * THIS CLASS MUST BE IMMUTABLE
+ * </p>
  */
-public class ComplexNumber {
+public final class ComplexNumber {
 	/**
 	 * The real part of a complex number.
 	 */
-	private double x;
+	private final double x;
 	/**
 	 * When multiplied by i, the imaginary part of a complex number.
 	 */
-	private double y;
+	private final double y;
 	/**
 	 * The constant alpha is used in determining the three cube roots of a
 	 * number. The primary cube root does not use alpha, but the secondary is
