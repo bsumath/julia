@@ -41,78 +41,76 @@ public class PostCriticalThread extends Thread {
 			int functionsLength = functions.length;
 			Session s = parentFrame.getCurrentSession();
 
-			if (functionsLength > 0) {
-				Vector<ComplexNumber> compositePoints = new Vector<ComplexNumber>();
-				Vector<ComplexNumber> interimPoints = new Vector<ComplexNumber>();
+			Vector<ComplexNumber> compositePoints = new Vector<ComplexNumber>();
+			Vector<ComplexNumber> interimPoints = new Vector<ComplexNumber>();
 
-				Vector<ComplexNumber> startVector = new Vector<ComplexNumber>();
-				for (int vi = 0; vi < functions.length; vi++) {
-					if (functions[vi] instanceof CubicInputFunction) {
-						flag = 1;
-						rFlag = 1;
-					} else if (functions[vi] instanceof QuadraticInputFunction) {
-						ComplexNumber[] coefficients = functions[vi]
-								.getCoefficients();
-						seed = (coefficients[1].multiply(NEG_ONE))
-								.divide(coefficients[0].multiply(TWO));
-						flag = 1;
-						rFlag = 1;
-					}
-					if (flag == 1) {
-						ComplexNumber start = seed.clone();
-						for (int seedi = 0; seedi < functions[vi].getM(); seedi++) {
-							start = functions[vi].evaluateFunction(start);
-							interimPoints.add(start);
-							startVector.add(start);
+			Vector<ComplexNumber> startVector = new Vector<ComplexNumber>();
+			for (int vi = 0; vi < functions.length; vi++) {
+				if (functions[vi] instanceof CubicInputFunction) {
+					flag = 1;
+					rFlag = 1;
+				} else if (functions[vi] instanceof QuadraticInputFunction) {
+					ComplexNumber[] coefficients = functions[vi]
+							.getCoefficients();
+					seed = (coefficients[1].multiply(NEG_ONE))
+							.divide(coefficients[0].multiply(TWO));
+					flag = 1;
+					rFlag = 1;
+				}
+				if (flag == 1) {
+					ComplexNumber start = seed.clone();
+					for (int seedi = 0; seedi < functions[vi].getM(); seedi++) {
+						start = functions[vi].evaluateFunction(start);
+						interimPoints.add(start);
+						startVector.add(start);
 
-						}
-						flag = 0;
 					}
-					Thread.yield();
+					flag = 0;
 				}
-				if (rFlag == 0) {
-					JOptionPane.showMessageDialog(parentFrame,
-							"No critical Points exist");
-					return;
-				}
-
-				for (int ti = 0; ti < tValue - 1; ti++) {
-					compositePoints.clear();
-					for (int i = 0; i < interimPoints.size(); i++) {
-						for (int j = 0; j < functionsLength; j++) {
-							try {
-								compositePoints.add(functions[j]
-										.evaluateForwards(interimPoints
-												.elementAt(i)));
-							} catch (ArithmeticException e) {
-								JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
-								return;
-							}
-							if (stop)
-								return;
-							Thread.yield();
-						}
-						Thread.yield();
-					}
-					interimPoints.clear();
-					for (int i = 0; i < compositePoints.size(); i++) {
-						interimPoints.add(compositePoints.elementAt(i));
-						startVector.add(compositePoints.elementAt(i));
-						Thread.yield();
-					}
-					Thread.yield();
-				}
-				progress = progress + startVector.size();
-				ComplexNumber[] compOutArray = new ComplexNumber[startVector
-						.size()];
-				for (int x = 0; x < compOutArray.length; x++) {
-					compOutArray[x] = startVector.elementAt(x);
-					Thread.yield();
-				}
-				OutputFunction compOutFn = new OutputFunction(s, functions,
-						OutputFunction.Type.POST_CRITICAL, compOutArray);
-				s.addOutputFunction(compOutFn);
+				Thread.yield();
 			}
+			if (rFlag == 0) {
+				JOptionPane.showMessageDialog(parentFrame,
+						"No critical Points exist");
+				return;
+			}
+
+			for (int ti = 0; ti < tValue - 1; ti++) {
+				compositePoints.clear();
+				for (int i = 0; i < interimPoints.size(); i++) {
+					for (int j = 0; j < functionsLength; j++) {
+						try {
+							compositePoints.add(functions[j]
+									.evaluateForwards(interimPoints
+											.elementAt(i)));
+						} catch (ArithmeticException e) {
+							JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
+							return;
+						}
+						if (stop)
+							return;
+						Thread.yield();
+					}
+					Thread.yield();
+				}
+				interimPoints.clear();
+				for (int i = 0; i < compositePoints.size(); i++) {
+					interimPoints.add(compositePoints.elementAt(i));
+					startVector.add(compositePoints.elementAt(i));
+					Thread.yield();
+				}
+				Thread.yield();
+			}
+			progress = progress + startVector.size();
+			ComplexNumber[] compOutArray = new ComplexNumber[startVector.size()];
+			for (int x = 0; x < compOutArray.length; x++) {
+				compOutArray[x] = startVector.elementAt(x);
+				Thread.yield();
+			}
+			OutputFunction compOutFn = new OutputFunction(s, functions,
+					OutputFunction.Type.POST_CRITICAL, compOutArray);
+			s.addOutputFunction(compOutFn);
+
 		} catch (OutOfMemoryError e) {
 			JuliaError.OUT_OF_MEMORY.showDialog(parentFrame);
 		}
