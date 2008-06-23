@@ -25,7 +25,6 @@ public class CFullJuliaThread extends Thread {
 		try {
 			InputFunction[] functions = parentFrame.getInputPanel()
 					.getSelectedFunctions();
-			int functionsLength = functions.length;
 			if (functions.length == 0)
 				return;
 			Session s = parentFrame.getCurrentSession();
@@ -40,46 +39,43 @@ public class CFullJuliaThread extends Thread {
 			int iterationCounter = 0;
 			do {
 				compositePoints.clear();
-				for (int i = 0; i < interimPoints.size(); i++) {
-					for (int j = 0; j < functionsLength; j++) {
+				for (ComplexNumber point : interimPoints) {
+					for (InputFunction function : functions) {
 						ComplexNumber[] interResults;
 						try {
-							interResults = functions[j]
-									.evaluateBackwardsFull(interimPoints
-											.elementAt(i));
+							interResults = function
+									.evaluateBackwardsFull(point);
 						} catch (ArithmeticException e) {
 							JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
 							return;
 						}
+
 						if (interResults == null) {
 							JuliaError.ZERO_DETERMINANT.showDialog(parentFrame);
 							return;
 						}
-						for (int k = 0; k < interResults.length; k++) {
-							compositePoints.add(interResults[k]);
+
+						for (ComplexNumber p : interResults) {
+							compositePoints.add(p);
 							Thread.yield();
 						}
+
 						if (stop)
 							return;
 						Thread.yield();
 					}
 					Thread.yield();
 				}
-				interimPoints.clear();
-				for (int i = 0; i < compositePoints.size(); i++) {
-					interimPoints.add(compositePoints.elementAt(i));
-					Thread.yield();
-				}
-				Thread.yield();
+
+				interimPoints = new Vector<ComplexNumber>(compositePoints);
+				progress += compositePoints.size();
 				iterationCounter += 1;
+				Thread.yield();
 			} while (!(functions.length == 1 && iterationCounter >= iterations)
 					&& compositePoints.size() < iterations);
 
-			progress = progress + compositePoints.size();
-			ComplexNumber[] compOutArray = new ComplexNumber[compositePoints
-					.size()];
-			for (int x = 0; x < compOutArray.length; x++)
-				compOutArray[x] = compositePoints.elementAt(x);
+			ComplexNumber[] compOutArray = compositePoints
+					.toArray(new ComplexNumber[] {});
 			OutputFunction compOutFn = new OutputFunction(s, functions,
 					OutputFunction.Type.FULL_JULIA, compOutArray);
 			s.addOutputFunction(compOutFn);
