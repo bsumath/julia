@@ -13,6 +13,8 @@ import edu.bsu.julia.ComplexNumber;
  */
 public interface OutputSetGenerator extends Runnable {
 	/**
+	 * This method should be synchronized.
+	 * 
 	 * @see Runnable#run()
 	 */
 	public void run();
@@ -23,4 +25,27 @@ public interface OutputSetGenerator extends Runnable {
 	 * @return a List of ComplexNumbers
 	 */
 	public List<ComplexNumber> getPoints();
+
+	/**
+	 * Method to cancel the execution of the {@link OutputSetGenerator}. This
+	 * method should be synchronized
+	 */
+	public void cancelExecution();
+
+	/**
+	 * Method to return the current progress of the execution as a percentage
+	 * complete. This method should be synchronized
+	 * 
+	 * @return the percentage complete as a floating point number. should be
+	 *         between 0 and 1
+	 */
+	public float getPercentComplete();
+
+	/**
+	 * Method to determine if the generator is done executing. This method
+	 * should be synchronized.
+	 * 
+	 * @return true if done executing, false otherwise
+	 */
+	public boolean isDone();
 }

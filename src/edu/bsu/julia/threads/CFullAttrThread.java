@@ -27,7 +27,6 @@ public class CFullAttrThread extends Thread {
 					.getSelectedFunctions();
 			if (functions.length == 0)
 				return;
-			int functionsLength = functions.length;
 			Session s = parentFrame.getCurrentSession();
 			ComplexNumber seed = s.getSeedValue();
 			int iterations = s.getIterations();
@@ -40,12 +39,11 @@ public class CFullAttrThread extends Thread {
 			int iterationCounter = 0;
 			do {
 				compositePoints.clear();
-				for (int i = 0; i < interimPoints.size(); i++) {
-					for (int j = 0; j < functionsLength; j++) {
+				for (ComplexNumber point : interimPoints) {
+					for (InputFunction function : functions) {
 						try {
-							compositePoints.add(functions[j]
-									.evaluateForwards(interimPoints
-											.elementAt(i)));
+							compositePoints.add(function
+									.evaluateForwards(point));
 						} catch (ArithmeticException e) {
 							JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
 							return;
@@ -56,22 +54,16 @@ public class CFullAttrThread extends Thread {
 					}
 					Thread.yield();
 				}
+
 				interimPoints.clear();
-				for (int i = 0; i < compositePoints.size(); i++) {
-					interimPoints.add(compositePoints.elementAt(i));
-					Thread.yield();
-				}
-				Thread.yield();
+				interimPoints.addAll(compositePoints);
 				iterationCounter += 1;
+				progress = progress + compositePoints.size();
+				Thread.yield();
 			} while (!(functions.length == 1 && iterationCounter >= iterations)
 					&& compositePoints.size() < iterations);
-			progress = progress + compositePoints.size();
-			ComplexNumber[] compOutArray = new ComplexNumber[compositePoints
-					.size()];
-			for (int x = 0; x < compOutArray.length; x++) {
-				compOutArray[x] = compositePoints.elementAt(x);
-				Thread.yield();
-			}
+
+			ComplexNumber[] compOutArray = compositePoints.toArray(new ComplexNumber[]{});
 			OutputFunction compOutFn = new OutputFunction(s, functions,
 					OutputFunction.Type.FULL_ATTR, compOutArray);
 			s.addOutputFunction(compOutFn);
