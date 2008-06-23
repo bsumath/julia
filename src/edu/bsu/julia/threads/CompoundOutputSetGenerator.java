@@ -12,6 +12,8 @@ import edu.bsu.julia.ComplexNumber;
  */
 public final class CompoundOutputSetGenerator implements OutputSetGenerator {
 	private final OutputSetGenerator[] generators;
+	private volatile boolean cancelExecution = false;
+	private volatile boolean isDone = false;
 
 	/**
 	 * constructor for {@link CompoundOutputSetGenerator} the order of the
@@ -47,7 +49,53 @@ public final class CompoundOutputSetGenerator implements OutputSetGenerator {
 	 */
 	public void run() {
 		for (OutputSetGenerator generator : generators) {
-			generator.run();
+			// start execution of the current generator
+			Thread currentGenerator = new Thread(generator);
+			currentGenerator.start();
+
+			// wait until the current generator is done,
+			// canceling execution if necessary.
+			while (!generator.isDone()) {
+				if (cancelExecution)
+					generator.cancelExecution();
+
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+				}
+			}
+
+			// check if execution was canceled
+			if (cancelExecution)
+				break;
 		}
+		isDone = true;
+	}
+
+	/**
+	 * @see OutputSetGenerator#cancelExecution()
+	 */
+	public synchronized void cancelExecution() {
+		cancelExecution = true;
+	}
+
+	/**
+	 * find the percent complete of all the generators combined
+	 * 
+	 * @see OutputSetGenerator#getPercentComplete()
+	 */
+	public float getPercentComplete() {
+		float sum = 0;
+		for (OutputSetGenerator generator : generators) {
+			sum += generator.getPercentComplete();
+		}
+		return sum / generators.length;
+	}
+
+	/**
+	 * @see OutputSetGenerator#isDone()
+	 */
+	public synchronized boolean isDone() {
+		return isDone;
 	}
 }
