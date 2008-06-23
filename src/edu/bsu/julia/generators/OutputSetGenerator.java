@@ -1,4 +1,4 @@
-package edu.bsu.julia.threads;
+package edu.bsu.julia.generators;
 
 import java.util.List;
 

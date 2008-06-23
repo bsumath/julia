@@ -8,7 +8,6 @@ import javax.swing.JFrame;
 import edu.bsu.julia.ComplexNumber;
 import edu.bsu.julia.gui.JuliaError;
 import edu.bsu.julia.input.InputFunction;
-import edu.bsu.julia.threads.OutputSetGenerator;
 
 /**
  * An {@link OutputSetGenerator} used to generate points using the full method
