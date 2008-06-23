@@ -33,8 +33,8 @@ public class FullAttrOutputSetGenerator implements OutputSetGenerator {
 	private Options option;
 	private JFrame parentFrame;
 	private volatile boolean cancelExecution = false;
-	private int progress = 0;
-	private int maxProgress;
+	private volatile int progress = 0;
+	private final int maxProgress;
 	private volatile boolean executionComplete = false;
 
 	/**
@@ -67,6 +67,12 @@ public class FullAttrOutputSetGenerator implements OutputSetGenerator {
 	 * @see OutputSetGenerator#run()
 	 */
 	public synchronized void run() {
+		// check that there are input functions
+		if (inputFunctions.size() == 0){
+			executionComplete = true;
+			return;
+		}
+
 		int iterationCounter = 0;
 		boolean specialCase = (option == Options.DISCARD_INTERMEDIATE_POINTS
 				&& inputFunctions.size() == 1 && seedList.size() == 1);
@@ -86,10 +92,13 @@ public class FullAttrOutputSetGenerator implements OutputSetGenerator {
 						tempList.add(function.evaluateForwards(point));
 					} catch (ArithmeticException e) {
 						JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
+						executionComplete = true;
 						return;
 					}
-					if (cancelExecution)
+					if (cancelExecution){
+						executionComplete = true;
 						return;
+					}
 					Thread.yield();
 				}
 				Thread.yield();
@@ -106,8 +115,11 @@ public class FullAttrOutputSetGenerator implements OutputSetGenerator {
 				isDone = currentIteration.size() >= iterations;
 			}
 
+			if (specialCase){
+				isDone = iterationCounter >= iterations;
+			}
 			Thread.yield();
-		} while (!(isDone || (specialCase && iterationCounter >= iterations)));
+		} while (!isDone);
 
 		outputSet.addAll(currentIteration);
 		executionComplete = true;
