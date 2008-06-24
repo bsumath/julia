@@ -41,7 +41,7 @@ public class MobiusInputFunction extends InputFunction {
 		ComplexNumber b = coefficientArray[1];
 		ComplexNumber c = coefficientArray[2];
 		ComplexNumber d = coefficientArray[3];
-		ComplexNumber w = seed.clone();
+		ComplexNumber w = seed;
 		ComplexNumber x;
 		ComplexNumber y;
 		
@@ -59,7 +59,7 @@ public class MobiusInputFunction extends InputFunction {
 		ComplexNumber b = coefficientArray[1];
 		ComplexNumber c = coefficientArray[2];
 		ComplexNumber d = coefficientArray[3];
-		ComplexNumber w = seed.clone();
+		ComplexNumber w = seed;
 		ComplexNumber x;
 		ComplexNumber y;
 		
@@ -78,7 +78,7 @@ public class MobiusInputFunction extends InputFunction {
 		ComplexNumber b = coefficientArray[1];
 		ComplexNumber c = coefficientArray[2];
 		ComplexNumber d = coefficientArray[3];
-		ComplexNumber w = seed.clone();
+		ComplexNumber w = seed;
 		ComplexNumber x;
 		ComplexNumber y;
 		

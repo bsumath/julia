@@ -37,7 +37,7 @@ public class LinearInputFunction extends InputFunction {
 	public ComplexNumber evaluateBackwardsRandom(ComplexNumber seed) {
 		ComplexNumber a = coefficientArray[0];
 		ComplexNumber b = coefficientArray[1];
-		ComplexNumber w = seed.clone();
+		ComplexNumber w = seed;
 		for(int i = 0; i<getM(); i++) {
 			w = w.subtract(b);
 			//potential ArithmeticExceptions should be handled at thread level
@@ -49,7 +49,7 @@ public class LinearInputFunction extends InputFunction {
 	public ComplexNumber evaluateForwards(ComplexNumber seed) {
 		ComplexNumber a = coefficientArray[0];
 		ComplexNumber b = coefficientArray[1];
-		ComplexNumber w = seed.clone();
+		ComplexNumber w = seed;
 		for(int i = 0; i<getM(); i++) {
 			w = a.multiply(w);
 			w = w.add(b);
@@ -60,7 +60,7 @@ public class LinearInputFunction extends InputFunction {
 	public ComplexNumber evaluateFunction(ComplexNumber seed) {
 		ComplexNumber a = coefficientArray[0];
 		ComplexNumber b = coefficientArray[1];
-		ComplexNumber w = seed.clone();
+		ComplexNumber w = seed;
 		w = a.multiply(w);
 		w = w.add(b);
 		
