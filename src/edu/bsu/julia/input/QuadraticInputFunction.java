@@ -51,7 +51,7 @@ public class QuadraticInputFunction extends InputFunction {
 		ComplexNumber a = coefficientArray[0];
 		ComplexNumber b = coefficientArray[1];
 		ComplexNumber c = coefficientArray[2];
-		ComplexNumber w = seed.clone();
+		ComplexNumber w = seed;
 		ComplexNumber temp;
 		ComplexNumber negB = b.multiply(NEG_ONE);
 		ComplexNumber sqrB = b.multiply(b);
@@ -72,7 +72,7 @@ public class QuadraticInputFunction extends InputFunction {
 		ComplexNumber b = coefficientArray[1];
 		ComplexNumber c = coefficientArray[2];
 		ComplexNumber result = new ComplexNumber();
-		ComplexNumber w = seed.clone();
+		ComplexNumber w = seed;
 		
 		for(int i = 0; i<getM(); i++) {
 			result = a.multiply(w.multiply(w));
@@ -88,7 +88,7 @@ public class QuadraticInputFunction extends InputFunction {
 		ComplexNumber b = coefficientArray[1];
 		ComplexNumber c = coefficientArray[2];
 		ComplexNumber result = new ComplexNumber();
-		ComplexNumber w = seed.clone();
+		ComplexNumber w = seed;
 		
 		result = a.multiply(w.multiply(w));
 		result = (result.add(b.multiply(w))).add(c);
@@ -104,7 +104,7 @@ public class QuadraticInputFunction extends InputFunction {
 		ComplexNumber a = coefficientArray[0];
 		ComplexNumber b = coefficientArray[1];
 		ComplexNumber c = coefficientArray[2];
-		ComplexNumber w = seed.clone();
+		ComplexNumber w = seed;
 		ComplexNumber temp;
 		ComplexNumber negB = b.multiply(NEG_ONE);
 		ComplexNumber sqrB = b.multiply(b);

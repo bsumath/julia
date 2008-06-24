@@ -33,7 +33,7 @@ public class CubicInputFunction extends InputFunction {
 	public ComplexNumber evaluateBackwardsRandom(ComplexNumber seed){
 		ComplexNumber a = coefficientArray[0];
 		ComplexNumber b = coefficientArray[1];
-		ComplexNumber w = seed.clone();
+		ComplexNumber w = seed;
 		for (int i=0;i<getM();i++){
 			double randomNumber = Math.random();
 			//potential ArithmeticExceptions should be handled at thread level
@@ -80,7 +80,7 @@ public class CubicInputFunction extends InputFunction {
 	public ComplexNumber[] evaluateBackwardsFull(ComplexNumber seed){
 		ComplexNumber a = coefficientArray[0];
 		ComplexNumber b = coefficientArray[1];
-		ComplexNumber w = seed.clone();
+		ComplexNumber w = seed;
 		Vector<ComplexNumber> results = new Vector<ComplexNumber>();
 		results.add(w);
 		ComplexNumber[] cbrt = new ComplexNumber[3];
