@@ -1,120 +1,88 @@
 package edu.bsu.julia.gui.actions;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.ButtonGroup;
-import javax.swing.JList;
-import javax.swing.ProgressMonitor;
-import javax.swing.Timer;
 
 import edu.bsu.julia.Julia;
+import edu.bsu.julia.generators.InverseOutputSetGenerator;
+import edu.bsu.julia.generators.OutputSetGenerator;
 import edu.bsu.julia.gui.InputPanel;
 import edu.bsu.julia.input.InputFunction;
+import edu.bsu.julia.output.InverseOutputFunction;
 import edu.bsu.julia.output.OutputFunction;
-import edu.bsu.julia.threads.ErgodicInverseThread;
-import edu.bsu.julia.threads.FullInverseThread;
+import edu.bsu.julia.session.Session;
 
 public class InverseAction extends AbstractAction {
-	
-	private Julia parentFrame;
-	private InputPanel inputPanel;
-	private ButtonGroup methodGroup;
-	private InputFunction[] inputFns;
-	private OutputFunction[] outputFns;
-	private ProgressMonitor pm;
-	private ErgodicInverseThread eThread;
-	private FullInverseThread fThread;
-	//for serializable interface: do not use
+	private final Julia parentFrame;
+	private final ButtonGroup methodGroup;
+	private List<OutputSetGenerator> generators;
+
+	// for serializable interface: do not use
 	public static final long serialVersionUID = 0;
-	
+
 	public InverseAction(Julia f) {
 		super("Inverse Image (Random/Full)");
 		parentFrame = f;
-		inputPanel = parentFrame.getInputPanel();
+		InputPanel inputPanel = parentFrame.getInputPanel();
 		methodGroup = inputPanel.getMethodGroup();
 		putValue("SHORT_DESCRIPTION", "Process Inverse Image");
-		putValue("LONG_DESCRIPTION", "Create a (Random/Full) Inverse Image of" +
-				"the selected Output Set(s) using the selected Input Functions");
+		putValue(
+				"LONG_DESCRIPTION",
+				"Create a (Random/Full) Inverse Image of"
+						+ "the selected Output Set(s) using the selected Input Functions");
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
-		inputFns = inputPanel.getSelectedFunctions();
-		if(inputFns.length == 0) return;
-		JList outList = parentFrame.getOutputFunctionList();
-		Object[] outObjs = outList.getSelectedValues();
-		outList.clearSelection();
-		if(outObjs.length == 0) return;
-		outputFns = new OutputFunction[outObjs.length];
-		for(int i = 0;i<outputFns.length;i++) {
-			outputFns[i] = (OutputFunction)outObjs[i];
-		}
-		if(methodGroup.getSelection().getActionCommand() == "ergodic") 
-			ergodicJuliaInv();
-		else fullJuliaInv();
-	}
-	
-	public void ergodicJuliaInv() {
-		int noOfInFns = inputFns.length;
-		int noOfOutPts = 0;
-		for(int i = 0; i<outputFns.length; i++) 
-			noOfOutPts += outputFns[i].getPoints().length;
-		pm = new ProgressMonitor(parentFrame,
-                "Processing Functions...",
-                "", 0, noOfInFns*noOfOutPts);
-		eThread = new ErgodicInverseThread(parentFrame, inputFns, outputFns);
-		eThread.start();
-		Timer timer = new Timer(500, new TimerActionListener(0));
-		timer.start();
-	}
-	
-	public void fullJuliaInv() {
-		int noOfInFns = inputFns.length;
-		int noOfOutPts = 0;
-		for(int i = 0; i<outputFns.length; i++) 
-			noOfOutPts += outputFns[i].getPoints().length;
-		pm = new ProgressMonitor(parentFrame,
-                "Processing Functions...",
-                "", 0, noOfInFns*3*noOfOutPts);
-		fThread = new FullInverseThread(parentFrame, inputFns, outputFns);
-		fThread.start();
-		Timer timer = new Timer(500, new TimerActionListener(1));
-		timer.start();
-	}
-	
-private class TimerActionListener implements ActionListener {
-		
-		int threadType;
-		public static final int ETHREAD = 0;
-		public static final int FTHREAD = 1;
-		
-		public TimerActionListener(int type) {
-			threadType = type;
-		}
+		// build list of input functions
+		InputFunction[] inFunc = parentFrame.getInputPanel()
+				.getSelectedFunctions();
 
-		public void actionPerformed(ActionEvent e) {
-			switch(threadType) {
-			case 0:
-				if(!pm.isCanceled()&&eThread.isAlive()) {
-					pm.setProgress(eThread.getProgress());
-				}
-				else {
-					eThread.setStop();
-					pm.close();
-				}
-				break;
-			case 1:
-				if(!pm.isCanceled()&&fThread.isAlive()) {
-					pm.setProgress(fThread.getProgress());
-				}
-				else {
-					fThread.setStop();
-					pm.close();
-				}
+		// build list of output functions
+		Object[] objArray = parentFrame.getOutputFunctionList()
+				.getSelectedValues();
+		if (objArray.length == 0)
+			return;
+		OutputFunction[] outFunc = new OutputFunction[objArray.length];
+		for (int i = 0; i < objArray.length; i++)
+			outFunc[i] = (OutputFunction) objArray[i];
+		parentFrame.getOutputFunctionList().clearSelection();
+
+		String command = methodGroup.getSelection().getActionCommand();
+		generators = new ArrayList<OutputSetGenerator>();
+		OutputFunction.Type type;
+		if (command.equals("ergodic")) {
+			for (InputFunction function : inFunc) {
+				generators.add(new InverseOutputSetGenerator(parentFrame,
+						function, outFunc,
+						InverseOutputSetGenerator.Type.ERGODIC));
 			}
-		}
-		
-	}
+			type = OutputFunction.Type.INVERSE_ERGODIC_JULIA;
+		} else if (command.equals("julia")) {
+			for (InputFunction function : inFunc) {
+				generators
+						.add(new InverseOutputSetGenerator(parentFrame,
+								function, outFunc,
+								InverseOutputSetGenerator.Type.FULL));
+			}
+			type = OutputFunction.Type.INVERSE_FULL_JULIA;
+		} else
+			return;
 
+		// check to make sure generators and inFunc are same size
+		if (generators.size() != inFunc.length)
+			return;
+
+		// create and add the OutputFunctions
+		Session session = parentFrame.getCurrentSession();
+		for (int i = 0; i < generators.size(); i++) {
+			OutputFunction function = new InverseOutputFunction(session,
+					new InputFunction[] { inFunc[i] }, type, generators.get(i),
+					outFunc);
+			session.addOutputFunction(function);
+		}
+	}
 }

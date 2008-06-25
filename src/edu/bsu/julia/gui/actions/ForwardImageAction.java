@@ -1,63 +1,90 @@
 package edu.bsu.julia.gui.actions;
 
-import java.awt.event.*;
-import javax.swing.*;
-import edu.bsu.julia.*;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.AbstractAction;
+
+import edu.bsu.julia.ComplexNumber;
+import edu.bsu.julia.Julia;
+import edu.bsu.julia.generators.FullAttrOutputSetGenerator;
+import edu.bsu.julia.generators.OutputSetGenerator;
 import edu.bsu.julia.input.InputFunction;
+import edu.bsu.julia.output.InverseOutputFunction;
 import edu.bsu.julia.output.OutputFunction;
-import edu.bsu.julia.threads.ForwardImageThread;
+import edu.bsu.julia.session.Session;
 
 public class ForwardImageAction extends AbstractAction {
-	
-	private Julia parentFrame;
-	private ProgressMonitor pm;
-	private ForwardImageThread fiThread;
-	//for serializable interface: do not use
+	private final Julia parentFrame;
+	private List<OutputSetGenerator> generators;
+	private OutputFunction.Type type;
+
+	// for serializable interface: do not use
 	public static final long serialVersionUID = 0;
-	
+
 	public ForwardImageAction(Julia f) {
 		super("Forward Image");
 		parentFrame = f;
 		putValue("SHORT_DESCRIPTION", "Process Forward Image");
-		putValue("LONG_DESCRIPTION", "Create a forward image set of the selected" +
-				" Output Set(s) using the selected Input Function(s).");
+		putValue(
+				"LONG_DESCRIPTION",
+				"Create a forward image set of the selected"
+						+ " Output Set(s) using the selected Input Function(s).");
+
+		generators = new ArrayList<OutputSetGenerator>();
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
-		InputFunction[] inputFns = parentFrame.getInputPanel().getSelectedFunctions();
-		if(inputFns.length == 0) return;
-		JList outList = parentFrame.getOutputFunctionList();
-		Object[] outObjs = outList.getSelectedValues();
-		if(outObjs.length == 0) return;
-		OutputFunction[] outputFns = new OutputFunction[outObjs.length];
-		for(int i = 0;i<outputFns.length;i++) {
-			outputFns[i] = (OutputFunction)outObjs[i];
+		// build list of input functions
+		InputFunction[] inFunc = parentFrame.getInputPanel()
+				.getSelectedFunctions();
+
+		// build list of output functions
+		Object[] objArray = parentFrame.getOutputFunctionList()
+				.getSelectedValues();
+		if (objArray.length == 0)
+			return;
+		OutputFunction[] outFunc = new OutputFunction[objArray.length];
+		for (int i = 0; i < objArray.length; i++)
+			outFunc[i] = (OutputFunction) objArray[i];
+		parentFrame.getOutputFunctionList().clearSelection();
+
+		// build list of points
+		int size = 0;
+		for (OutputFunction out : outFunc) {
+			size += out.getNumOfPoints();
 		}
-		int noOfInFns = inputFns.length;
-		int noOfOutPts = 0;
-		for(int i = 0; i<outputFns.length; i++) 
-			noOfOutPts += outputFns[i].getPoints().length;
-		pm = new ProgressMonitor(parentFrame,
-                "Processing Functions...",
-                "", 0, noOfInFns*noOfOutPts);
-		fiThread = new ForwardImageThread(parentFrame);
-		fiThread.start();
-		Timer timer = new Timer(500, new TimerActionListener());
-		timer.start();
+		ComplexNumber[] points = new ComplexNumber[size];
+		int index = 0;
+		for (OutputFunction out : outFunc) {
+			for (ComplexNumber p : out.getPoints())
+				points[index++] = p;
+		}
+
+		// create the generators
+		for (InputFunction function : inFunc) {
+			generators
+					.add(new FullAttrOutputSetGenerator(
+							parentFrame,
+							points.length,
+							points,
+							new InputFunction[] { function },
+							FullAttrOutputSetGenerator.Options.DISCARD_INTERMEDIATE_POINTS));
+		}
+		type = OutputFunction.Type.INVERSE_ATTR;
+
+		// check to make sure generators and inFunc are same size
+		if (generators.size() != inFunc.length)
+			return;
+
+		// create and add the OutputFunctions
+		Session session = parentFrame.getCurrentSession();
+		for (int i = 0; i < generators.size(); i++) {
+			OutputFunction function = new InverseOutputFunction(session,
+					new InputFunction[] { inFunc[i] }, type, generators.get(i),
+					outFunc);
+			session.addOutputFunction(function);
+		}
 	}
-	
-private class TimerActionListener implements ActionListener {
-
-		public void actionPerformed(ActionEvent e) {
-				if(!pm.isCanceled()&&fiThread.isAlive()) {
-					pm.setProgress(fiThread.getProgress());
-				}
-				else {
-					fiThread.setStop();
-					pm.close();
-				}
-		}
-
-
-}
 }

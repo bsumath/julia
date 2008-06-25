@@ -1,10 +1,28 @@
 package edu.bsu.julia.output;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
+
+import javax.swing.JProgressBar;
+import javax.swing.Timer;
 
 import edu.bsu.julia.ComplexNumber;
+import edu.bsu.julia.generators.OutputSetGenerator;
 import edu.bsu.julia.input.InputFunction;
 import edu.bsu.julia.session.Session;
 
@@ -49,29 +67,32 @@ public class OutputFunction {
 
 	private int sub = 0;
 	private int iterations;
-	private int skips;
-	private ComplexNumber seed;
-	protected Type functionType;
-	private InputFunction[] inputFunctions = new InputFunction[] {};
-	private ComplexNumber[] points = new ComplexNumber[] {};
+	private final int skips;
+	private final ComplexNumber seed;
+	protected final Type functionType;
+	private final InputFunction[] inputFunctions;
+	private ComplexNumber[] points;
+	private OutputSetGenerator generator;
+	private File pointsFile;
+
 	private Color c;
 	private final static Color[] colorSet = { Color.BLACK, Color.BLUE,
 			Color.RED, Color.DARK_GRAY, Color.GREEN, Color.ORANGE,
 			Color.MAGENTA };
 	private static int colorIndex = 0;
 	private PropertyChangeSupport support = new PropertyChangeSupport(this);
+	private final JProgressBar bar = new JProgressBar(0, 100);
+	private Timer timer;
 
 	public OutputFunction(Session s, InputFunction[] i, Type type,
-			ComplexNumber[] p) {
+			OutputSetGenerator gen) {
 		iterations = s.getIterations();
-		skips = s.getSkips();
-		seed = s.getSeedValue();
 		functionType = type;
-		if (functionType == Type.POST_CRITICAL)
-			skips = 0;
+		skips = (functionType == Type.POST_CRITICAL) ? 0 : s.getSkips();
+		seed = s.getSeedValue();
 
 		inputFunctions = i;
-		points = p;
+		generator = gen;
 		c = getNextColor();
 	}
 
@@ -100,7 +121,10 @@ public class OutputFunction {
 	}
 
 	public int getNumOfPoints() {
-		return points.length;
+		if (points == null)
+			return 0;
+		else
+			return points.length;
 	}
 
 	public Color getColor() {
@@ -171,6 +195,117 @@ public class OutputFunction {
 			return result;
 		} catch (ClassCastException e) {
 			return false;
+		}
+	}
+
+	public boolean isLoaded() {
+		return points != null;
+	}
+
+	public Component getLoadingComponent() {
+		bar.setStringPainted(true);
+		bar.setValue(50);
+		return bar;
+	}
+
+	public synchronized void unload() {
+		if (pointsFile == null)
+			return;
+		points = null;
+	}
+
+	public synchronized void load() {
+		if (pointsFile == null) {
+			regenerate();
+		} else {
+			readPointsTempFile();
+		}
+	}
+
+	public synchronized void regenerate() {
+		// start the thread and timer
+		Thread thread = new Thread(generator);
+		thread.start();
+		timer = new Timer(10, new TimerActionListener(thread));
+		timer.start();
+	}
+
+	private void writePointsTempFile() {
+		if (pointsFile != null)
+			return;
+
+		new Thread() {
+			public void run() {
+				try {
+					// create a new temp file and open it.
+					pointsFile = File.createTempFile(System.currentTimeMillis()
+							+ "", ".tmp.z");
+					pointsFile.deleteOnExit();
+					ZipOutputStream zipOut = new ZipOutputStream(
+							new FileOutputStream(pointsFile));
+					zipOut.putNextEntry(new ZipEntry(pointsFile.getName()
+							.replaceAll(".tmp.z", ".tmp")));
+					PrintStream out = new PrintStream(zipOut);
+
+					for (ComplexNumber p : points)
+						out.println(p);
+
+					out.close();
+					zipOut.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}.start();
+	}
+
+	private void readPointsTempFile() {
+		points = null;
+		List<ComplexNumber> tempPoints = new ArrayList<ComplexNumber>();
+
+		try {
+			// open the temp file
+			ZipInputStream zipIn = new ZipInputStream(new FileInputStream(
+					pointsFile));
+			zipIn.getNextEntry();
+			Scanner in = new Scanner(zipIn);
+
+			// try to read all the points
+			while (in.hasNextLine()) {
+				String line = in.nextLine();
+				tempPoints.add(ComplexNumber.parseComplexNumber(line));
+			}
+
+			// create an array
+			points = tempPoints.toArray(new ComplexNumber[] {});
+
+			in.close();
+			zipIn.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private final class TimerActionListener implements ActionListener {
+		private final Thread thread;
+
+		public TimerActionListener(Thread thread) {
+			this.thread = thread;
+		}
+
+		public void actionPerformed(ActionEvent e) {
+			if (thread.isAlive() || !generator.isDone()) {
+				int progress = (int) (generator.getPercentComplete() * 100);
+				progress = (progress < 0) ? 0 : progress;
+				progress = (progress > 100) ? 100 : progress;
+				bar.setValue(progress);
+				support.firePropertyChange("repaint", null, null);
+			} else {
+				timer.stop();
+				points = generator.getPoints();
+				writePointsTempFile();
+				support.firePropertyChange("reselect", null, null);
+			}
 		}
 	}
 }

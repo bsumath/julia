@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 import edu.bsu.julia.ComplexNumber;
+import edu.bsu.julia.generators.OutputSetGenerator;
 import edu.bsu.julia.input.InputFunction;
 import edu.bsu.julia.session.Session;
 
@@ -14,8 +15,8 @@ public class InverseOutputFunction extends OutputFunction {
 	private OutputFunction[] outputFunctions = new OutputFunction[] {};
 
 	public InverseOutputFunction(Session s, InputFunction[] i, Type type,
-			ComplexNumber[] p, OutputFunction[] o) {
-		super(s, i, type, p);
+			OutputSetGenerator g, OutputFunction[] o) {
+		super(s, i, type, g);
 		outputFunctions = o;
 	}
 

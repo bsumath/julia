@@ -189,8 +189,8 @@ public class GLListener implements GLEventListener, ListSelectionListener,
 		int dSize = parentFrame.getDotSize();
 		gl.glPointSize(dSize);
 		for (int i = 0; i < fns.length; i++) {
-			if (fns[i] != null) {
-				OutputFunction function = fns[i];
+			OutputFunction function = fns[i];
+			if (function != null && function.isLoaded()) {
 				float[] cArray = new float[3];
 				function.getColor().getColorComponents(cArray);
 				gl.glColor3f(cArray[0], cArray[1], cArray[2]);

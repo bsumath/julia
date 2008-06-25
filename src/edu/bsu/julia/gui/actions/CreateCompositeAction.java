@@ -1,14 +1,9 @@
 package edu.bsu.julia.gui.actions;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.ButtonGroup;
-import javax.swing.ProgressMonitor;
-import javax.swing.Timer;
 
 import edu.bsu.julia.ComplexNumber;
 import edu.bsu.julia.Julia;
@@ -20,18 +15,18 @@ import edu.bsu.julia.generators.OutputSetGenerator;
 import edu.bsu.julia.generators.FullAttrOutputSetGenerator.Options;
 import edu.bsu.julia.gui.InputPanel;
 import edu.bsu.julia.input.InputFunction;
+import edu.bsu.julia.output.OutputFunction;
 import edu.bsu.julia.session.Session;
 
 /**
  * an {@link AbstractAction} to create a composite output set
+ * 
  * @author Ben Dean
  */
 public class CreateCompositeAction extends AbstractAction {
 	private final Julia parentFrame;
 	private final ButtonGroup typeGroup;
 	private final ButtonGroup methodGroup;
-	private final ProgressMonitor pm;
-	private Thread thread;
 	private OutputSetGenerator generator;
 
 	// for serializable interface: do not use
@@ -45,10 +40,6 @@ public class CreateCompositeAction extends AbstractAction {
 		putValue("SHORT_DESCRIPTION", "Create Composite Set");
 		putValue("LONG_DESCRIPTION", "Create a Composite Set "
 				+ "from the selected functions.");
-		
-		// create the progress monitor
-		pm = new ProgressMonitor(parentFrame, "Processing Functions...", "", 0,
-				100);
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
@@ -57,51 +48,41 @@ public class CreateCompositeAction extends AbstractAction {
 		InputPanel inputPanel = parentFrame.getInputPanel();
 
 		// build list of input functions
-		List<InputFunction> inFunc = new ArrayList<InputFunction>();
-		for (InputFunction func : inputPanel.getSelectedFunctions()) {
-			inFunc.add(func);
-		}
+		InputFunction[] inFunc = inputPanel.getSelectedFunctions();
 
 		// create a command string based on which options are selected
 		String command = typeGroup.getSelection().getActionCommand() + "+"
 				+ methodGroup.getSelection().getActionCommand();
 
 		// create a generator for the command selected
+		OutputFunction.Type type;
 		if (command.equals("julia+ergodic")) {
 			generator = new ErgodicJuliaOutputSetGenerator(parentFrame, session
 					.getIterations(), session.getSkips(), session
 					.getSeedValue(), inFunc);
+			type = OutputFunction.Type.ERGODIC_JULIA;
 		} else if (command.equals("julia+full")) {
 			generator = new FullJuliaOutputSetGenerator(parentFrame, session
 					.getIterations(), session.getSeedValue(), inFunc);
+			type = OutputFunction.Type.FULL_JULIA;
 		} else if (command.equals("attr+ergodic")) {
 			generator = new ErgodicAttrOutputSetGenerator(parentFrame, session
 					.getIterations(), session.getSkips(), session
 					.getSeedValue(), inFunc);
+			type = OutputFunction.Type.ERGODIC_ATTR;
 		} else if (command.equals("attr+full")) {
-			List<ComplexNumber> seedList = new ArrayList<ComplexNumber>();
-			seedList.add(session.getSeedValue());
+			ComplexNumber[] seedList = new ComplexNumber[] { session
+					.getSeedValue() };
 			generator = new FullAttrOutputSetGenerator(parentFrame, session
 					.getIterations(), seedList, inFunc,
 					Options.DISCARD_INTERMEDIATE_POINTS);
-		}
+			type = OutputFunction.Type.FULL_ATTR;
+		} else
+			return;
 
 		// start the thread and timer
-		new Thread(generator).start();
-		new Timer(500, new TimerActionListener()).start();
-	}
-
-	private final class TimerActionListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			if (!pm.isCanceled() && thread.isAlive()) {
-				int progress = (int) (generator.getPercentComplete() * 100);
-				progress = (progress < 0) ? 0 : progress;
-				progress = (progress > 100) ? 100 : progress;
-				pm.setProgress(progress);
-			} else {
-				generator.cancelExecution();
-				pm.close();
-			}
-		}
+		OutputFunction function = new OutputFunction(session, inFunc, type,
+				generator);
+		session.addOutputFunction(function);
 	}
 }
