@@ -13,7 +13,7 @@ public class FullJuliaOutputSetGenerator implements OutputSetGenerator {
 	private final JFrame parentFrame;
 	private final int iterations;
 	private final ComplexNumber seed;
-	private final List<InputFunction> inputFunctions;
+	private final InputFunction[] inputFunctions;
 	private final List<ComplexNumber> outputSet;
 
 	private volatile boolean cancelExecution = false;
@@ -31,10 +31,10 @@ public class FullJuliaOutputSetGenerator implements OutputSetGenerator {
 	 * @param sd
 	 *            the {@link ComplexNumber} seed
 	 * @param inFunc
-	 *            the {@link List} of {@link InputFunction}
+	 *            an array of {@link InputFunction}
 	 */
 	public FullJuliaOutputSetGenerator(JFrame parent, int iter,
-			ComplexNumber sd, List<InputFunction> inFunc) {
+			ComplexNumber sd, InputFunction[] inFunc) {
 		parentFrame = parent;
 		iterations = iter;
 		seed = sd;
@@ -49,14 +49,17 @@ public class FullJuliaOutputSetGenerator implements OutputSetGenerator {
 	 * @see OutputSetGenerator#run()
 	 */
 	public synchronized void run() {
+		// reset the output set
+		outputSet.clear();
+
 		// check that there are input functions
-		if (inputFunctions.size() == 0){
+		if (inputFunctions.length == 0){
 			executionComplete = true;
 			return;
 		}
 		
 		int iterationCounter = 0;
-		boolean specialCase = inputFunctions.size() == 1;
+		boolean specialCase = inputFunctions.length == 1;
 		boolean isDone = false;
 
 		List<ComplexNumber> currentIteration = new ArrayList<ComplexNumber>();
@@ -137,8 +140,8 @@ public class FullJuliaOutputSetGenerator implements OutputSetGenerator {
 	/**
 	 * @see OutputSetGenerator#getPoints()
 	 */
-	public List<ComplexNumber> getPoints() {
-		return outputSet;
+	public ComplexNumber[] getPoints() {
+		return outputSet.toArray(new ComplexNumber[]{});
 	}
 
 	/**

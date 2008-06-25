@@ -1,7 +1,6 @@
 package edu.bsu.julia.generators;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Random;
 
 import javax.swing.JFrame;
@@ -23,8 +22,8 @@ public class ErgodicJuliaOutputSetGenerator implements OutputSetGenerator {
 	private final int iterations;
 	private final int skips;
 	private final ComplexNumber seed;
-	private final List<InputFunction> inputFunctions;
-	private final List<ComplexNumber> outputSet;
+	private final InputFunction[] inputFunctions;
+	private final ComplexNumber[] outputSet;
 
 	private volatile boolean cancelExecution = false;
 	private volatile boolean executionComplete = false;
@@ -43,10 +42,10 @@ public class ErgodicJuliaOutputSetGenerator implements OutputSetGenerator {
 	 * @param sd
 	 *            the {@link ComplexNumber} seed
 	 * @param inFunc
-	 *            the {@link List} of {@link InputFunction}
+	 *            an array of {@link InputFunction}
 	 */
 	public ErgodicJuliaOutputSetGenerator(JFrame parent, int iter, int sk,
-			ComplexNumber sd, List<InputFunction> inFunc) {
+			ComplexNumber sd, InputFunction[] inFunc) {
 		parentFrame = parent;
 		iterations = iter;
 		skips = sk;
@@ -55,15 +54,18 @@ public class ErgodicJuliaOutputSetGenerator implements OutputSetGenerator {
 
 		maxProgress = iterations + skips;
 
-		outputSet = new ArrayList<ComplexNumber>();
+		outputSet = new ComplexNumber[iterations];
 	}
 
 	/**
 	 * @see OutputSetGenerator#run()
 	 */
 	public synchronized void run() {
+		// reset the output set
+		Arrays.fill(outputSet, null);
+
 		// check that there are input functions
-		if (inputFunctions.size() == 0){
+		if (inputFunctions.length == 0) {
 			executionComplete = true;
 			return;
 		}
@@ -74,8 +76,8 @@ public class ErgodicJuliaOutputSetGenerator implements OutputSetGenerator {
 		for (int k = 0; k < iterations + skips; k++) {
 			// find the next iteration of the current point
 			try {
-				InputFunction function = inputFunctions.get(RAND
-						.nextInt(inputFunctions.size()));
+				InputFunction function = inputFunctions[RAND
+						.nextInt(inputFunctions.length)];
 				currentPoint = function.evaluateBackwardsRandom(currentPoint);
 				if (currentPoint == null) {
 					JuliaError.ZERO_DETERMINANT.showDialog(parentFrame);
@@ -90,7 +92,7 @@ public class ErgodicJuliaOutputSetGenerator implements OutputSetGenerator {
 
 			// after the skips have been used up, add the current point
 			if (k >= skips) {
-				outputSet.add(currentPoint);
+				outputSet[k - skips] = currentPoint;
 			}
 			progress = k;
 
@@ -122,7 +124,7 @@ public class ErgodicJuliaOutputSetGenerator implements OutputSetGenerator {
 	/**
 	 * @see OutputSetGenerator#getPoints()
 	 */
-	public List<ComplexNumber> getPoints() {
+	public ComplexNumber[] getPoints() {
 		return outputSet;
 	}
 

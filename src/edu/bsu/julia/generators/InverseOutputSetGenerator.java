@@ -43,15 +43,15 @@ public class InverseOutputSetGenerator implements OutputSetGenerator {
 	 * @param parent
 	 *            {@link JFrame} where the generator was executed
 	 * @param inFunc
-	 *            {@link InputFunction} to apply to all the points
+	 *            an {@link InputFunction} to apply to all the points
 	 * @param outFunc
-	 *            {@link List} of {@link OutputFunction} to use as seed points
+	 *            an array of {@link OutputFunction} to use as seed points
 	 * @param t
 	 *            {@link InverseOutputSetGenerator.Type} to determine full or
 	 *            ergodic method
 	 */
 	public InverseOutputSetGenerator(JFrame parent, InputFunction inFunc,
-			List<OutputFunction> outFunc, Type t) {
+			OutputFunction[] outFunc, Type t) {
 		parentFrame = parent;
 		inputFunction = inFunc;
 		type = t;
@@ -78,6 +78,9 @@ public class InverseOutputSetGenerator implements OutputSetGenerator {
 	 * @see OutputSetGenerator#run()
 	 */
 	public synchronized void run() {
+		// reset the output set
+		outputSet.clear();
+		
 		// apply the function to each point in the seedList
 		for (ComplexNumber point : seedList) {
 			ComplexNumber[] tempResult;
@@ -141,8 +144,8 @@ public class InverseOutputSetGenerator implements OutputSetGenerator {
 	/**
 	 * @see OutputSetGenerator#getPoints()
 	 */
-	public List<ComplexNumber> getPoints() {
-		return outputSet;
+	public ComplexNumber[] getPoints() {
+		return outputSet.toArray(new ComplexNumber[] {});
 	}
 
 	/**
