@@ -1,7 +1,5 @@
 package edu.bsu.julia.generators;
 
-import java.util.List;
-
 import edu.bsu.julia.ComplexNumber;
 
 /**
@@ -24,7 +22,7 @@ public interface OutputSetGenerator extends Runnable {
 	 * 
 	 * @return a List of ComplexNumbers
 	 */
-	public List<ComplexNumber> getPoints();
+	public ComplexNumber[] getPoints();
 
 	/**
 	 * Method to cancel the execution of the {@link OutputSetGenerator}. This

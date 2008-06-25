@@ -235,4 +235,34 @@ public final class ComplexNumber {
 			return false;
 		}
 	}
+
+	/**
+	 * method to create a {@link ComplexNumber} from a {@link String}. Must be
+	 * able to parse the {@link String} created by
+	 * {@link ComplexNumber#toString()}
+	 * 
+	 * @param s
+	 *            the {@link String} to parse
+	 * @return the resulting {@link ComplexNumber} on success, null on error
+	 */
+	public static ComplexNumber parseComplexNumber(String s) {
+		// remove the braces and split on the comma
+		s = s.replace("{", "").replace("}", "");
+		String[] parts = s.split(",");
+		if (parts.length != 2)
+			return null;
+
+		// trim the strings and fix the scientific notation
+		parts[0] = parts[0].trim().replace("*10^", "E");
+		parts[1] = parts[1].trim().replace("*10^", "E");
+
+		// try to parse the doubles and create the ComplexNumber
+		try {
+			double x = Double.parseDouble(parts[0]);
+			double y = Double.parseDouble(parts[1]);
+			return new ComplexNumber(x, y);
+		} catch (NumberFormatException e) {
+			return null;
+		}
+	}
 }

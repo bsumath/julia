@@ -1,6 +1,7 @@
 package edu.bsu.julia.generators;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -26,12 +27,12 @@ public class FullAttrOutputSetGenerator implements OutputSetGenerator {
 		DISCARD_INTERMEDIATE_POINTS, KEEP_INTERMEDIATE_POINTS;
 	}
 
-	private List<ComplexNumber> outputSet = new ArrayList<ComplexNumber>();
-	private int iterations;
-	private List<ComplexNumber> seedList;
-	private List<InputFunction> inputFunctions;
-	private Options option;
-	private JFrame parentFrame;
+	private final List<ComplexNumber> outputSet;
+	private final int iterations;
+	private final ComplexNumber[] seedList;
+	private final InputFunction[] inputFunctions;
+	private final Options option;
+	private final JFrame parentFrame;
 	private volatile boolean cancelExecution = false;
 	private volatile int progress = 0;
 	private final int maxProgress;
@@ -47,19 +48,20 @@ public class FullAttrOutputSetGenerator implements OutputSetGenerator {
 	 * @param seed
 	 *            a {@link List} of {@link ComplexNumber} to use as the seed
 	 * @param inFunc
-	 *            a {@link List} of {@link InputFunction}
+	 *            an array of {@link InputFunction}
 	 * @param opt
 	 *            {@link Options} describing whether or not to keep the
 	 *            intermediate points at each iteration
 	 */
 	public FullAttrOutputSetGenerator(JFrame parent, int iter,
-			List<ComplexNumber> seed, List<InputFunction> inFunc, Options opt) {
+			ComplexNumber[] seed, InputFunction[] inFunc, Options opt) {
 		parentFrame = parent;
 		iterations = iter;
 		seedList = seed;
 		inputFunctions = inFunc;
 		option = opt;
 
+		outputSet = new ArrayList<ComplexNumber>();
 		maxProgress = iterations;
 	}
 
@@ -67,29 +69,34 @@ public class FullAttrOutputSetGenerator implements OutputSetGenerator {
 	 * @see OutputSetGenerator#run()
 	 */
 	public synchronized void run() {
+		// reset the output set
+		outputSet.clear();
+
 		// check that there are input functions
-		if (inputFunctions.size() == 0){
+		if (inputFunctions.length == 0){
 			executionComplete = true;
 			return;
 		}
 
 		int iterationCounter = 0;
 		boolean specialCase = (option == Options.DISCARD_INTERMEDIATE_POINTS
-				&& inputFunctions.size() == 1 && seedList.size() == 1);
+				&& inputFunctions.length == 1 && seedList.length == 1);
 		boolean isDone = false;
 
-		List<ComplexNumber> currentIteration = seedList;
-		List<ComplexNumber> tempList = new ArrayList<ComplexNumber>();
+		ComplexNumber[] currentIteration = seedList;
+		ComplexNumber[] tempList;
 		do {
-			if (iterationCounter > 0
-					&& option == Options.KEEP_INTERMEDIATE_POINTS)
-				outputSet.addAll(currentIteration);
+			if (option == Options.KEEP_INTERMEDIATE_POINTS
+					&& iterationCounter > 0)
+				outputSet.addAll(Arrays.asList(currentIteration));
 
-			tempList.clear();
+			// iterate each point by each function
+			tempList = new ComplexNumber[currentIteration.length * inputFunctions.length];
+			int index = 0;
 			for (ComplexNumber point : currentIteration) {
 				for (InputFunction function : inputFunctions) {
 					try {
-						tempList.add(function.evaluateForwards(point));
+						tempList[index++] = function.evaluateForwards(point);
 					} catch (ArithmeticException e) {
 						JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
 						executionComplete = true;
@@ -104,24 +111,26 @@ public class FullAttrOutputSetGenerator implements OutputSetGenerator {
 				Thread.yield();
 			}
 
-			currentIteration = new ArrayList<ComplexNumber>(tempList);
+			currentIteration = Arrays.copyOf(tempList, tempList.length);
 			iterationCounter += 1;
 
+			// determine if we're done iterating
 			if (option == Options.KEEP_INTERMEDIATE_POINTS) {
 				progress = outputSet.size();
 				isDone = outputSet.size() >= iterations;
 			} else {
-				progress = currentIteration.size();
-				isDone = currentIteration.size() >= iterations;
+				progress = currentIteration.length;
+				isDone = currentIteration.length >= iterations;
 			}
 
+			// check for special case with one function and one point
 			if (specialCase){
 				isDone = iterationCounter >= iterations;
 			}
 			Thread.yield();
 		} while (!isDone);
 
-		outputSet.addAll(currentIteration);
+		outputSet.addAll(Arrays.asList(currentIteration));
 		executionComplete = true;
 	}
 
@@ -143,8 +152,8 @@ public class FullAttrOutputSetGenerator implements OutputSetGenerator {
 	/**
 	 * @see OutputSetGenerator#getPoints()
 	 */
-	public List<ComplexNumber> getPoints() {
-		return outputSet;
+	public ComplexNumber[] getPoints() {
+		return outputSet.toArray(new ComplexNumber[]{});
 	}
 
 	/**

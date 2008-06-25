@@ -6,6 +6,7 @@ import javax.swing.JOptionPane;
 
 import edu.bsu.julia.ComplexNumber;
 import edu.bsu.julia.Julia;
+import edu.bsu.julia.generators.DummyOutputSetGenerator;
 import edu.bsu.julia.gui.JuliaError;
 import edu.bsu.julia.input.CubicInputFunction;
 import edu.bsu.julia.input.InputFunction;
@@ -108,7 +109,8 @@ public class PostCriticalThread extends Thread {
 				Thread.yield();
 			}
 			OutputFunction compOutFn = new OutputFunction(s, functions,
-					OutputFunction.Type.POST_CRITICAL, compOutArray);
+					OutputFunction.Type.POST_CRITICAL,
+					new DummyOutputSetGenerator(compOutArray));
 			s.addOutputFunction(compOutFn);
 
 		} catch (OutOfMemoryError e) {

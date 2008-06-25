@@ -1,7 +1,6 @@
 package edu.bsu.julia.generators;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Random;
 
 import javax.swing.JFrame;
@@ -23,13 +22,13 @@ public class ErgodicAttrOutputSetGenerator implements OutputSetGenerator {
 	private final int iterations;
 	private final int skips;
 	private final ComplexNumber seed;
-	private final List<InputFunction> inputFunctions;
+	private final InputFunction[] inputFunctions;
 	private volatile boolean cancelExecution = false;
 	private volatile boolean executionComplete = false;
 	private volatile int progress = 0;
 	private final int maxProgress;
 
-	private final List<ComplexNumber> outputSet;
+	private final ComplexNumber[] outputSet;
 
 	/**
 	 * constructor for {@link ErgodicAttrOutputSetGenerator}
@@ -43,27 +42,30 @@ public class ErgodicAttrOutputSetGenerator implements OutputSetGenerator {
 	 * @param sd
 	 *            the {@link ComplexNumber} seed
 	 * @param inFunc
-	 *            a {@link List} of {@link InputFunction}
+	 *            an array of {@link InputFunction}
 	 */
 	public ErgodicAttrOutputSetGenerator(JFrame parent, int iter, int sk,
-			ComplexNumber sd, List<InputFunction> inFunc) {
+			ComplexNumber sd, InputFunction[] inFunc) {
 		parentFrame = parent;
 		iterations = iter;
 		skips = sk;
 		seed = sd;
 		inputFunctions = inFunc;
 
-		outputSet = new ArrayList<ComplexNumber>();
+		outputSet = new ComplexNumber[iterations];
 
-		maxProgress = iterations;
+		maxProgress = iterations + skips;
 	}
 
 	/**
 	 * @see OutputSetGenerator#run()
 	 */
 	public synchronized void run() {
+		// reset the output set
+		Arrays.fill(outputSet, null);
+		
 		// check that there are input functions
-		if (inputFunctions.size() == 0){
+		if (inputFunctions.length == 0) {
 			executionComplete = true;
 			return;
 		}
@@ -74,8 +76,8 @@ public class ErgodicAttrOutputSetGenerator implements OutputSetGenerator {
 		for (int k = 0; k < iterations + skips; k++) {
 			// iterate the current point using a random input function
 			try {
-				InputFunction function = inputFunctions.get(RAND
-						.nextInt(inputFunctions.size()));
+				InputFunction function = inputFunctions[RAND
+						.nextInt(inputFunctions.length)];
 				currentPoint = function.evaluateForwards(currentPoint);
 			} catch (ArithmeticException e) {
 				JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
@@ -85,7 +87,7 @@ public class ErgodicAttrOutputSetGenerator implements OutputSetGenerator {
 
 			// if we've used up the skips, add the current point
 			if (k >= skips)
-				outputSet.add(currentPoint);
+				outputSet[k - skips] = currentPoint;
 			progress += 1;
 
 			// check if execution should be canceled
@@ -116,7 +118,7 @@ public class ErgodicAttrOutputSetGenerator implements OutputSetGenerator {
 	/**
 	 * @see OutputSetGenerator#getPoints()
 	 */
-	public List<ComplexNumber> getPoints() {
+	public ComplexNumber[] getPoints() {
 		return outputSet;
 	}
 
