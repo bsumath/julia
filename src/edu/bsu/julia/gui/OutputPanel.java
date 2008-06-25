@@ -147,6 +147,8 @@ public class OutputPanel extends JPanel implements PropertyChangeListener {
 		String name = event.getPropertyName();
 		if (name.equals("addOutputFunction")) {
 			OutputFunction fn = (OutputFunction) event.getNewValue();
+			if (!fn.isLoaded())
+				fn.load();
 			if (listModel.isEmpty()) {
 				inverseButton.setEnabled(true);
 				forwardButton.setEnabled(true);
@@ -178,7 +180,7 @@ public class OutputPanel extends JPanel implements PropertyChangeListener {
 
 			outputList.setCellRenderer(new OutputListCellRenderer());
 			s.addListener(this);
-		} else if (name.equals("Color")) {
+		} else if (name.equals("Color") || name.equals("repaint")) {
 			outputList.repaint();
 		} else if (name.equals("deleteOutputFunction")) {
 			Integer i = (Integer) event.getNewValue();
@@ -191,6 +193,8 @@ public class OutputPanel extends JPanel implements PropertyChangeListener {
 			}
 			outputList.setCellRenderer(new OutputListCellRenderer());
 			outputList.repaint();
+		} else if (name.equals("reselect")) {
+			outputList.setSelectedIndices(outputList.getSelectedIndices());
 		}
 	}
 

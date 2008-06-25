@@ -12,6 +12,8 @@ import java.util.zip.ZipInputStream;
 import javax.swing.JFrame;
 
 import edu.bsu.julia.ComplexNumber;
+import edu.bsu.julia.generators.DummyOutputSetGenerator;
+import edu.bsu.julia.generators.OutputSetGenerator;
 import edu.bsu.julia.input.InputFunction;
 import edu.bsu.julia.output.InverseOutputFunction;
 import edu.bsu.julia.output.OutputFunction;
@@ -224,15 +226,15 @@ public class SessionFileImporter implements Importer {
 
 		// create the output function
 		OutputFunction function;
+		OutputSetGenerator generator = new DummyOutputSetGenerator(points
+				.toArray(new ComplexNumber[] {}));
 		if (className.endsWith("InverseOutputFunction")) {
 			function = new InverseOutputFunction(tempSession, inFunctions
-					.toArray(new InputFunction[] {}), type, points
-					.toArray(new ComplexNumber[] {}), outFunctions
-					.toArray(new OutputFunction[] {}));
+					.toArray(new InputFunction[] {}), type, generator,
+					outFunctions.toArray(new OutputFunction[] {}));
 		} else {
 			function = new OutputFunction(tempSession, inFunctions
-					.toArray(new InputFunction[] {}), type, points
-					.toArray(new ComplexNumber[] {}));
+					.toArray(new InputFunction[] {}), type, generator);
 		}
 		function.setSubscript(nextOutputSubscript());
 		return function;

@@ -172,6 +172,7 @@ public class Session {
 		markModified();
 		outputFunctions.add(fn);
 		fn.setSubscript(getNextOutSubscript());
+		fn.load();
 		support.firePropertyChange("addOutputFunction", null, fn);
 	}
 

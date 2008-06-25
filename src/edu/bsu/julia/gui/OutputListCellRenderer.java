@@ -19,7 +19,8 @@ public class OutputListCellRenderer implements ListCellRenderer {
 	private JTextArea functionDescription = new JTextArea(3, 13);
 	private ColorIcon icon = new ColorIcon(Color.WHITE);
 	private final JPanel panel = new JPanel();
-	
+	private final JPanel loadingPanel = new JPanel();
+
 	// for serializable interface: do not use
 	public static final long serialVersionUID = 0;
 
@@ -30,6 +31,7 @@ public class OutputListCellRenderer implements ListCellRenderer {
 		functionDescription.setWrapStyleWord(true);
 		functionDescription.setBackground(panel.getBackground());
 		panel.add(functionDescription, BorderLayout.CENTER);
+		loadingPanel.setPreferredSize(functionDescription.getPreferredSize());
 		JPanel iconPanel = new JPanel();
 		iconPanel.add(icon);
 		panel.add(iconPanel, BorderLayout.WEST);
@@ -41,11 +43,22 @@ public class OutputListCellRenderer implements ListCellRenderer {
 		functionDescription.setText(function.toString());
 		icon.setFunction(function);
 		icon.setColor(function.getColor());
+
+		if (function.isLoaded()){
+			panel.remove(loadingPanel);
+			panel.add(functionDescription,BorderLayout.CENTER);
+		}
+		else {
+			loadingPanel.removeAll();
+			loadingPanel.add(function.getLoadingComponent());
+			panel.remove(functionDescription);
+			panel.add(loadingPanel,BorderLayout.CENTER);
+		}
+
 		if (selected)
 			panel.setBorder(lowered);
 		else
 			panel.setBorder(raised);
 		return panel;
 	}
-
 }
