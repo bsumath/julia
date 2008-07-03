@@ -17,6 +17,7 @@ public class GraphScrollPane extends GLJPanel{
 		setName("Graphical display of output functions.");
 		setPreferredSize(new Dimension(1000, 1000));
 		addMouseListener(parentFrame.getStatusBar());
+		addMouseWheelListener(parentFrame.getStatusBar());
 		addMouseMotionListener(parentFrame.getStatusBar());
 		listener = new GLListener(parentFrame);
 		addMouseListener(listener);

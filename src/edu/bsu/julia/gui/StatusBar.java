@@ -7,7 +7,7 @@ import java.awt.event.*;
 import javax.media.opengl.*;
 
 public class StatusBar extends JPanel implements MouseListener,
-		MouseMotionListener {
+		MouseMotionListener, MouseWheelListener {
 
 	private JLabel helpLabel = new JLabel();
 	private String defaultString = "Hover over an object to see a description.";
@@ -96,6 +96,22 @@ public class StatusBar extends JPanel implements MouseListener,
 
 	public void mouseDragged(MouseEvent e) {
 
+	}
+
+	public void mouseWheelMoved(MouseWheelEvent e) {
+		if (e.getSource().getClass().getName().equals(
+				edu.bsu.julia.gui.GraphScrollPane.class.getName())) {
+			GraphScrollPane panel = (GraphScrollPane) e.getSource();
+			GLListener list = panel.getGLListener();
+			double xd = (e.getX() * list.getWidth() / panel.getWidth())
+					+ list.getX();
+			double yd = ((panel.getHeight() - e.getY()) * list.getHeight() / panel
+					.getHeight())
+					+ list.getY();
+
+			coordinateLabel.setText("x: " + xd + ", y: " + yd);
+		}
+		
 	}
 
 }
