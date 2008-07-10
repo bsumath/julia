@@ -4,7 +4,7 @@
 	href="http://julia.googlecode.com/svn/trunk/build/juliaBeta.jnlp">
 
 <information>
- 	<title>Julia Fractal Drawing Program</title>
+ 	<title>Julia Fractal Drawing Program (Beta)</title>
  	<vendor>Ball State University</vendor>
 	<homepage href="http://www.cs.bsu.edu/~rstankew/julia/Julia.html" />
 	<description kind="one-line" >Julia Fractal Drawing Program</description>
@@ -22,7 +22,7 @@
 <resources>
 	<jar href="julia.jar"/>
 	<jar href="resources.jar"/>
-	<j2se version="1.5+" href="http://java.sun.com/products/autodl/j2se" />
+	<j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se" />
 
 	<extension name="jogl" href="http://download.java.net/media/jogl/builds/archive/jsr-231-webstart-current/jogl.jnlp" />
 </resources>
