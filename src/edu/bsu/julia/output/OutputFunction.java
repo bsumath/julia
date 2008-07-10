@@ -2,8 +2,7 @@ package edu.bsu.julia.output;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
@@ -13,13 +12,12 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
 
 import javax.swing.JProgressBar;
-import javax.swing.Timer;
+import javax.swing.SwingWorker;
+import javax.swing.SwingWorker.StateValue;
 
 import edu.bsu.julia.ComplexNumber;
 import edu.bsu.julia.generators.OutputSetGenerator;
@@ -82,18 +80,45 @@ public class OutputFunction {
 	private static int colorIndex = 0;
 	private PropertyChangeSupport support = new PropertyChangeSupport(this);
 	private final JProgressBar bar = new JProgressBar(0, 100);
-	private Timer timer;
+	private SwingWorker<File, Void> tempFileWriter;
+	private SwingWorker<ComplexNumber[], Void> tempFileReader;
 
-	public OutputFunction(Session s, InputFunction[] i, Type type,
+	public OutputFunction(final Session session, InputFunction[] i, Type type,
 			OutputSetGenerator gen) {
-		iterations = s.getIterations();
+		iterations = session.getIterations();
 		functionType = type;
-		skips = (functionType == Type.POST_CRITICAL) ? 0 : s.getSkips();
-		seed = s.getSeedValue();
+		skips = (functionType == Type.POST_CRITICAL) ? 0 : session.getSkips();
+		seed = session.getSeedValue();
 
 		inputFunctions = i;
 		generator = gen;
 		c = getNextColor();
+
+		generator.addPropertyChangeListener(new PropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				if ("progress".equals(evt.getPropertyName())) {
+					bar.setValue((Integer) evt.getNewValue());
+					support.firePropertyChange("repaint", null, null);
+				} else if ("state".equals(evt.getPropertyName())
+						&& (StateValue) evt.getNewValue() == StateValue.DONE) {
+					// try to get the points from the generator
+					try {
+						points = generator.get();
+					} catch (Exception e) {
+					}
+
+					// if the points are null then there was some sort of error
+					if (points == null) {
+						session.deleteOutputFunction(OutputFunction.this);
+					} else {
+						writePointsTempFile();
+						support.firePropertyChange("reselect", null, null);
+					}
+				}
+			}
+		});
+		generator.execute();
 	}
 
 	public Type getType() {
@@ -149,8 +174,59 @@ public class OutputFunction {
 		return inputFunctions;
 	}
 
+	/**
+	 * @return an array of {@link ComplexNumber}. will be empty if points ==
+	 *         null
+	 */
 	public ComplexNumber[] getPoints() {
-		return points;
+		return getPoints(false);
+	}
+
+	/**
+	 * method to get the points that will block if the points aren't generated
+	 * or need to be read from a file
+	 * 
+	 * @param shouldWait
+	 *            boolean for whether or not to wait for points to be generated
+	 *            or read from file
+	 * @return an array of {@link ComplexNumber}. will be empty if points ==
+	 *         null
+	 */
+	public ComplexNumber[] getPoints(boolean shouldWait) {
+		// if we have the points, return them
+		if (points != null)
+			return points;
+
+		// we don't have the points, should we wait for them or not
+		if (shouldWait) {
+			// if the generator isn't done, wait on it to finish
+			if (!generator.isDone()) {
+				try {
+					ComplexNumber[] results = generator.get();
+					if (results != null)
+						return results;
+				} catch (Exception e) {
+				}
+			} else if (pointsFile != null) {
+				// the generator was done so try and read the points from the
+				// file and wait for them to finish reading
+				readPointsTempFile();
+				try {
+					ComplexNumber[] results = tempFileReader.get();
+					if (results != null)
+						return results;
+				} catch (Exception e) {
+				}
+			}
+		} else {
+			// we're not waiting but we still need to start reading the points
+			// from the temp file
+			readPointsTempFile();
+		}
+
+		// if it gets this far either points null and we might be waiting for it
+		// to be read. for now, return an empty array
+		return new ComplexNumber[] {};
 	}
 
 	public void addListener(PropertyChangeListener list) {
@@ -181,15 +257,19 @@ public class OutputFunction {
 			result = result && functionType.equals(other.functionType);
 			result = result
 					&& inputFunctions.length == other.inputFunctions.length;
-			result = result && points.length == other.points.length;
+
+			if (points == null) {
+				result = result && other.points == null;
+			} else {
+				result = result && points.length == other.points.length;
+				for (int i = 0; result && i < points.length; i++) {
+					result = result && points[i].equals(other.points[i]);
+				}
+			}
 
 			for (int i = 0; result && i < inputFunctions.length; i++) {
 				result = result
 						&& inputFunctions[i].equals(other.inputFunctions[i]);
-			}
-
-			for (int i = 0; result && i < points.length; i++) {
-				result = result && points[i].equals(other.points[i]);
 			}
 
 			return result;
@@ -204,108 +284,120 @@ public class OutputFunction {
 
 	public Component getLoadingComponent() {
 		bar.setStringPainted(true);
-		bar.setValue(50);
 		return bar;
 	}
 
-	public synchronized void unload() {
+	public void unload() {
 		if (pointsFile == null)
 			return;
 		points = null;
 	}
 
-	public synchronized void load() {
-		if (pointsFile == null) {
-			regenerate();
-		} else {
-			readPointsTempFile();
-		}
-	}
-
-	public synchronized void regenerate() {
-		// start the thread and timer
-		Thread thread = new Thread(generator);
-		thread.start();
-		timer = new Timer(10, new TimerActionListener(thread));
-		timer.start();
-	}
-
 	private void writePointsTempFile() {
-		if (pointsFile != null)
+		if (pointsFile != null || tempFileWriter != null || points == null)
 			return;
 
-		new Thread() {
-			public void run() {
+		tempFileWriter = new SwingWorker<File, Void>() {
+			public File doInBackground() {
 				try {
+					// sleep for a random amount of time. should make sure two
+					// temp files never have the same name
+					try {
+						Random rand = new Random();
+						Thread.sleep(rand.nextInt(50));
+					} catch (InterruptedException e) {
+					}
+
 					// create a new temp file and open it.
-					pointsFile = File.createTempFile(System.currentTimeMillis()
-							+ "", ".tmp.z");
-					pointsFile.deleteOnExit();
-					ZipOutputStream zipOut = new ZipOutputStream(
-							new FileOutputStream(pointsFile));
-					zipOut.putNextEntry(new ZipEntry(pointsFile.getName()
-							.replaceAll(".tmp.z", ".tmp")));
-					PrintStream out = new PrintStream(zipOut);
+					File file = File.createTempFile("out."
+							+ System.currentTimeMillis(), ".tmp");
+					file.deleteOnExit();
+
+					PrintStream out = new PrintStream(
+							new FileOutputStream(file));
 
 					for (ComplexNumber p : points)
-						out.println(p);
+						out.println(p.getX() + " " + p.getY());
 
 					out.close();
-					zipOut.close();
+					return file;
 				} catch (IOException e) {
 					e.printStackTrace();
+					return null;
 				}
 			}
-		}.start();
+		};
+
+		tempFileWriter.addPropertyChangeListener(new PropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				if ("state".equals(evt.getPropertyName())
+						&& (StateValue) evt.getNewValue() == StateValue.DONE) {
+					try {
+						pointsFile = tempFileWriter.get();
+					} catch (Exception e) {
+					}
+					tempFileWriter = null;
+				}
+			}
+		});
 	}
 
 	private void readPointsTempFile() {
-		points = null;
-		List<ComplexNumber> tempPoints = new ArrayList<ComplexNumber>();
+		if (tempFileReader != null || points != null || pointsFile == null)
+			return;
 
-		try {
-			// open the temp file
-			ZipInputStream zipIn = new ZipInputStream(new FileInputStream(
-					pointsFile));
-			zipIn.getNextEntry();
-			Scanner in = new Scanner(zipIn);
+		tempFileReader = new SwingWorker<ComplexNumber[], Void>() {
+			@Override
+			protected ComplexNumber[] doInBackground() throws Exception {
+				List<ComplexNumber> tempPoints = new ArrayList<ComplexNumber>();
 
-			// try to read all the points
-			while (in.hasNextLine()) {
-				String line = in.nextLine();
-				tempPoints.add(ComplexNumber.parseComplexNumber(line));
+				try {
+					// open the temp file
+					Scanner in = new Scanner(new FileInputStream(pointsFile));
+
+					// try to read all the points
+					while (in.hasNextLine()) {
+						String line = in.nextLine();
+						tempPoints.add(ComplexNumber.parseComplexNumber(line));
+					}
+					in.close();
+
+					// create an array
+					return tempPoints.toArray(new ComplexNumber[] {});
+				} catch (IOException e) {
+					return null;
+				}
 			}
+		};
 
-			// create an array
-			points = tempPoints.toArray(new ComplexNumber[] {});
+		tempFileReader.addPropertyChangeListener(new PropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				if ("state".equals(evt.getPropertyName())
+						&& (StateValue) evt.getNewValue() == StateValue.DONE) {
+					try {
+						points = tempFileReader.get();
+					} catch (Exception e) {
+						points = null;
+					}
+					
+					if (points != null)
+						support.firePropertyChange("reselect", null, null);
+					tempFileReader = null;
+				}
+			}
+		});
 
-			in.close();
-			zipIn.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		tempFileReader.execute();
 	}
 
-	private final class TimerActionListener implements ActionListener {
-		private final Thread thread;
-
-		public TimerActionListener(Thread thread) {
-			this.thread = thread;
-		}
-
-		public void actionPerformed(ActionEvent e) {
-			if (thread.isAlive() || !generator.isDone()) {
-				int progress = (int) (generator.getPercentComplete() * 100);
-				progress = (progress < 0) ? 0 : progress;
-				progress = (progress > 100) ? 100 : progress;
-				bar.setValue(progress);
-				support.firePropertyChange("repaint", null, null);
-			} else {
-				timer.stop();
-				points = generator.getPoints();
-				writePointsTempFile();
-				support.firePropertyChange("reselect", null, null);
-			}
-		}
+	/**
+	 * called when an OutputFunction is deleted from the session
+	 */
+	public void delete() {
+		if (!generator.isDone())
+			generator.cancel(true);
+		unload();
 	}
 }

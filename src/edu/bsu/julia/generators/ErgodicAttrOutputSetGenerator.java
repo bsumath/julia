@@ -1,6 +1,5 @@
 package edu.bsu.julia.generators;
 
-import java.util.Arrays;
 import java.util.Random;
 
 import javax.swing.JFrame;
@@ -15,7 +14,7 @@ import edu.bsu.julia.input.InputFunction;
  * 
  * @author Ben Dean
  */
-public class ErgodicAttrOutputSetGenerator implements OutputSetGenerator {
+public class ErgodicAttrOutputSetGenerator extends OutputSetGenerator {
 	private final static Random RAND = new Random();
 
 	private final JFrame parentFrame;
@@ -23,12 +22,6 @@ public class ErgodicAttrOutputSetGenerator implements OutputSetGenerator {
 	private final int skips;
 	private final ComplexNumber seed;
 	private final InputFunction[] inputFunctions;
-	private volatile boolean cancelExecution = false;
-	private volatile boolean executionComplete = false;
-	private volatile int progress = 0;
-	private final int maxProgress;
-
-	private final ComplexNumber[] outputSet;
 
 	/**
 	 * constructor for {@link ErgodicAttrOutputSetGenerator}
@@ -51,81 +44,45 @@ public class ErgodicAttrOutputSetGenerator implements OutputSetGenerator {
 		skips = sk;
 		seed = sd;
 		inputFunctions = inFunc;
-
-		outputSet = new ComplexNumber[iterations];
-
-		maxProgress = iterations + skips;
 	}
 
 	/**
-	 * @see OutputSetGenerator#run()
+	 * @see OutputSetGenerator#doInBackground()
 	 */
-	public synchronized void run() {
-		// reset the output set
-		Arrays.fill(outputSet, null);
-		
-		// check that there are input functions
-		if (inputFunctions.length == 0) {
-			executionComplete = true;
-			return;
-		}
+	public ComplexNumber[] doInBackground() {
+		try {
+			// check that there are input functions
+			if (inputFunctions.length == 0) {
+				return null;
+			}
 
-		ComplexNumber currentPoint = seed;
+			ComplexNumber currentPoint = seed;
+			ComplexNumber[] outputSet = new ComplexNumber[iterations];
+			int progress = 0;
+			int maxProgress = iterations + skips;
 
-		// iterate the number of skips + the number of iterations
-		for (int k = 0; k < iterations + skips; k++) {
-			// iterate the current point using a random input function
-			try {
+			// iterate the number of skips + the number of iterations
+			for (int k = 0; k < iterations + skips; k++) {
+				// iterate the current point using a random input function
 				InputFunction function = inputFunctions[RAND
 						.nextInt(inputFunctions.length)];
 				currentPoint = function.evaluateForwards(currentPoint);
-			} catch (ArithmeticException e) {
-				JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
-				executionComplete = true;
-				return;
+
+				// if we've used up the skips, add the current point
+				if (k >= skips)
+					outputSet[k - skips] = currentPoint;
+				progress += 1;
+				setProgress(Math.min((int) ((progress * 100f) / maxProgress),
+						100));
 			}
 
-			// if we've used up the skips, add the current point
-			if (k >= skips)
-				outputSet[k - skips] = currentPoint;
-			progress += 1;
-
-			// check if execution should be canceled
-			if (cancelExecution) {
-				executionComplete = true;
-				return;
-			}
-			Thread.yield();
+			return outputSet;
+		} catch (OutOfMemoryError e) {
+			JuliaError.OUT_OF_MEMORY.showDialog(parentFrame);
+			return null;
+		} catch (ArithmeticException e) {
+			JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
+			return null;
 		}
-		executionComplete = true;
-	}
-
-	/**
-	 * @see OutputSetGenerator#cancelExecution()
-	 */
-	public synchronized void cancelExecution() {
-		cancelExecution = true;
-	}
-
-	/**
-	 * @see OutputSetGenerator#getPercentComplete()
-	 */
-	public synchronized float getPercentComplete() {
-		float percent = progress / maxProgress;
-		return (percent > 1) ? 1 : percent;
-	}
-
-	/**
-	 * @see OutputSetGenerator#getPoints()
-	 */
-	public ComplexNumber[] getPoints() {
-		return outputSet;
-	}
-
-	/**
-	 * @see OutputSetGenerator#isDone()
-	 */
-	public synchronized boolean isDone() {
-		return executionComplete;
 	}
 }

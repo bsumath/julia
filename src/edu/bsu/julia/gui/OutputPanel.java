@@ -20,8 +20,9 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
 import edu.bsu.julia.Julia;
+import edu.bsu.julia.gui.actions.CancelOutputAction;
 import edu.bsu.julia.gui.actions.ChangeColorAction;
-import edu.bsu.julia.gui.actions.DeleteAction;
+import edu.bsu.julia.gui.actions.DeleteOutputAction;
 import edu.bsu.julia.gui.actions.DeleteSelectedAction;
 import edu.bsu.julia.gui.actions.ForwardImageAction;
 import edu.bsu.julia.gui.actions.InverseAction;
@@ -57,13 +58,21 @@ public class OutputPanel extends JPanel implements PropertyChangeListener {
 		private void checkPopup(MouseEvent e) {
 			if (e.isPopupTrigger()) {
 				final int index = outputList.locationToIndex(e.getPoint());
+				Vector<OutputFunction> functions = parentFrame.getCurrentSession()
+						.getOutputFunctions();
+				if(index >= functions.size()) return;
+				
+				OutputFunction function = functions.get(index);
+
 				JPopupMenu popup = new JPopupMenu();
-				popup.add(new ChangeColorAction(parentFrame, listModel, index));
-				popup.add(new DeleteAction(parentFrame, listModel, index,
-						Julia.OUTPUTTYPE));
-				popup.add(new SaveSetAction(parentFrame, listModel, index));
+				popup.add(new ChangeColorAction(parentFrame, function));
+				if (function.isLoaded())
+					popup.add(new DeleteOutputAction(parentFrame, function));
+				else
+					popup.add(new CancelOutputAction(parentFrame, function));
+				popup.add(new SaveSetAction(parentFrame, function));
 				popup.addSeparator();
-				popup.add(new PropertiesAction(parentFrame, listModel, index));
+				popup.add(new PropertiesAction(parentFrame, function));
 				popup.addSeparator();
 				popup.add(new DeleteSelectedAction(parentFrame,
 						Julia.OUTPUTTYPE));
@@ -147,8 +156,6 @@ public class OutputPanel extends JPanel implements PropertyChangeListener {
 		String name = event.getPropertyName();
 		if (name.equals("addOutputFunction")) {
 			OutputFunction fn = (OutputFunction) event.getNewValue();
-			if (!fn.isLoaded())
-				fn.load();
 			if (listModel.isEmpty()) {
 				inverseButton.setEnabled(true);
 				forwardButton.setEnabled(true);
@@ -183,9 +190,7 @@ public class OutputPanel extends JPanel implements PropertyChangeListener {
 		} else if (name.equals("Color") || name.equals("repaint")) {
 			outputList.repaint();
 		} else if (name.equals("deleteOutputFunction")) {
-			Integer i = (Integer) event.getNewValue();
-			int index = Integer.valueOf(i);
-			listModel.remove(index);
+			listModel.removeElement(event.getNewValue());
 			if (listModel.isEmpty()) {
 				inverseButton.setEnabled(false);
 				forwardButton.setEnabled(false);

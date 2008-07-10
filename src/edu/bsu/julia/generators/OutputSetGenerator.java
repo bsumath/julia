@@ -1,49 +1,25 @@
 package edu.bsu.julia.generators;
 
+import javax.swing.SwingWorker;
+
 import edu.bsu.julia.ComplexNumber;
 
 /**
- * This interface defines the algorithms to be run when creating an
- * OutputFunction. Since it extends Runnable, it can be used to create a Thread
- * and must implement the run() method.
+ * This abstract class defines the algorithms to be run when creating an
+ * OutputFunction. It extends {@link SwingWorker} and returns an array of
+ * {@link ComplexNumber} after the worker has finished
  * 
  * @author Ben Dean
  */
-public interface OutputSetGenerator extends Runnable {
-	/**
-	 * This method should be synchronized.
-	 * 
-	 * @see Runnable#run()
-	 */
-	public void run();
+public abstract class OutputSetGenerator extends
+		SwingWorker<ComplexNumber[], Void> {
 
 	/**
-	 * Access the points created by the OutputSetGenerator
+	 * the method that runs on a background thread to generate an array of
+	 * {@link ComplexNumber}
 	 * 
-	 * @return a List of ComplexNumbers
+	 * @return the array of {@link ComplexNumber} that was generated
+	 * @see SwingWorker#doInBackground()
 	 */
-	public ComplexNumber[] getPoints();
-
-	/**
-	 * Method to cancel the execution of the {@link OutputSetGenerator}. This
-	 * method should be synchronized
-	 */
-	public void cancelExecution();
-
-	/**
-	 * Method to return the current progress of the execution as a percentage
-	 * complete. This method should be synchronized
-	 * 
-	 * @return the percentage complete as a floating point number. should be
-	 *         between 0 and 1
-	 */
-	public float getPercentComplete();
-
-	/**
-	 * Method to determine if the generator is done executing. This method
-	 * should be synchronized.
-	 * 
-	 * @return true if done executing, false otherwise
-	 */
-	public boolean isDone();
+	public abstract ComplexNumber[] doInBackground();
 }

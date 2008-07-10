@@ -40,19 +40,19 @@ public class OutputListCellRenderer implements ListCellRenderer {
 	public Component getListCellRendererComponent(JList list, Object fn,
 			int index, boolean selected, boolean focus) {
 		OutputFunction function = (OutputFunction) fn;
-		functionDescription.setText(function.toString());
+		functionDescription.setText(function.toString() + ". Points:"
+				+ function.getNumOfPoints());
 		icon.setFunction(function);
 		icon.setColor(function.getColor());
 
-		if (function.isLoaded()){
+		if (function.isLoaded()) {
 			panel.remove(loadingPanel);
-			panel.add(functionDescription,BorderLayout.CENTER);
-		}
-		else {
+			panel.add(functionDescription, BorderLayout.CENTER);
+		} else {
 			loadingPanel.removeAll();
 			loadingPanel.add(function.getLoadingComponent());
 			panel.remove(functionDescription);
-			panel.add(loadingPanel,BorderLayout.CENTER);
+			panel.add(loadingPanel, BorderLayout.CENTER);
 		}
 
 		if (selected)

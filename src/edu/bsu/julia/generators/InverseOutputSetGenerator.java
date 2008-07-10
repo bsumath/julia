@@ -16,7 +16,7 @@ import edu.bsu.julia.output.OutputFunction;
  * 
  * @author Ben Dean
  */
-public class InverseOutputSetGenerator implements OutputSetGenerator {
+public class InverseOutputSetGenerator extends OutputSetGenerator {
 	/**
 	 * enum to determine full or ergodic method
 	 * 
@@ -30,12 +30,6 @@ public class InverseOutputSetGenerator implements OutputSetGenerator {
 	private final List<ComplexNumber> seedList;
 	private final InputFunction inputFunction;
 	private final Type type;
-	private final List<ComplexNumber> outputSet;
-
-	private volatile boolean cancelExecution = false;
-	private volatile boolean executionComplete = false;
-	private volatile int progress = 0;
-	private final int maxProgress;
 
 	/**
 	 * constructor for {@link InverseOutputSetGenerator}
@@ -62,96 +56,61 @@ public class InverseOutputSetGenerator implements OutputSetGenerator {
 			for (ComplexNumber point : function.getPoints())
 				seedList.add(point);
 		}
-
-		outputSet = new ArrayList<ComplexNumber>();
-
-		// estimate the maximum progress
-		ComplexNumber[] temp = inputFunction
-				.evaluateBackwardsFull(new ComplexNumber());
-		if (temp != null)
-			maxProgress = seedList.size() * temp.length;
-		else
-			maxProgress = seedList.size();
 	}
 
 	/**
-	 * @see OutputSetGenerator#run()
+	 * @see OutputSetGenerator#doInBackground()
 	 */
-	public synchronized void run() {
-		// reset the output set
-		outputSet.clear();
-		
-		// apply the function to each point in the seedList
-		for (ComplexNumber point : seedList) {
-			ComplexNumber[] tempResult;
-			try {
+	public ComplexNumber[] doInBackground() {
+		try {
+			List<ComplexNumber> outputSet = new ArrayList<ComplexNumber>();
+
+			// estimate the maximum progress
+			int progress = 0;
+			int maxProgress;
+			ComplexNumber[] arr = inputFunction
+					.evaluateBackwardsFull(new ComplexNumber());
+			if (arr != null)
+				maxProgress = seedList.size() * arr.length;
+			else
+				maxProgress = seedList.size();
+
+			// apply the function to each point in the seedList
+			for (ComplexNumber point : seedList) {
+				ComplexNumber[] tempResult;
 				// create a temp array using full or ergodic method
 				if (type == Type.FULL) {
 					tempResult = inputFunction.evaluateBackwardsFull(point);
 					if (tempResult == null) {
 						JuliaError.ZERO_DETERMINANT.showDialog(parentFrame);
-						executionComplete = true;
-						return;
+						return null;
 					}
 				} else {
 					ComplexNumber temp = inputFunction
 							.evaluateBackwardsRandom(point);
 					if (temp == null) {
 						JuliaError.ZERO_DETERMINANT.showDialog(parentFrame);
-						executionComplete = true;
-						return;
+						return null;
 					}
 					tempResult = new ComplexNumber[] { temp };
 				}
-			} catch (ArithmeticException e) {
-				JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
-				executionComplete = true;
-				return;
+
+				// add all the points from the temp list to the output set
+				for (ComplexNumber pt : tempResult) {
+					outputSet.add(pt);
+				}
+				progress = outputSet.size();
+				setProgress(Math.min((int) ((progress * 100f) / maxProgress),
+						100));
 			}
 
-			// add all the points from the temp list to the output set
-			for (ComplexNumber pt : tempResult) {
-				outputSet.add(pt);
-				Thread.yield();
-			}
-			progress = outputSet.size();
-
-			if (cancelExecution) {
-				executionComplete = true;
-				return;
-			}
-			Thread.yield();
+			return outputSet.toArray(new ComplexNumber[] {});
+		} catch (OutOfMemoryError e) {
+			JuliaError.OUT_OF_MEMORY.showDialog(parentFrame);
+			return null;
+		} catch (ArithmeticException e) {
+			JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
+			return null;
 		}
-
-		executionComplete = true;
-	}
-
-	/**
-	 * @see OutputSetGenerator#cancelExecution()
-	 */
-	public synchronized void cancelExecution() {
-		cancelExecution = true;
-	}
-
-	/**
-	 * @see OutputSetGenerator#getPercentComplete()
-	 */
-	public synchronized float getPercentComplete() {
-		float percent = progress / maxProgress;
-		return (percent > 1) ? 1 : percent;
-	}
-
-	/**
-	 * @see OutputSetGenerator#getPoints()
-	 */
-	public ComplexNumber[] getPoints() {
-		return outputSet.toArray(new ComplexNumber[] {});
-	}
-
-	/**
-	 * @see OutputSetGenerator#isDone()
-	 */
-	public synchronized boolean isDone() {
-		return executionComplete;
 	}
 }

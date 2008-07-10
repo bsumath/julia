@@ -85,13 +85,6 @@ public final class ComplexNumber {
 	}
 
 	/**
-	 * @return A copy of this complex number as a new complex number.
-	 */
-	public ComplexNumber clone() {
-		return new ComplexNumber(x, y);
-	}
-
-	/**
 	 * Adds two complex numbers.
 	 * 
 	 * @param a
@@ -239,7 +232,8 @@ public final class ComplexNumber {
 	/**
 	 * method to create a {@link ComplexNumber} from a {@link String}. Must be
 	 * able to parse the {@link String} created by
-	 * {@link ComplexNumber#toString()}
+	 * {@link ComplexNumber#toString()}. Also can parse two numbers separated by
+	 * a space
 	 * 
 	 * @param s
 	 *            the {@link String} to parse
@@ -247,8 +241,8 @@ public final class ComplexNumber {
 	 */
 	public static ComplexNumber parseComplexNumber(String s) {
 		// remove the braces and split on the comma
-		s = s.replace("{", "").replace("}", "");
-		String[] parts = s.split(",");
+		s = s.replace("{", "").replace("}", "").replace(",", "");
+		String[] parts = s.split(" ");
 		if (parts.length != 2)
 			return null;
 

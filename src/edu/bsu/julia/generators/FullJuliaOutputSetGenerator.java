@@ -1,6 +1,7 @@
 package edu.bsu.julia.generators;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -9,17 +10,17 @@ import edu.bsu.julia.ComplexNumber;
 import edu.bsu.julia.gui.JuliaError;
 import edu.bsu.julia.input.InputFunction;
 
-public class FullJuliaOutputSetGenerator implements OutputSetGenerator {
+/**
+ * An {@link OutputSetGenerator} used to generate points using the full method
+ * for julia sets.
+ * 
+ * @author Ben Dean
+ */
+public class FullJuliaOutputSetGenerator extends OutputSetGenerator {
 	private final JFrame parentFrame;
 	private final int iterations;
 	private final ComplexNumber seed;
 	private final InputFunction[] inputFunctions;
-	private final List<ComplexNumber> outputSet;
-
-	private volatile boolean cancelExecution = false;
-	private volatile boolean executionComplete = false;
-	private volatile int progress = 0;
-	private final int maxProgress;
 
 	/**
 	 * constructor for {@link FullJuliaOutputSetGenerator}
@@ -39,115 +40,70 @@ public class FullJuliaOutputSetGenerator implements OutputSetGenerator {
 		iterations = iter;
 		seed = sd;
 		inputFunctions = inFunc;
-
-		outputSet = new ArrayList<ComplexNumber>();
-
-		maxProgress = iterations;
 	}
 
 	/**
-	 * @see OutputSetGenerator#run()
+	 * @see OutputSetGenerator#doInBackground()
 	 */
-	public synchronized void run() {
-		// reset the output set
-		outputSet.clear();
+	public ComplexNumber[] doInBackground() {
+		try {
+			// check that there are input functions
+			if (inputFunctions.length == 0) {
+				return null;
+			}
 
-		// check that there are input functions
-		if (inputFunctions.length == 0){
-			executionComplete = true;
-			return;
-		}
-		
-		int iterationCounter = 0;
-		boolean specialCase = inputFunctions.length == 1;
-		boolean isDone = false;
+			int progress = 0;
+			int maxProgress = iterations;
 
-		List<ComplexNumber> currentIteration = new ArrayList<ComplexNumber>();
-		currentIteration.add(seed);
-		List<ComplexNumber> tempList = new ArrayList<ComplexNumber>();
-		do {
-			// iterate each point by each of the input functions
-			tempList.clear();
-			for (ComplexNumber point : currentIteration) {
-				for (InputFunction function : inputFunctions) {
-					try {
+			int iterationCounter = 0;
+			boolean specialCase = inputFunctions.length == 1;
+			boolean isDone = false;
+
+			List<ComplexNumber> currentIteration = new ArrayList<ComplexNumber>();
+			currentIteration.add(seed);
+			List<ComplexNumber> tempList = new ArrayList<ComplexNumber>();
+			do {
+				// iterate each point by each of the input functions
+				tempList.clear();
+				for (ComplexNumber point : currentIteration) {
+					for (InputFunction function : inputFunctions) {
 						// evaluate backwards with the current function
 						ComplexNumber[] temp = function
 								.evaluateBackwardsFull(point);
 						if (temp == null) {
 							JuliaError.ZERO_DETERMINANT.showDialog(parentFrame);
-							executionComplete = true;
-							return;
+							return null;
 						}
 
 						// add all the points from the backwards evaluation
-						for (ComplexNumber pt : temp){
-							tempList.add(pt);
-							Thread.yield();
-						}
-					} catch (ArithmeticException e) {
-						JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
-						executionComplete = true;
-						return;
+						tempList.addAll(Arrays.asList(temp));
 					}
-					
-					// check if execution was canceled
-					if (cancelExecution){
-						executionComplete = true;
-						return;
-					}
-					Thread.yield();
 				}
-				Thread.yield();
-			}
 
-			// the current iteration is a copy of the temp list of points
-			currentIteration = new ArrayList<ComplexNumber>(tempList);
-			iterationCounter += 1;
+				// the current iteration is a copy of the temp list of points
+				currentIteration = new ArrayList<ComplexNumber>(tempList);
+				iterationCounter += 1;
 
-			// update the progress and isDone condition
-			if (specialCase) {
-				progress = iterationCounter;
-				isDone = iterationCounter >= iterations;
-			} else {
-				progress = currentIteration.size();
-				isDone = currentIteration.size() >= iterations;
-			}
+				// update the progress and isDone condition
+				if (specialCase) {
+					progress = iterationCounter;
+					isDone = iterationCounter >= iterations;
+				} else {
+					progress = currentIteration.size();
+					isDone = currentIteration.size() >= iterations;
+				}
+				setProgress(Math.min((int) ((progress * 100f) / maxProgress),
+						100));
+			} while (!isDone);
 
-			Thread.yield();
-		} while (!isDone);
-
-		// iteration complete, the output set is the most recent iteration
-		outputSet.addAll(currentIteration);
-		executionComplete = true;
-	}
-
-	/**
-	 * @see OutputSetGenerator#cancelExecution()
-	 */
-	public synchronized void cancelExecution() {
-		cancelExecution = true;
-	}
-
-	/**
-	 * @see OutputSetGenerator#getPercentComplete()
-	 */
-	public synchronized float getPercentComplete() {
-		float percent = progress / maxProgress;
-		return (percent > 1) ? 1 : percent;
-	}
-
-	/**
-	 * @see OutputSetGenerator#getPoints()
-	 */
-	public ComplexNumber[] getPoints() {
-		return outputSet.toArray(new ComplexNumber[]{});
-	}
-
-	/**
-	 * @see OutputSetGenerator#isDone()
-	 */
-	public synchronized boolean isDone() {
-		return executionComplete;
+			// iteration complete, the output set is the most recent iteration
+			return currentIteration.toArray(new ComplexNumber[] {});
+		} catch (OutOfMemoryError e) {
+			JuliaError.OUT_OF_MEMORY.showDialog(parentFrame);
+			return null;
+		} catch (ArithmeticException e) {
+			JuliaError.DIV_BY_ZERO.showDialog(parentFrame);
+			return null;
+		}
 	}
 }

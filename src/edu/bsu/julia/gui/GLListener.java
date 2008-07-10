@@ -191,13 +191,14 @@ public class GLListener implements GLEventListener, ListSelectionListener,
 		for (int i = 0; i < fns.length; i++) {
 			OutputFunction function = fns[i];
 			if (function != null && function.isLoaded()) {
-				float[] cArray = new float[3];
-				function.getColor().getColorComponents(cArray);
-				gl.glColor3f(cArray[0], cArray[1], cArray[2]);
-				ComplexNumber[] points = function.getPoints();
+				float[] colorArray = new float[3];
+				function.getColor().getColorComponents(colorArray);
+				gl.glColor3f(colorArray[0], colorArray[1], colorArray[2]);
+
 				gl.glBegin(GL.GL_POINTS);
-				for (int j = 0; j < points.length; j++)
-					gl.glVertex2d(points[j].getX(), points[j].getY());
+				for (ComplexNumber point : function.getPoints())
+					if (point != null)
+						gl.glVertex2d(point.getX(), point.getY());
 				gl.glEnd();
 			}
 		}

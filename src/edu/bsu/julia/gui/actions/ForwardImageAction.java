@@ -17,7 +17,6 @@ import edu.bsu.julia.session.Session;
 
 public class ForwardImageAction extends AbstractAction {
 	private final Julia parentFrame;
-	private List<OutputSetGenerator> generators;
 	private OutputFunction.Type type;
 
 	// for serializable interface: do not use
@@ -31,11 +30,12 @@ public class ForwardImageAction extends AbstractAction {
 				"LONG_DESCRIPTION",
 				"Create a forward image set of the selected"
 						+ " Output Set(s) using the selected Input Function(s).");
-
-		generators = new ArrayList<OutputSetGenerator>();
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
+		// list of generators
+		List<OutputSetGenerator> generators = new ArrayList<OutputSetGenerator>();
+		
 		// build list of input functions
 		InputFunction[] inFunc = parentFrame.getInputPanel()
 				.getSelectedFunctions();

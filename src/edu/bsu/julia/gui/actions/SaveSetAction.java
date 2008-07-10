@@ -4,11 +4,11 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 
 import javax.swing.AbstractAction;
-import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import edu.bsu.julia.Julia;
+import edu.bsu.julia.output.OutputFunction;
 
 public class SaveSetAction extends AbstractAction {
 	
@@ -20,7 +20,7 @@ public class SaveSetAction extends AbstractAction {
 	//for serializable interface: do not use
 	public static final long serialVersionUID = 0;
 	
-	public SaveSetAction(Julia f, DefaultListModel listModel, int i) {
+	public SaveSetAction(Julia f, OutputFunction func) {
 		super("Save Output Set");
 		putValue("SHORT_DESCRIPTION", "Save Output Set");
 		putValue("LONG_DESCRIPTION", "Save this output set to a file.");

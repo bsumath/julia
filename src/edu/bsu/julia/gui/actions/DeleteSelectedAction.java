@@ -40,10 +40,8 @@ public class DeleteSelectedAction extends AbstractAction {
 				for(int j = 0; j<outObjs.length; j++) {
 					outFns[j] = (OutputFunction)outObjs[j];
 				}
-				for(int i = 0; i<outFns.length; i++){
-					Vector<OutputFunction> outList = s.getOutputFunctions();
-					int index = outList.indexOf(outFns[i]);
-					s.deleteOutputFunction(index);
+				for(OutputFunction function : outFns){
+					s.deleteOutputFunction(function);
 				}
 			}
 			else {

@@ -28,8 +28,8 @@ public class SessionFileImporter implements Importer {
 
 	private Vector<InputFunction> inputFunctions = new Vector<InputFunction>();
 	private Vector<OutputFunction> outputFunctions = new Vector<OutputFunction>();
-	private int inputSubscript = 0;
-	private int outputSubscript = 0;
+	private int inputSubscript = 1;
+	private int outputSubscript = 1;
 
 	public SessionFileImporter(File f) throws IOException,
 			ClassNotFoundException, IllegalArgumentException,
