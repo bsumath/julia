@@ -32,13 +32,11 @@ import javax.swing.ListSelectionModel;
 import edu.bsu.julia.ComplexNumber;
 import edu.bsu.julia.Julia;
 import edu.bsu.julia.gui.actions.CopyFunctionAction;
-import edu.bsu.julia.gui.actions.CreateCompositeAction;
-import edu.bsu.julia.gui.actions.CreateIndAction;
-import edu.bsu.julia.gui.actions.DeleteAction;
+import edu.bsu.julia.gui.actions.CreateCompositeIndAction;
+import edu.bsu.julia.gui.actions.DeleteInputAction;
 import edu.bsu.julia.gui.actions.DeleteSelectedAction;
 import edu.bsu.julia.gui.actions.EditFunctionAction;
 import edu.bsu.julia.gui.actions.PostCriticalAction;
-import edu.bsu.julia.gui.actions.ProcessAction;
 import edu.bsu.julia.input.InputFunction;
 import edu.bsu.julia.session.Session;
 
@@ -84,8 +82,7 @@ public class InputPanel extends JPanel implements PropertyChangeListener {
 				popup
 						.add(new EditFunctionAction(parentFrame, listModel,
 								index));
-				popup.add(new DeleteAction(parentFrame, listModel, index,
-						Julia.INPUTTYPE));
+				popup.add(new DeleteInputAction(parentFrame, listModel, index));
 				popup
 						.add(new CopyFunctionAction(parentFrame, listModel,
 								index));
@@ -372,15 +369,17 @@ public class InputPanel extends JPanel implements PropertyChangeListener {
 		panel.add(postCriticalButton);
 
 		JPanel twoProcessPanel = new JPanel(new GridLayout(1, 2, 5, 5));
-		createCompButton = new JButton(new CreateCompositeAction(parentFrame,
-				getTypeGroup(), getMethodGroup()));
+		createCompButton = new JButton(new CreateCompositeIndAction(
+				parentFrame, getTypeGroup(), getMethodGroup(),
+				CreateCompositeIndAction.Mode.COMPOSITE));
 		// createCompButton.setFocusable(false);
 		if (listModel.isEmpty())
 			createCompButton.setEnabled(false);
 		createCompButton.addMouseListener(parentFrame.getStatusBar());
 		twoProcessPanel.add(createCompButton);
-		createIndButton = new JButton(new CreateIndAction(parentFrame,
-				getTypeGroup(), getMethodGroup()));
+		createIndButton = new JButton(new CreateCompositeIndAction(parentFrame,
+				getTypeGroup(), getMethodGroup(),
+				CreateCompositeIndAction.Mode.INDIVIDUAL));
 		// createIndButton.setFocusable(false);
 		if (listModel.isEmpty())
 			createIndButton.setEnabled(false);
@@ -388,8 +387,9 @@ public class InputPanel extends JPanel implements PropertyChangeListener {
 		twoProcessPanel.add(createIndButton);
 		panel.add(twoProcessPanel);
 
-		processButton = new JButton(new ProcessAction(parentFrame,
-				getTypeGroup(), getMethodGroup()));
+		processButton = new JButton(new CreateCompositeIndAction(parentFrame,
+				getTypeGroup(), getMethodGroup(),
+				CreateCompositeIndAction.Mode.BOTH));
 		// processButton.setFocusable(false);
 		if (listModel.isEmpty())
 			processButton.setEnabled(false);

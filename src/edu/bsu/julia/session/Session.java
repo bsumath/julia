@@ -2,6 +2,8 @@ package edu.bsu.julia.session;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Vector;
 
 import javax.swing.JFrame;
@@ -75,6 +77,7 @@ public class Session {
 	private ComplexNumber seed;
 	private Vector<InputFunction> inputFunctions;
 	private Vector<OutputFunction> outputFunctions;
+	private Queue<OutputFunction> outputQueue;
 	private int inputSubscript;
 	private int outputSubscript;
 	private boolean modified = false;
@@ -88,6 +91,7 @@ public class Session {
 		seed = importer.provideSeedValue();
 		inputFunctions = importer.provideInputFunctions();
 		outputFunctions = importer.provideOutputFunctions();
+		outputQueue = new LinkedList<OutputFunction>(outputFunctions); 
 		inputSubscript = importer.provideInputSubscript();
 		outputSubscript = importer.provideOutputSubscript();
 
@@ -171,17 +175,31 @@ public class Session {
 	public void addOutputFunction(OutputFunction fn) {
 		markModified();
 		outputFunctions.add(fn);
+		outputQueue.add(fn);
 		fn.setSubscript(getNextOutSubscript());
-		fn.load();
 		support.firePropertyChange("addOutputFunction", null, fn);
 	}
 
-	public void deleteOutputFunction(int fn) {
+	public void deleteOutputFunction(OutputFunction function) {
 		markModified();
-		outputFunctions.remove(fn);
-		support.firePropertyChange("deleteOutputFunction", null, fn);
+		outputFunctions.remove(function);
+		outputQueue.remove(function);
+		function.delete();
+		support.firePropertyChange("deleteOutputFunction", null, function);
 	}
+	
 
+	/**
+	 * method to unload an OutputFunction to try and free some heap space
+	 */
+	public void freeHeapSpace(){
+		OutputFunction function = outputQueue.poll();
+		if (function != null){
+			function.unload();
+			outputQueue.add(function);
+		}
+	}
+	
 	public void addListener(PropertyChangeListener list) {
 		support.addPropertyChangeListener(list);
 	}

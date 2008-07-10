@@ -12,6 +12,7 @@ import java.beans.PropertyChangeSupport;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JSplitPane;
+import javax.swing.SwingUtilities;
 
 import edu.bsu.julia.gui.GLListener;
 import edu.bsu.julia.gui.GraphScrollPane;
@@ -58,14 +59,20 @@ public class Julia extends JFrame {
 		axisTrigger = true;
 		grilTrigger = false;
 		inputPanel = new InputPanel(this);
-		outputPanel = new OutputPanel(this);
-		createGUI();
-		setFocusable(true);
+		outputPanel = new OutputPanel(this);		
 	}
 
 	public static void main(String[] args) {
+		//create the instance of Julia
 		final Julia application = new Julia();
 		application.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		
+		//start the GUI
+		SwingUtilities.invokeLater(new Runnable(){
+			public void run(){
+				application.createAndShowGUI();
+			}
+		});
 	}
 
 	public Session getCurrentSession() {
@@ -141,7 +148,7 @@ public class Julia extends JFrame {
 		filePath = path;
 	}
 
-	public void createGUI() {
+	private void createAndShowGUI() {
 		tabbedPane = new GraphTabbedPane(this);
 		setJMenuBar(new MainMenu(this));
 		add(new MainToolBar(this), BorderLayout.NORTH);
@@ -173,6 +180,7 @@ public class Julia extends JFrame {
 
 		setSize(800, 650);
 		setVisible(true);
+		setFocusable(true);
 
 		GraphScrollPane aPane = tabbedPane.getActivePane();
 		GLListener glList = aPane.getGLListener();

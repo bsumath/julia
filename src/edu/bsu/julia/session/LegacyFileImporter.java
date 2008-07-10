@@ -92,6 +92,10 @@ public class LegacyFileImporter implements Importer {
 						var[1], var[2]));
 			}
 		}
+		
+		for (int i=0; i< inputFunctions.size(); i++){
+			inputFunctions.get(i).setSubscript(i+1);
+		}
 	}
 
 	public Vector<InputFunction> provideInputFunctions() {

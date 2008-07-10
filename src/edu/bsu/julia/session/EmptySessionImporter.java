@@ -29,15 +29,15 @@ public class EmptySessionImporter implements Importer {
 		ComplexNumber d = new ComplexNumber(-.5, -0.866);
 
 		InputFunction function = new LinearInputFunction(1, a, b);
-		function.setSubscript(inputFunctions.size());
+		function.setSubscript(1);
 		inputFunctions.add(function);
 
 		function = new LinearInputFunction(1, a, c);
-		function.setSubscript(inputFunctions.size());
+		function.setSubscript(2);
 		inputFunctions.add(function);
 		
 		function = new LinearInputFunction(1, a, d);
-		function.setSubscript(inputFunctions.size());
+		function.setSubscript(3);
 		inputFunctions.add(function);
 	}
 
@@ -68,7 +68,7 @@ public class EmptySessionImporter implements Importer {
 	}
 
 	public int provideInputSubscript() {
-		return inputFunctions.size() - 1;
+		return inputFunctions.size();
 	}
 
 	public int provideOutputSubscript() {

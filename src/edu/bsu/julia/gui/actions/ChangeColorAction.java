@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
-import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JColorChooser;
 
@@ -14,29 +13,25 @@ import edu.bsu.julia.output.OutputFunction;
 public class ChangeColorAction extends AbstractAction {
 
 	private Julia parentFrame;
-	private DefaultListModel outputList;
-	private int index;
+	private OutputFunction function;
 	// for serializable interface: do not use
 	public static final long serialVersionUID = 0;
 
-	public ChangeColorAction(Julia f, DefaultListModel listModel, int i) {
+	public ChangeColorAction(Julia f, OutputFunction func) {
 		super("Change Color", new ImageIcon(Thread.currentThread()
 				.getContextClassLoader().getResource("color.png")));
 		putValue("SHORT_DESCRIPTION", "Change Color");
 		putValue("LONG_DESCRIPTION", "Change the color used to display "
 				+ "this function.");
 		parentFrame = f;
-		outputList = listModel;
-		index = i;
+		function = func;
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
-		OutputFunction fn = (OutputFunction) outputList.getElementAt(index);
-
 		Color newColor = JColorChooser.showDialog(parentFrame,
-				"New Color for Function Display", fn.getColor());
+				"New Color for Function Display", function.getColor());
 		if (newColor != null)
-			fn.setColor(newColor);
+			function.setColor(newColor);
 	}
 
 }
