@@ -122,8 +122,8 @@ public class CreateCompositeIndAction extends AbstractAction {
 								.getIterations(), session.getSkips(), session
 								.getSeedValue(), inFunc)));
 			if (mode == Mode.INDIVIDUAL || mode == Mode.BOTH)
-				for (int i = 0; i < inFunc.length; i++) {
-					InputFunction[] inArray = new InputFunction[] { inFunc[i] };
+				for (InputFunction function : inFunc) {
+					InputFunction[] inArray = new InputFunction[] { function };
 					newFunctions.add(new OutputFunction(session, inArray,
 							OutputFunction.Type.valueOf("IND_" + command),
 							new ErgodicJuliaOutputSetGenerator(parentFrame,
@@ -139,8 +139,8 @@ public class CreateCompositeIndAction extends AbstractAction {
 								.getIterations(), session.getSeedValue(),
 								inFunc)));
 			if (mode == Mode.INDIVIDUAL || mode == Mode.BOTH)
-				for (int i = 0; i < inFunc.length; i++) {
-					InputFunction[] inArray = new InputFunction[] { inFunc[i] };
+				for (InputFunction function : inFunc) {
+					InputFunction[] inArray = new InputFunction[] { function };
 					newFunctions.add(new OutputFunction(session, inArray,
 							OutputFunction.Type.valueOf("IND_" + command),
 							new FullJuliaOutputSetGenerator(parentFrame,
@@ -155,8 +155,8 @@ public class CreateCompositeIndAction extends AbstractAction {
 								.getIterations(), session.getSkips(), session
 								.getSeedValue(), inFunc)));
 			if (mode == Mode.INDIVIDUAL || mode == Mode.BOTH)
-				for (int i = 0; i < inFunc.length; i++) {
-					InputFunction[] inArray = new InputFunction[] { inFunc[i] };
+				for (InputFunction function : inFunc) {
+					InputFunction[] inArray = new InputFunction[] { function };
 					newFunctions.add(new OutputFunction(session, inArray,
 							OutputFunction.Type.valueOf("IND_" + command),
 							new ErgodicAttrOutputSetGenerator(parentFrame,
@@ -174,8 +174,8 @@ public class CreateCompositeIndAction extends AbstractAction {
 								.getIterations(), seedList, inFunc,
 								Options.DISCARD_INTERMEDIATE_POINTS)));
 			if (mode == Mode.INDIVIDUAL || mode == Mode.BOTH)
-				for (int i = 0; i < inFunc.length; i++) {
-					InputFunction[] inArray = new InputFunction[] { inFunc[i] };
+				for (InputFunction function : inFunc) {
+					InputFunction[] inArray = new InputFunction[] { function };
 					newFunctions.add(new OutputFunction(session, inArray,
 							OutputFunction.Type.valueOf("IND_" + command),
 							new FullAttrOutputSetGenerator(parentFrame, session

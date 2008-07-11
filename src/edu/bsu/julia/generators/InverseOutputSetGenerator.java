@@ -24,6 +24,17 @@ public class InverseOutputSetGenerator extends OutputSetGenerator {
 	 */
 	public enum Type {
 		ERGODIC, FULL;
+
+		public OutputFunction.Type outputType() {
+			switch (this) {
+			case ERGODIC:
+				return OutputFunction.Type.INVERSE_ERGODIC_JULIA;
+			case FULL:
+				return OutputFunction.Type.INVERSE_FULL_JULIA;
+			default:
+				return OutputFunction.Type.BASIC;
+			}
+		}
 	}
 
 	private final JFrame parentFrame;
