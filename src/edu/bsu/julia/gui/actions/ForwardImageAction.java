@@ -1,8 +1,6 @@
 package edu.bsu.julia.gui.actions;
 
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.AbstractAction;
 
@@ -17,7 +15,6 @@ import edu.bsu.julia.session.Session;
 
 public class ForwardImageAction extends AbstractAction {
 	private final Julia parentFrame;
-	private OutputFunction.Type type;
 
 	// for serializable interface: do not use
 	public static final long serialVersionUID = 0;
@@ -33,9 +30,6 @@ public class ForwardImageAction extends AbstractAction {
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
-		// list of generators
-		List<OutputSetGenerator> generators = new ArrayList<OutputSetGenerator>();
-		
 		// build list of input functions
 		InputFunction[] inFunc = parentFrame.getInputPanel()
 				.getSelectedFunctions();
@@ -62,29 +56,21 @@ public class ForwardImageAction extends AbstractAction {
 				points[index++] = p;
 		}
 
-		// create the generators
-		for (InputFunction function : inFunc) {
-			generators
-					.add(new FullAttrOutputSetGenerator(
-							parentFrame,
-							points.length,
-							points,
-							new InputFunction[] { function },
-							FullAttrOutputSetGenerator.Options.DISCARD_INTERMEDIATE_POINTS));
-		}
-		type = OutputFunction.Type.INVERSE_ATTR;
-
-		// check to make sure generators and inFunc are same size
-		if (generators.size() != inFunc.length)
-			return;
-
 		// create and add the OutputFunctions
 		Session session = parentFrame.getCurrentSession();
-		for (int i = 0; i < generators.size(); i++) {
-			OutputFunction function = new InverseOutputFunction(session,
-					new InputFunction[] { inFunc[i] }, type, generators.get(i),
-					outFunc);
-			session.addOutputFunction(function);
+		for (InputFunction function : inFunc) {
+			InputFunction[] inArray = new InputFunction[] { function };
+
+			OutputSetGenerator generator = new FullAttrOutputSetGenerator(
+					parentFrame,
+					points.length,
+					points,
+					inArray,
+					FullAttrOutputSetGenerator.Options.DISCARD_INTERMEDIATE_POINTS);
+			OutputFunction outputFunction = new InverseOutputFunction(session,
+					inArray, OutputFunction.Type.INVERSE_ATTR, generator, outFunc);
+			
+			session.addOutputFunction(outputFunction);
 		}
 	}
 }
