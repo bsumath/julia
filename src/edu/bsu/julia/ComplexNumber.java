@@ -213,7 +213,7 @@ public final class ComplexNumber {
 	 * standard scientific notation.
 	 */
 	public String toString() {
-		String result = new String("{" + x + ", " + y + "}");
+		String result = new String(x + " " + y);
 		return result.replace("E", "*10^");
 	}
 
@@ -232,8 +232,7 @@ public final class ComplexNumber {
 	/**
 	 * method to create a {@link ComplexNumber} from a {@link String}. Must be
 	 * able to parse the {@link String} created by
-	 * {@link ComplexNumber#toString()}. Also can parse two numbers separated by
-	 * a space
+	 * {@link ComplexNumber#toString()}
 	 * 
 	 * @param s
 	 *            the {@link String} to parse
@@ -241,7 +240,6 @@ public final class ComplexNumber {
 	 */
 	public static ComplexNumber parseComplexNumber(String s) {
 		// remove the braces and split on the comma
-		s = s.replace("{", "").replace("}", "").replace(",", "");
 		String[] parts = s.split(" ");
 		if (parts.length != 2)
 			return null;

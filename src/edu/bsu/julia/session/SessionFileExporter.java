@@ -1,38 +1,42 @@
 package edu.bsu.julia.session;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import edu.bsu.julia.ComplexNumber;
 import edu.bsu.julia.input.InputFunction;
-import edu.bsu.julia.output.InverseOutputFunction;
 import edu.bsu.julia.output.OutputFunction;
 import edu.bsu.julia.session.Session.Exporter;
 
 public class SessionFileExporter implements Exporter {
-
-	private Vector<InputFunction> inputFunctions;
+	private static final int BUFFER_SIZE = 2048;
+	private List<InputFunction> inputFunctions;
 	private int iterations;
-	private Vector<OutputFunction> outputFunctions;
+	private List<OutputFunction> outputFunctions;
 	private ComplexNumber seed;
 	private int skips;
-	private int tabDepth = 0;
 
-	public void addInputFunctions(Vector<InputFunction> i) {
-		inputFunctions = i;
+	public void addInputFunctions(Collection<InputFunction> i) {
+		inputFunctions = new ArrayList<InputFunction>(i);
 	}
 
 	public void addIterations(int i) {
 		iterations = i;
 	}
 
-	public void addOutputFunctions(Vector<OutputFunction> o) {
-		outputFunctions = o;
+	public void addOutputFunctions(Collection<OutputFunction> o) {
+		outputFunctions = new ArrayList<OutputFunction>(o);
 	}
 
 	public void addSeedValue(ComplexNumber s) {
@@ -44,77 +48,59 @@ public class SessionFileExporter implements Exporter {
 	}
 
 	public void writeToFile(File f) throws IOException {
-		//FileOutputStream out = new FileOutputStream(f);
-		ZipOutputStream out = new ZipOutputStream(new FileOutputStream(f));
-		out.putNextEntry(new ZipEntry(f.getName().replaceAll(".julia.z", "")));
-		PrintStream ps = new PrintStream(out);
-		
-		tabDepth = 0;
+		// create a new zip file output stream
+		ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(
+				new FileOutputStream(f)));
 
-		ps.println("iterations: " + iterations);
-		ps.println("skips: " + skips);
-		ps.println("seed: " + seed.getX() + ", " + seed.getY());
-		ps.println();
+		// write the session info the zip
+		writeFileToZip(createSessionInfoFile(), "session.txt", out);
 
 		for (InputFunction function : inputFunctions) {
-			writeInputFunction(ps, function);
+			File temp = function.getFile();
+			String name = "in." + function.getInputID() + ".txt";
+			if (temp != null) {
+				writeFileToZip(temp, name, out);
+			}
 		}
 
 		for (OutputFunction function : outputFunctions) {
-			writeOutputFunction(ps, function);
+			File[] temp = function.getFiles();
+			String name = "out." + function.getOutputID();
+			if (temp != null && temp.length == 2) {
+				writeFileToZip(temp[0], name + ".txt", out);
+				writeFileToZip(temp[1], name + ".dat", out);
+			}
 		}
 
-		ps.close();
 		out.close();
 	}
 
-	private void writeOutputFunction(PrintStream ps, OutputFunction function) {
-		ps.println(generateTabs() + "start_output_function: "
-				+ function.getClass().getName());
-		tabDepth += 1;
+	private File createSessionInfoFile() throws IOException {
+		File info = File.createTempFile("session", ".txt");
+		info.deleteOnExit();
+		PrintStream out = new PrintStream(new BufferedOutputStream(
+				new FileOutputStream(info)));
 
-		ps.println(generateTabs() + "iterations: " + function.getIterations());
-		ps.println(generateTabs() + "skips: " + function.getSkips());
-		ps.println(generateTabs() + "seed: " + function.getSeedValue().getX()
-				+ ", " + function.getSeedValue().getY());
-		ps.println(generateTabs() + "type: " + function.getType());
-		for (InputFunction inFunc : function.getInputFunctions()) {
-			writeInputFunction(ps, inFunc);
-		}
-		if (function instanceof InverseOutputFunction) {
-			for (OutputFunction outFunc : ((InverseOutputFunction) function)
-					.getOutputFunctions()) {
-				ps.println(generateTabs() + "output_function: "+ outFunc.hashCode());
-			}
-		}
-		for (ComplexNumber point : function.getPoints()) {
-			ps.println(generateTabs() + "point: " + point.getX() + ", "
-					+ point.getY());
-		}
+		out.println("iterations: " + iterations);
+		out.println("skips: " + skips);
+		out.println("seed: " + seed);
+		out.println();
 
-		tabDepth -= 1;
-		ps.println(generateTabs() + "end_output_function");
-		ps.println();
+		out.close();
+		return info;
 	}
 
-	private void writeInputFunction(PrintStream ps, InputFunction function) {
-		ps.println(generateTabs() + "start_input_function: "
-				+ function.getClass().getName());
-		tabDepth += 1;
-		ps.println(generateTabs() + "m:" + function.getM());
-		for (ComplexNumber var : function.getCoefficients()) {
-			ps.println(generateTabs() + "coefficient: " + var.getX() + ", "
-					+ var.getY());
+	private void writeFileToZip(File file, String zipEntryName,
+			ZipOutputStream out) throws IOException {
+		byte data[] = new byte[BUFFER_SIZE];
+		InputStream in = new BufferedInputStream(new FileInputStream(file),
+				BUFFER_SIZE);
+		ZipEntry entry = new ZipEntry(zipEntryName);
+		out.putNextEntry(entry);
+		int count;
+		while ((count = in.read(data, 0, BUFFER_SIZE)) != -1) {
+			out.write(data, 0, count);
 		}
-		tabDepth -= 1;
-		ps.println(generateTabs() + "end_input_function");
-		ps.println();
-	}
-
-	private String generateTabs() {
-		String s = "";
-		for (int i = 0; i < tabDepth; i++)
-			s += "\t";
-		return s;
+		in.close();
 	}
 }

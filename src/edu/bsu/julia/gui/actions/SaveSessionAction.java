@@ -18,6 +18,7 @@ public class SaveSessionAction extends AbstractAction {
 	private File file = null;
 	// for serializable interface: do not use
 	public static final long serialVersionUID = 0;
+	public static final String FILE_EXTENSION = ".julia.zip";
 
 	public SaveSessionAction(Julia f) {
 		super("Save Session", new ImageIcon(Thread.currentThread()
@@ -29,7 +30,7 @@ public class SaveSessionAction extends AbstractAction {
 
 	public void actionPerformed(ActionEvent arg0) {
 		parentFrame.loseFocus();
-		
+
 		if (!parentFrame.getCurrentSession().isModified())
 			return;
 		if (!saveFile()) {
@@ -42,12 +43,12 @@ public class SaveSessionAction extends AbstractAction {
 		JFileChooser filechooser = new JFileChooser();
 		filechooser.setFileFilter(new FileFilter() {
 			public boolean accept(File file) {
-				return file.getName().toLowerCase().endsWith(".julia.z")
+				return file.getName().toLowerCase().endsWith(FILE_EXTENSION)
 						|| file.isDirectory();
 			}
 
 			public String getDescription() {
-				return "Julia files (*.julia.z)";
+				return "Julia files (*" + FILE_EXTENSION + ")";
 			}
 		});
 
@@ -59,8 +60,8 @@ public class SaveSessionAction extends AbstractAction {
 			return true;
 		} else if (result == JFileChooser.APPROVE_OPTION) {
 			file = filechooser.getSelectedFile();
-			if (!(file.getName().endsWith(".julia.z"))) {
-				file = new File(file.getAbsolutePath() + ".julia.z");
+			if (!(file.getName().endsWith(FILE_EXTENSION))) {
+				file = new File(file.getAbsolutePath() + FILE_EXTENSION);
 			}
 			if (file.exists()) {
 				int response = JOptionPane.showConfirmDialog(null,
@@ -71,7 +72,7 @@ public class SaveSessionAction extends AbstractAction {
 					return false;
 			}
 			parentFrame.setFilePath(file.getAbsolutePath());
-			
+
 			// try to write to a file
 			SessionFileExporter exporter = new SessionFileExporter();
 			parentFrame.getCurrentSession().export(exporter);
@@ -83,7 +84,7 @@ public class SaveSessionAction extends AbstractAction {
 				System.err.println(e);
 				return false;
 			}
-			
+
 		} else {
 			return false;
 		}
