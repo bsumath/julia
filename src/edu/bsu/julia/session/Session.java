@@ -2,9 +2,11 @@ package edu.bsu.julia.session;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
-import java.util.Vector;
 
 import javax.swing.JFrame;
 
@@ -27,12 +29,12 @@ public class Session {
 
 		public ComplexNumber provideSeedValue();
 
-		public Vector<InputFunction> provideInputFunctions();
+		public Collection<InputFunction> provideInputFunctions();
 
-		public Vector<OutputFunction> provideOutputFunctions();
-		
+		public Collection<OutputFunction> provideOutputFunctions();
+
 		public int provideInputSubscript();
-		
+
 		public int provideOutputSubscript();
 	}
 
@@ -49,9 +51,9 @@ public class Session {
 
 		public void addSeedValue(ComplexNumber s);
 
-		public void addInputFunctions(Vector<InputFunction> i);
+		public void addInputFunctions(Collection<InputFunction> i);
 
-		public void addOutputFunctions(Vector<OutputFunction> o);		
+		public void addOutputFunctions(Collection<OutputFunction> o);
 	}
 
 	/**
@@ -75,23 +77,26 @@ public class Session {
 	private int iterations;
 	private int skips;
 	private ComplexNumber seed;
-	private Vector<InputFunction> inputFunctions;
-	private Vector<OutputFunction> outputFunctions;
+	private List<InputFunction> inputFunctions;
+	private List<OutputFunction> outputFunctions;
 	private Queue<OutputFunction> outputQueue;
 	private int inputSubscript;
 	private int outputSubscript;
 	private boolean modified = false;
 	private final JFrame parentFrame;
-	
-	public Session(JFrame frame, Importer importer) throws InvalidSessionParametersException {
+
+	public Session(JFrame frame, Importer importer)
+			throws InvalidSessionParametersException {
 		parentFrame = frame;
-		
+
 		iterations = importer.provideIterations();
 		skips = importer.provideSkips();
 		seed = importer.provideSeedValue();
-		inputFunctions = importer.provideInputFunctions();
-		outputFunctions = importer.provideOutputFunctions();
-		outputQueue = new LinkedList<OutputFunction>(outputFunctions); 
+		inputFunctions = new ArrayList<InputFunction>(importer
+				.provideInputFunctions());
+		outputFunctions = new ArrayList<OutputFunction>(importer
+				.provideOutputFunctions());
+		outputQueue = new LinkedList<OutputFunction>(outputFunctions);
 		inputSubscript = importer.provideInputSubscript();
 		outputSubscript = importer.provideOutputSubscript();
 
@@ -104,7 +109,7 @@ public class Session {
 		if (skips >= iterations)
 			throw new InvalidSessionParametersException(
 					"Skips must be less than Points to Plot.");
-		
+
 		markUnmodified();
 	}
 
@@ -144,7 +149,7 @@ public class Session {
 		support.firePropertyChange("seed", null, seed);
 	}
 
-	public Vector<InputFunction> getInputFunctions() {
+	public List<InputFunction> getInputFunctions() {
 		return inputFunctions;
 	}
 
@@ -168,7 +173,7 @@ public class Session {
 		support.firePropertyChange("deleteInputFunction", null, fn);
 	}
 
-	public Vector<OutputFunction> getOutputFunctions() {
+	public List<OutputFunction> getOutputFunctions() {
 		return outputFunctions;
 	}
 
@@ -187,19 +192,18 @@ public class Session {
 		function.delete();
 		support.firePropertyChange("deleteOutputFunction", null, function);
 	}
-	
 
 	/**
 	 * method to unload an OutputFunction to try and free some heap space
 	 */
-	public void freeHeapSpace(){
+	public void freeHeapSpace() {
 		OutputFunction function = outputQueue.poll();
-		if (function != null){
+		if (function != null) {
 			function.unload();
 			outputQueue.add(function);
 		}
 	}
-	
+
 	public void addListener(PropertyChangeListener list) {
 		support.addPropertyChangeListener(list);
 	}
@@ -212,7 +216,7 @@ public class Session {
 		return ++outputSubscript;
 	}
 
-	public void export(Exporter exporter){
+	public void export(Exporter exporter) {
 		exporter.addIterations(iterations);
 		exporter.addSkips(skips);
 		exporter.addSeedValue(seed);
@@ -228,8 +232,8 @@ public class Session {
 		modified = false;
 		parentFrame.setTitle(UNMODIFIED_TITLE);
 	}
-	
-	private void markModified(){
+
+	private void markModified() {
 		modified = true;
 		parentFrame.setTitle(MODIFIED_TITLE);
 	}

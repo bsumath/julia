@@ -1,5 +1,12 @@
 package edu.bsu.julia.input;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.Random;
+
 import edu.bsu.julia.ComplexNumber;
 
 /**
@@ -43,6 +50,8 @@ public abstract class InputFunction {
 	 */
 	private int sub = 0;
 
+	private final long creationTime;
+
 	/**
 	 * This constructor must be called as the first line of any subclass
 	 * constructor. It takes in the m value and the number of coefficients in
@@ -60,6 +69,14 @@ public abstract class InputFunction {
 			throw new IllegalArgumentException("m neg");
 		m = mValue;
 		coefficientArray = new ComplexNumber[coefficients];
+
+		// sleep random amount of time to make sure creationTime is unique
+		try {
+			Random rand = new Random();
+			Thread.sleep(rand.nextInt(50) + 1);
+		} catch (InterruptedException e) {
+		}
+		creationTime = System.currentTimeMillis();
 	}
 
 	/**
@@ -169,5 +186,53 @@ public abstract class InputFunction {
 			return false;
 		}
 
+	}
+
+	/**
+	 * method to uniquely identify each {@link InputFunction}
+	 * 
+	 * @return a long integer that uniquely identifies each
+	 *         {@link InputFunction}
+	 */
+	public long getInputID() {
+		return creationTime;
+	}
+
+	/**
+	 * method to access a {@link File} with the information about this
+	 * {@link InputFunction}
+	 * 
+	 * @return a {@link File} with the information about this
+	 *         {@link InputFunction}
+	 */
+	public File getFile() {
+		try {
+			File info = File.createTempFile("input", ".txt");
+			PrintStream out = new PrintStream(new BufferedOutputStream(
+					new FileOutputStream(info)));
+
+			out.print(historyInfo());
+
+			out.close();
+			return info;
+		} catch (IOException e) {
+			return null;
+		}
+	}
+
+	/**
+	 * create a string to represent this function's history
+	 * 
+	 * @return a {@link String} containing the class, m value, and coefficients
+	 *         of this {@link InputFunction}
+	 */
+	public String historyInfo() {
+		String result = "";
+		result += "class: " + this.getClass().getName() + "\n";
+		result += "m: " + m + "\n";
+		for (ComplexNumber coefficient : coefficientArray) {
+			result += "coefficient: " + coefficient + "\n";
+		}
+		return result;
 	}
 }

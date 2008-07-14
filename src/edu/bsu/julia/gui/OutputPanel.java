@@ -8,7 +8,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Vector;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -58,7 +58,7 @@ public class OutputPanel extends JPanel implements PropertyChangeListener {
 		private void checkPopup(MouseEvent e) {
 			if (e.isPopupTrigger()) {
 				final int index = outputList.locationToIndex(e.getPoint());
-				Vector<OutputFunction> functions = parentFrame.getCurrentSession()
+				List<OutputFunction> functions = parentFrame.getCurrentSession()
 						.getOutputFunctions();
 				if(index >= functions.size()) return;
 				
@@ -99,9 +99,9 @@ public class OutputPanel extends JPanel implements PropertyChangeListener {
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
 
-		Vector<OutputFunction> fns = s.getOutputFunctions();
+		List<OutputFunction> fns = s.getOutputFunctions();
 		for (int i = 0; i < fns.size(); i++)
-			listModel.addElement(fns.elementAt(i));
+			listModel.addElement(fns.get(i));
 
 		outputList = new JList(listModel);
 		outputList

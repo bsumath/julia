@@ -4,7 +4,8 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
@@ -19,7 +20,7 @@ import edu.bsu.julia.session.Session;
 public class SaveOutputFunctionAction extends AbstractAction {
 
 	private Julia parentFrame;
-	private static Vector<OutputFunction> func;
+	private static List<OutputFunction> func;
 	File file;
 	// for serializable interface: do not use
 	public static final long serialVersionUID = 0;
@@ -41,7 +42,7 @@ public class SaveOutputFunctionAction extends AbstractAction {
 		Session s = parentFrame.getCurrentSession();
 		FileOutputStream out;
 		PrintStream ps;
-		func = new Vector<OutputFunction>();
+		func = new ArrayList<OutputFunction>();
 		func = s.getOutputFunctions();
 
 		try {
@@ -56,7 +57,7 @@ public class SaveOutputFunctionAction extends AbstractAction {
 			for (int j = 0; j < s.getOutputFunctions().size(); j++) {
 
 				if (j < s.getOutputFunctions().size()) {
-					InputFunction in[] = func.elementAt(j).getInputFunctions();
+					InputFunction in[] = func.get(j).getInputFunctions();
 					for (int k = 0; k < in.length; k++) {
 						ps.println(in[k].getM());
 						ComplexNumber var[] = in[k].getCoefficients();
@@ -67,7 +68,7 @@ public class SaveOutputFunctionAction extends AbstractAction {
 				} else {
 					ps.println("Composite");
 				}
-				ComplexNumber pts[] = func.elementAt(j).getPoints();
+				ComplexNumber pts[] = func.get(j).getPoints();
 				ps.print("{");
 				for (int n = 0; n < pts.length; n++)
 					ps.print(pts[n]);

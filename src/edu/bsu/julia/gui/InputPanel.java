@@ -13,8 +13,8 @@ import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -186,9 +186,9 @@ public class InputPanel extends JPanel implements PropertyChangeListener {
 		constraints.weighty = 1000;
 		constraints.fill = GridBagConstraints.BOTH;
 
-		Vector<InputFunction> fns = s.getInputFunctions();
+		List<InputFunction> fns = s.getInputFunctions();
 		for (int i = 0; i < fns.size(); i++)
-			listModel.addElement(fns.elementAt(i));
+			listModel.addElement(fns.get(i));
 
 		inputList = new JList(listModel);
 		inputList

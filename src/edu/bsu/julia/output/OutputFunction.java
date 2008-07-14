@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -64,14 +65,14 @@ public class OutputFunction {
 	}
 
 	private int sub = 0;
-	private int iterations;
-	private final int skips;
-	private final ComplexNumber seed;
+	protected int iterations;
+	protected final int skips;
+	protected final ComplexNumber seed;
 	protected final Type functionType;
-	private final InputFunction[] inputFunctions;
+	protected final InputFunction[] inputFunctions;
 	private ComplexNumber[] points;
 	private OutputSetGenerator generator;
-	private File pointsFile;
+	protected File pointsFile;
 
 	private Color c;
 	private final static Color[] colorSet = { Color.BLACK, Color.BLUE,
@@ -82,6 +83,7 @@ public class OutputFunction {
 	private final JProgressBar bar = new JProgressBar(0, 100);
 	private SwingWorker<File, Void> tempFileWriter;
 	private SwingWorker<ComplexNumber[], Void> tempFileReader;
+	protected final long creationTime;
 
 	public OutputFunction(final Session session, InputFunction[] i, Type type,
 			OutputSetGenerator gen) {
@@ -94,6 +96,15 @@ public class OutputFunction {
 		generator = gen;
 		c = getNextColor();
 
+		// sleep random amount of time to make sure creationTime is unique
+		try {
+			Random rand = new Random();
+			Thread.sleep(rand.nextInt(50) + 1);
+		} catch (InterruptedException e) {
+		}
+		creationTime = System.currentTimeMillis();
+
+		// add a property change listener to detect when the generator is done
 		generator.addPropertyChangeListener(new PropertyChangeListener() {
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
@@ -300,24 +311,15 @@ public class OutputFunction {
 		tempFileWriter = new SwingWorker<File, Void>() {
 			public File doInBackground() {
 				try {
-					// sleep for a random amount of time. should make sure two
-					// temp files never have the same name
-					try {
-						Random rand = new Random();
-						Thread.sleep(rand.nextInt(50));
-					} catch (InterruptedException e) {
-					}
-
 					// create a new temp file and open it.
-					File file = File.createTempFile("out."
-							+ System.currentTimeMillis(), ".tmp");
+					File file = File.createTempFile("output", ".dat");
 					file.deleteOnExit();
 
 					PrintStream out = new PrintStream(
 							new FileOutputStream(file));
 
 					for (ComplexNumber p : points)
-						out.println(p.getX() + " " + p.getY());
+						out.println(p);
 
 					out.close();
 					return file;
@@ -341,6 +343,7 @@ public class OutputFunction {
 				}
 			}
 		});
+		tempFileWriter.execute();
 	}
 
 	private void readPointsTempFile() {
@@ -381,7 +384,7 @@ public class OutputFunction {
 					} catch (Exception e) {
 						points = null;
 					}
-					
+
 					if (points != null)
 						support.firePropertyChange("reselect", null, null);
 					tempFileReader = null;
@@ -399,5 +402,57 @@ public class OutputFunction {
 		if (!generator.isDone())
 			generator.cancel(true);
 		unload();
+	}
+
+	/**
+	 * method to access the files this OutputFunction
+	 * 
+	 * @return an array of {@link File} containing two entries, one for point
+	 *         data and one for the other information about the
+	 *         {@link OutputFunction}
+	 */
+	public File[] getFiles() {
+		if (pointsFile == null)
+			try {
+				pointsFile = tempFileWriter.get();
+			} catch (Exception e1) {
+				System.err
+						.println("OutputFunction.getFiles(): temp file error");
+				return null;
+			}
+
+		try {
+			File info = File.createTempFile("output", ".txt");
+			info.deleteOnExit();
+			PrintStream out = new PrintStream(new BufferedOutputStream(
+					new FileOutputStream(info)));
+
+			out.println("class: " + this.getClass().getName());
+			out.println("type: " + functionType);
+			out.println("iterations: " + iterations);
+			out.println("skips: " + skips);
+			out.println("seed: " + seed.getX() + ", " + seed.getY());
+
+			for (InputFunction function : inputFunctions) {
+				out.println("input_function: " + function.getInputID());
+			}
+
+			out.close();
+
+			return new File[] { info, pointsFile };
+		} catch (IOException e) {
+			System.err.println("OutputFunction.getFiles(): IO exception");
+			return null;
+		}
+	}
+
+	/**
+	 * method to uniquely identify each {@link OutputFunction}
+	 * 
+	 * @return a long integer that uniquely identifies each
+	 *         {@link OutputFunction}
+	 */
+	public long getOutputID() {
+		return creationTime;
 	}
 }

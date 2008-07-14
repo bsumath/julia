@@ -1,7 +1,7 @@
 package edu.bsu.julia.gui.actions;
 
 import java.awt.event.ActionEvent;
-import java.util.Vector;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
@@ -47,7 +47,7 @@ public class DeleteSelectedAction extends AbstractAction {
 			else {
 				InputFunction[] inFns = parentFrame.getInputPanel().getSelectedFunctions();
 				for(int i = 0; i<inFns.length; i++) {
-					Vector<InputFunction> inList = s.getInputFunctions();
+					List<InputFunction> inList = s.getInputFunctions();
 					int index = inList.indexOf(inFns[i]);
 					s.deleteInputFunction(index);
 				}

@@ -1,5 +1,6 @@
 package edu.bsu.julia.output;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -87,6 +88,51 @@ public class InverseOutputFunction extends OutputFunction {
 			return result;
 		} catch (ClassCastException e) {
 			return false;
+		}
+	}
+
+	@Override
+	/*
+	 * method to access the files this OutputFunction
+	 * 
+	 * @return an array of {@link File} containing two entries, one for point
+	 * data and one for the other information about the {@link OutputFunction}
+	 */
+	public File[] getFiles() {
+		if (pointsFile == null)
+			return null;
+
+		try {
+			File info = File.createTempFile("out." + creationTime, ".txt");
+			info.deleteOnExit();
+			PrintStream out = new PrintStream(new BufferedOutputStream(
+					new FileOutputStream(info)));
+
+			// TODO this is all copy/pasted from OutputFunction. instead it
+			// would make sense to call something like private
+			// OutputFunction.writeInfo(OutputStream) that would do all this.
+			// then things would need to be protected in OutputFunction
+			out.println("class: " + this.getClass().getName());
+			out.println("type: " + functionType);
+			out.println("iterations: " + iterations);
+			out.println("skips: " + skips);
+			out.println("seed: " + seed.getX() + ", " + seed.getY());
+			out.println();
+
+			for (InputFunction function : inputFunctions) {
+				out.println("input_function: " + function.getInputID());
+			}
+			out.println();
+
+			for (OutputFunction function : outputFunctions) {
+				out.println("output_function: " + function.getOutputID());
+			}
+
+			out.close();
+
+			return new File[] { info, pointsFile };
+		} catch (IOException e) {
+			return null;
 		}
 	}
 }

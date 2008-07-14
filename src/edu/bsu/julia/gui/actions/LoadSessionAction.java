@@ -21,6 +21,9 @@ public class LoadSessionAction extends AbstractAction {
 	// for serializable interface: do not use
 	public static final long serialVersionUID = 0;
 
+	private static final String FILE_EXTENSION = ".julia.zip";
+	private static final String LEGACY_EXTENSION = ".julia";
+
 	public LoadSessionAction(Julia f) {
 		super("Open Session", new ImageIcon(Thread.currentThread()
 				.getContextClassLoader().getResource("loadSession.png")));
@@ -61,7 +64,7 @@ public class LoadSessionAction extends AbstractAction {
 
 		try {
 			Session.Importer importer;
-			if (file.getName().endsWith(".julia.z"))
+			if (file.getName().endsWith(FILE_EXTENSION))
 				importer = new SessionFileImporter(file);
 			else
 				importer = new LegacyFileImporter(file);
@@ -76,13 +79,14 @@ public class LoadSessionAction extends AbstractAction {
 
 	private class JuliaFileFilter extends javax.swing.filechooser.FileFilter {
 		public boolean accept(File file) {
-			return file.getName().toLowerCase().endsWith(".julia")
-					|| file.getName().toLowerCase().endsWith(".julia.z")
+			return file.getName().toLowerCase().endsWith(LEGACY_EXTENSION)
+					|| file.getName().toLowerCase().endsWith(FILE_EXTENSION)
 					|| file.isDirectory();
 		}
 
 		public String getDescription() {
-			return "Julia files (*.julia, *.julia.z)";
+			return "Julia files (*" + LEGACY_EXTENSION + ", *" + FILE_EXTENSION
+					+ ")";
 		}
 	}
 
