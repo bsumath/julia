@@ -427,15 +427,8 @@ public class OutputFunction {
 			PrintStream out = new PrintStream(new BufferedOutputStream(
 					new FileOutputStream(info)));
 
-			out.println("class: " + this.getClass().getName());
-			out.println("type: " + functionType);
-			out.println("iterations: " + iterations);
-			out.println("skips: " + skips);
-			out.println("seed: " + seed.getX() + ", " + seed.getY());
-
-			for (InputFunction function : inputFunctions) {
-				out.println("input_function: " + function.getInputID());
-			}
+			for (String s : historyInfo())
+				out.println(s);
 
 			out.close();
 
@@ -454,5 +447,29 @@ public class OutputFunction {
 	 */
 	public long getOutputID() {
 		return creationTime;
+	}
+
+	/**
+	 * create a string to represent this function's history
+	 * 
+	 * @return a {@link String} containing the class, m value, and coefficients
+	 *         of this {@link OutputFunction}
+	 */
+	public List<String> historyInfo() {
+		List<String> result = new ArrayList<String>();
+		result.add("class: " + this.getClass().getName());
+		result.add("type: " + functionType);
+		result.add("iterations: " + iterations);
+		result.add("skips: " + skips);
+		result.add("seed: " + seed);
+
+		for (InputFunction function : inputFunctions) {
+			result.add("begin_input_function: " + function.getInputID());
+			for (String s : function.historyInfo())
+				result.add("\t" + s);
+			result.add("end_input_function");
+		}
+
+		return result;
 	}
 }

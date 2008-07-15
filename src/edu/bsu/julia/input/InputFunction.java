@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import edu.bsu.julia.ComplexNumber;
@@ -211,7 +213,8 @@ public abstract class InputFunction {
 			PrintStream out = new PrintStream(new BufferedOutputStream(
 					new FileOutputStream(info)));
 
-			out.print(historyInfo());
+			for (String s : historyInfo())
+				out.println(s);
 
 			out.close();
 			return info;
@@ -226,12 +229,12 @@ public abstract class InputFunction {
 	 * @return a {@link String} containing the class, m value, and coefficients
 	 *         of this {@link InputFunction}
 	 */
-	public String historyInfo() {
-		String result = "";
-		result += "class: " + this.getClass().getName() + "\n";
-		result += "m: " + m + "\n";
+	public List<String> historyInfo() {
+		List<String> result = new ArrayList<String>();
+		result.add("class: " + this.getClass().getName());
+		result.add("m: " + m);
 		for (ComplexNumber coefficient : coefficientArray) {
-			result += "coefficient: " + coefficient + "\n";
+			result.add("coefficient: " + coefficient);
 		}
 		return result;
 	}
