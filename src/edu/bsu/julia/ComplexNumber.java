@@ -211,10 +211,19 @@ public final class ComplexNumber {
 	 * Provides a string representation of the complex number in the form: "{x,
 	 * y}". "Computerized Scientific Notation" (the E form) is replaced with
 	 * standard scientific notation.
+	 * @return the {@link String} representation of the {@link ComplexNumber}
 	 */
 	public String toString() {
-		String result = new String(x + " " + y);
-		return result.replace("E", "*10^");
+		return ("{" + x + ", " + y + "}").replace("E", "*10^");
+	}
+
+	/**
+	 * creates a {@link String} where the x and y are separated by a space
+	 * 
+	 * @return a {@link String} representing the {@link ComplexNumber}.
+	 */
+	public String exportString() {
+		return (x + " " + y).replace("E", "*10^");
 	}
 
 	/**
@@ -240,6 +249,7 @@ public final class ComplexNumber {
 	 */
 	public static ComplexNumber parseComplexNumber(String s) {
 		// remove the braces and split on the comma
+		s = s.replace("{", "").replace("}", "").replace(",", "");
 		String[] parts = s.split(" ");
 		if (parts.length != 2)
 			return null;
