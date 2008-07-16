@@ -59,8 +59,7 @@ public class SaveSetAction extends AbstractAction {
 				if (response == JOptionPane.CANCEL_OPTION) return false;
 			}
 			parentFrame.setFilePath(file.getAbsolutePath());
-			//OutputFunction fn = (OutputFunction)outputList.getElementAt(index);
-			return true; //fn.writeToFile(file);
+			return true;
 			//TODO fix this
 		}
 		else {

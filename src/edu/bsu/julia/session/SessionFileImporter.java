@@ -26,7 +26,7 @@ import edu.bsu.julia.ComplexNumber;
 import edu.bsu.julia.generators.DummyOutputSetGenerator;
 import edu.bsu.julia.generators.OutputSetGenerator;
 import edu.bsu.julia.input.InputFunction;
-import edu.bsu.julia.output.InverseOutputFunction;
+import edu.bsu.julia.output.RecursiveOutputSet;
 import edu.bsu.julia.output.OutputSet;
 import edu.bsu.julia.session.Session.Importer;
 import edu.bsu.julia.session.Session.InvalidSessionParametersException;
@@ -47,7 +47,7 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 	private ComplexNumber seed = new ComplexNumber();
 
 	private final Map<Long, InputFunction> inputFunctions = new HashMap<Long, InputFunction>();
-	private final Map<Long, OutputSet> outputFunctions = new HashMap<Long, OutputSet>();
+	private final Map<Long, OutputSet> outputSets = new HashMap<Long, OutputSet>();
 
 	private final List<File> tempFiles = new ArrayList<File>();
 	private final Map<Long, File> inputMap;
@@ -125,7 +125,7 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 					new FileInputStream(infoFile)));
 			Scanner dataScanner = new Scanner(new BufferedInputStream(
 					new FileInputStream(dataFile)));
-			readOutputFunction(key, infoScanner, dataScanner);
+			readOutputSet(key, infoScanner, dataScanner);
 			infoScanner.close();
 			dataScanner.close();
 		}
@@ -219,7 +219,7 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 		}
 	}
 
-	private void readOutputFunction(Long outputID, Scanner info, Scanner data)
+	private void readOutputSet(Long outputID, Scanner info, Scanner data)
 			throws IOException, ClassNotFoundException,
 			IllegalArgumentException, InstantiationException,
 			IllegalAccessException, InvocationTargetException {
@@ -231,7 +231,7 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 		ComplexNumber seed = new ComplexNumber();
 		List<InputFunction> inFunctions = new ArrayList<InputFunction>();
 		List<ComplexNumber> points = new ArrayList<ComplexNumber>();
-		List<OutputSet> outFunctions = new ArrayList<OutputSet>();
+		List<OutputSet> outSets = new ArrayList<OutputSet>();
 		OutputSet.Type type = OutputSet.Type.BASIC;
 		String className = "";
 
@@ -276,9 +276,9 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 				type = OutputSet.Type.valueOf(lineParts[1]);
 			} else if (lineParts[0].equalsIgnoreCase("begin_output_function")) {
 				long key = Long.parseLong(lineParts[1]);
-				if (outputFunctions.containsKey(key)) {
+				if (outputSets.containsKey(key)) {
 					// get the output function for the key
-					outFunctions.add(outputFunctions.get(key));
+					outSets.add(outputSets.get(key));
 
 					// skip all the lines until end_output_function
 					while (info.hasNextLine()
@@ -293,11 +293,11 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 							new FileInputStream(infoFile)));
 					Scanner dataScanner = new Scanner(new BufferedInputStream(
 							new FileInputStream(dataFile)));
-					readOutputFunction(key, infoScanner, dataScanner);
+					readOutputSet(key, infoScanner, dataScanner);
 					infoScanner.close();
 					dataScanner.close();
 
-					outFunctions.add(outputFunctions.get(key));
+					outSets.add(outputSets.get(key));
 
 					// skip all the lines until end_output_function
 					while (info.hasNextLine()
@@ -309,11 +309,11 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 					// file
 					File temp = File.createTempFile("dummy", ".tmp");
 					Scanner dataScanner = new Scanner(new FileInputStream(temp));
-					readOutputFunction(key, info, dataScanner);
+					readOutputSet(key, info, dataScanner);
 					dataScanner.close();
 					temp.delete();
 
-					outFunctions.add(outputFunctions.remove(key));
+					outSets.add(outputSets.remove(key));
 				}
 			}
 		}
@@ -334,22 +334,22 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 		}
 
 		// create the output function
-		OutputSet function;
+		OutputSet set;
 		OutputSetGenerator generator = new DummyOutputSetGenerator(points
 				.toArray(new ComplexNumber[] {}));
-		if (className.endsWith("InverseOutputFunction")) {
-			function = new InverseOutputFunction(tempSession, inFunctions
+		if (className.endsWith("RecursiveOutputSet")) {
+			set = new RecursiveOutputSet(tempSession, inFunctions
 					.toArray(new InputFunction[] {}), type, generator,
-					outFunctions.toArray(new OutputSet[] {}));
+					outSets.toArray(new OutputSet[] {}));
 		} else {
-			function = new OutputSet(tempSession, inFunctions
+			set = new OutputSet(tempSession, inFunctions
 					.toArray(new InputFunction[] {}), type, generator);
 		}
 
 		// function created successfully, remove it from the maps
 		outputDataMap.remove(outputID);
 		outputInfoMap.remove(outputID);
-		outputFunctions.put(outputID, function);
+		outputSets.put(outputID, set);
 	}
 
 	/**
@@ -385,16 +385,16 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 		return iterations;
 	}
 
-	public Collection<OutputSet> provideOutputFunctions() {
+	public Collection<OutputSet> provideOutputSets() {
 		// sort the functions by the keys and set the subscripts
-		List<Long> keys = new ArrayList<Long>(outputFunctions.keySet());
+		List<Long> keys = new ArrayList<Long>(outputSets.keySet());
 		Collections.sort(keys);
 
 		List<OutputSet> result = new ArrayList<OutputSet>();
 		for (int i = 0; i < keys.size(); i++) {
-			OutputSet function = outputFunctions.get(keys.get(i));
-			function.setSubscript(i + 1);
-			result.add(function);
+			OutputSet set = outputSets.get(keys.get(i));
+			set.setSubscript(i + 1);
+			result.add(set);
 		}
 
 		return result;
@@ -413,7 +413,7 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 	}
 
 	public int provideOutputSubscript() {
-		return outputFunctions.size();
+		return outputSets.size();
 	}
 
 	/**
@@ -445,7 +445,7 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 			return iterations;
 		}
 
-		public Collection<OutputSet> provideOutputFunctions() {
+		public Collection<OutputSet> provideOutputSets() {
 			return new ArrayList<OutputSet>();
 		}
 

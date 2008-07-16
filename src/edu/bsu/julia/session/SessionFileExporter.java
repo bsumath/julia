@@ -26,7 +26,7 @@ public class SessionFileExporter extends SwingWorker<Boolean, Void> implements
 	private static final int BUFFER_SIZE = 2048;
 	private List<InputFunction> inputFunctions;
 	private int iterations;
-	private List<OutputSet> outputFunctions;
+	private List<OutputSet> outputSets;
 	private ComplexNumber seed;
 	private int skips;
 	private final File file;
@@ -43,8 +43,8 @@ public class SessionFileExporter extends SwingWorker<Boolean, Void> implements
 		iterations = i;
 	}
 
-	public void addOutputFunctions(Collection<OutputSet> o) {
-		outputFunctions = new ArrayList<OutputSet>(o);
+	public void addOutputSets(Collection<OutputSet> o) {
+		outputSets = new ArrayList<OutputSet>(o);
 	}
 
 	public void addSeedValue(ComplexNumber s) {
@@ -56,7 +56,7 @@ public class SessionFileExporter extends SwingWorker<Boolean, Void> implements
 	}
 
 	protected Boolean doInBackground() throws Exception {
-		float maxProgress = 1 + inputFunctions.size() + outputFunctions.size();
+		float maxProgress = 1 + inputFunctions.size() + outputSets.size();
 		float progress = 0;
 
 		// create a new zip file output stream
@@ -79,9 +79,9 @@ public class SessionFileExporter extends SwingWorker<Boolean, Void> implements
 			setProgress((int) (progress / maxProgress * 100));
 		}
 
-		for (OutputSet function : outputFunctions) {
-			File[] temp = function.getFiles();
-			String name = "out." + function.getOutputID();
+		for (OutputSet set : outputSets) {
+			File[] temp = set.getFiles();
+			String name = "out." + set.getOutputID();
 			if (temp != null && temp.length == 2) {
 				writeFileToZip(temp[0], name + ".txt", out);
 				writeFileToZip(temp[1], name + ".dat", out);

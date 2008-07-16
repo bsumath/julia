@@ -14,7 +14,7 @@ public class OverviewListener implements GLEventListener, PropertyChangeListener
 	private Julia parentFrame;
 	private double x, y, width, height, boxX, boxY, boxWidth, boxHeight,
 		paneHeight, paneWidth, boxPHeight, boxPWidth, dragX, dragY;
-	private OutputSet fns[];
+	private OutputSet sets[];
 	private JDialog frame;
 	private GLListener list;
 	private boolean dragInProgress;
@@ -34,7 +34,7 @@ public class OverviewListener implements GLEventListener, PropertyChangeListener
 		height = boxHeight*5;
 		x -= width/2;
 		y -= height/2;
-		fns = list.getFns();
+		sets = list.getSets();
 		boxPHeight = list.getPaneHeight();
 		boxPWidth = list.getPaneWidth();
 		if(boxPHeight >= boxPWidth) {
@@ -81,15 +81,15 @@ public class OverviewListener implements GLEventListener, PropertyChangeListener
 		gl.glVertex2d(boxX, boxY + boxHeight);
 		gl.glEnd();
 		
-		if(fns==null) return;
+		if(sets==null) return;
 		gl.glPointSize(1);
-		for(int i=0; i<fns.length; i++) {
-			if(fns[i]!=null) {
-				OutputSet function = fns[i];
+		for(int i=0; i<sets.length; i++) {
+			if(sets[i]!=null) {
+				OutputSet set = sets[i];
 				float[] cArray = new float[3];
-				function.getColor().getColorComponents(cArray);
+				set.getColor().getColorComponents(cArray);
 				gl.glColor3f(cArray[0], cArray[1], cArray[2]);
-				ComplexNumber[] points = function.getPoints();
+				ComplexNumber[] points = set.getPoints();
 				gl.glBegin(GL.GL_POINTS);
 				for(int j=0; j<points.length; j++)
 					gl.glVertex2d(points[j].getX(), points[j].getY());
@@ -140,8 +140,8 @@ public class OverviewListener implements GLEventListener, PropertyChangeListener
 			y -= height/2;
 			frame.repaint();
 		}
-		else if(name.equals("fns")) {
-			fns = (OutputSet[])e.getNewValue();
+		else if(name.equals("sets")) {
+			sets = (OutputSet[])e.getNewValue();
 			frame.repaint();
 		}
 		else if(name.equals("paneHeight")) {

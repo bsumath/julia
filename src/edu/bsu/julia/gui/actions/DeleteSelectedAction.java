@@ -35,13 +35,13 @@ public class DeleteSelectedAction extends AbstractAction {
 				"Delete All Selected?",JOptionPane.OK_CANCEL_OPTION);
 		if (choice == JOptionPane.OK_OPTION){
 			if (type == Julia.OUTPUTTYPE) {
-				Object[] outObjs = parentFrame.getOutputFunctionList().getSelectedValues();
-				OutputSet[] outFns = new OutputSet[outObjs.length];
+				Object[] outObjs = parentFrame.getOutputSetList().getSelectedValues();
+				OutputSet[] outSets = new OutputSet[outObjs.length];
 				for(int j = 0; j<outObjs.length; j++) {
-					outFns[j] = (OutputSet)outObjs[j];
+					outSets[j] = (OutputSet)outObjs[j];
 				}
-				for(OutputSet function : outFns){
-					s.deleteOutputFunction(function);
+				for(OutputSet set : outSets){
+					s.deleteOutputSet(set);
 				}
 			}
 			else {

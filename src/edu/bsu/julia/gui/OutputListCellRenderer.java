@@ -37,20 +37,20 @@ public class OutputListCellRenderer implements ListCellRenderer {
 		panel.add(iconPanel, BorderLayout.WEST);
 	}
 
-	public Component getListCellRendererComponent(JList list, Object fn,
+	public Component getListCellRendererComponent(JList list, Object obj,
 			int index, boolean selected, boolean focus) {
-		OutputSet function = (OutputSet) fn;
-		functionDescription.setText(function.toString() + ". Points:"
-				+ function.getNumOfPoints());
-		icon.setFunction(function);
-		icon.setColor(function.getColor());
+		OutputSet set = (OutputSet) obj;
+		functionDescription.setText(set.toString() + ". Points:"
+				+ set.getNumOfPoints());
+		icon.setFunction(set);
+		icon.setColor(set.getColor());
 
-		if (function.isLoaded()) {
+		if (set.isLoaded()) {
 			panel.remove(loadingPanel);
 			panel.add(functionDescription, BorderLayout.CENTER);
 		} else {
 			loadingPanel.removeAll();
-			loadingPanel.add(function.getLoadingComponent());
+			loadingPanel.add(set.getLoadingComponent());
 			panel.remove(functionDescription);
 			panel.add(loadingPanel, BorderLayout.CENTER);
 		}

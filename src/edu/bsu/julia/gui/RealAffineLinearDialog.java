@@ -12,7 +12,7 @@ import javax.swing.JTextField;
 
 import edu.bsu.julia.ComplexNumber;
 import edu.bsu.julia.Julia;
-import edu.bsu.julia.input.RealAfflineLinearInputFunction;
+import edu.bsu.julia.input.RealAffineLinearInputFunction;
 import edu.bsu.julia.session.Session;
 
 /**
@@ -20,11 +20,11 @@ import edu.bsu.julia.session.Session;
  * <h3>Description</h3>
  * <p>
  * Creates a dialog box for the function type: [a, b; c, d]z + [e; f]. This
- * dialog is used when creating a new affline linear function, editing an
- * existing function, or cloneing an existing function.
+ * dialog is used when creating a new affine linear function, editing an
+ * existing function, or cloning an existing function.
  * 
  */
-public class RealAfflineLinearDialog extends JDialog implements ActionListener {
+public class RealAffineLinearDialog extends JDialog implements ActionListener {
 	/**
 	 * The main frame over which this dialog sets.
 	 */
@@ -41,7 +41,7 @@ public class RealAfflineLinearDialog extends JDialog implements ActionListener {
 	 * function that is being modified. If the dialog is being used to create a
 	 * new function, this field is <b>null</b>.
 	 */
-	private RealAfflineLinearInputFunction function;
+	private RealAffineLinearInputFunction function;
 	/**
 	 * The text field in which the user enters the function's m value.
 	 */
@@ -74,10 +74,10 @@ public class RealAfflineLinearDialog extends JDialog implements ActionListener {
 	public static final long serialVersionUID = 0;
 
 	/**
-	 * Builds the dialog for a affline linear input function and makes it
+	 * Builds the dialog for a affine linear input function and makes it
 	 * visible on the screen. 'type' indicates whether the dialog will be used
-	 * for editing or cloneing an existing function or creating a new function.
-	 * If editing or cloneing an existing function, that function is passed to
+	 * for editing or cloning an existing function or creating a new function.
+	 * If editing or cloning an existing function, that function is passed to
 	 * the constructor as 'fn'. When creating a new function, 'fn' can be
 	 * <b>null</b>.
 	 * 
@@ -89,9 +89,9 @@ public class RealAfflineLinearDialog extends JDialog implements ActionListener {
 	 * @param fn
 	 *            the function to be edited or cloned
 	 */
-	public RealAfflineLinearDialog(Julia f, int type,
-			RealAfflineLinearInputFunction fn) {
-		super(f, "Create a Real Affline Linear Function", false);
+	public RealAffineLinearDialog(Julia f, int type,
+			RealAffineLinearInputFunction fn) {
+		super(f, "Create a Real Affine Linear Function", false);
 		dialogType = type;
 		function = fn;
 		parentFrame = f;
@@ -248,9 +248,9 @@ public class RealAfflineLinearDialog extends JDialog implements ActionListener {
 		ComplexNumber dComp = new ComplexNumber(d, 0);
 		ComplexNumber eComp = new ComplexNumber(e, 0);
 		ComplexNumber fComp = new ComplexNumber(f, 0);
-		RealAfflineLinearInputFunction newFunction;
+		RealAffineLinearInputFunction newFunction;
 		try {
-			newFunction = new RealAfflineLinearInputFunction(m, aComp, bComp,
+			newFunction = new RealAffineLinearInputFunction(m, aComp, bComp,
 					cComp, dComp, eComp, fComp);
 		} catch (IllegalArgumentException except) {
 			JuliaError.M_NEG_ERROR.showDialog(parentFrame);

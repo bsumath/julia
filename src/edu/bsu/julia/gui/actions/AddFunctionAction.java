@@ -21,7 +21,7 @@ import edu.bsu.julia.gui.GUIUtil;
 import edu.bsu.julia.gui.LinearDialog;
 import edu.bsu.julia.gui.MobiusDialog;
 import edu.bsu.julia.gui.QuadraticDialog;
-import edu.bsu.julia.gui.RealAfflineLinearDialog;
+import edu.bsu.julia.gui.RealAffineLinearDialog;
 
 public class AddFunctionAction extends AbstractAction {
 	
@@ -92,7 +92,7 @@ public class AddFunctionAction extends AbstractAction {
 					new CubicDialog(parentFrame, GUIUtil.NEW_DIALOG, null);
 					break;
 				case 4:
-					new RealAfflineLinearDialog(parentFrame, GUIUtil.NEW_DIALOG, null);
+					new RealAffineLinearDialog(parentFrame, GUIUtil.NEW_DIALOG, null);
 				}
 			}
 		});

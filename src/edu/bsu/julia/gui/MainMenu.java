@@ -20,7 +20,6 @@ import edu.bsu.julia.gui.actions.PrintImageAction;
 import edu.bsu.julia.gui.actions.RemoveTabAction;
 import edu.bsu.julia.gui.actions.ResetZoomAction;
 import edu.bsu.julia.gui.actions.SaveImageAction;
-import edu.bsu.julia.gui.actions.SaveOutputFunctionAction;
 import edu.bsu.julia.gui.actions.SaveSessionAction;
 import edu.bsu.julia.gui.actions.ZoomInAction;
 import edu.bsu.julia.gui.actions.ZoomOutAction;
@@ -70,10 +69,6 @@ public class MainMenu extends JMenuBar {
 		addFnItem.addMouseListener(parentFrame.getStatusBar());
 		fileMenu.add(addFnItem);
 		fileMenu.addSeparator();
-		JMenuItem saveOutput = new JMenuItem(new SaveOutputFunctionAction(parentFrame));
-		saveOutput.setMnemonic('U');
-		saveOutput.addMouseListener(parentFrame.getStatusBar());
-		fileMenu.add(saveOutput);
 		JMenuItem saveGraph = new JMenuItem(new SaveImageAction(parentFrame));
 		saveGraph.setMnemonic('S');
 		saveGraph.addMouseListener(parentFrame.getStatusBar());

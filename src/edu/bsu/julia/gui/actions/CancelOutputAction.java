@@ -10,7 +10,7 @@ import edu.bsu.julia.output.OutputSet;
 import edu.bsu.julia.session.Session;
 
 /**
- * An action to delete the OutputFunction which in turn will cancel its
+ * An action to delete the {@link OutputSet} which in turn will cancel its
  * execution
  * 
  * @author Ben Dean
@@ -20,9 +20,9 @@ public class CancelOutputAction extends AbstractAction {
 	private static final long serialVersionUID = 0;
 
 	private final Session session;
-	private final OutputSet function;
+	private final OutputSet set;
 
-	public CancelOutputAction(Julia parentFrame, OutputSet func) {
+	public CancelOutputAction(Julia parentFrame, OutputSet s) {
 		super("Cancel and Delete", new ImageIcon(Thread.currentThread()
 				.getContextClassLoader().getResource("delete.png")));
 		putValue("SHORT_DESCRIPTION", "Cancel and Delete");
@@ -30,11 +30,11 @@ public class CancelOutputAction extends AbstractAction {
 				"Cancel the execution of the current Output Set.");
 
 		session = parentFrame.getCurrentSession();
-		function = func;
+		set = s;
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
-		session.deleteOutputFunction(function);
+		session.deleteOutputSet(set);
 	}
 
 }

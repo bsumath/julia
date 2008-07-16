@@ -33,7 +33,7 @@ public enum JuliaError {
 	DIV_BY_ZERO("Division by zero "
 			+ "has occurred.\nProcessing cannot continue.",
 			"Division By Zero Error"), ZERO_DETERMINANT(
-			"To produce an inverse image or julia set using an\naffline "
+			"To produce an inverse image or julia set using an\naffine "
 					+ "linear map, the determinant of the matrix\n"
 					+ "cannot be zero (or very close to zero).",
 			"Zero Determinant Error"),

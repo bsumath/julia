@@ -55,7 +55,7 @@ public class EmptySessionImporter implements Importer {
 		return iterations;
 	}
 
-	public Vector<OutputSet> provideOutputFunctions() {
+	public Vector<OutputSet> provideOutputSets() {
 		return new Vector<OutputSet>();
 	}
 

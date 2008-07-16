@@ -30,7 +30,7 @@ public class GLListener implements GLEventListener, ListSelectionListener,
 
 	public final double ZOOM_CONSTANT = 1.25;
 	private Julia parentFrame;
-	private OutputSet[] fns;
+	private OutputSet[] sets;
 	private double x, y, width, height, paneWidth, paneHeight, dragX, dragY;
 	private boolean enabled, unsized, dragInProgress;
 	private boolean axisEnabled;
@@ -184,19 +184,19 @@ public class GLListener implements GLEventListener, ListSelectionListener,
 	}
 
 	private void drawFunctions(GL gl) {
-		if (fns == null)
+		if (sets == null)
 			return;
 		int dSize = parentFrame.getDotSize();
 		gl.glPointSize(dSize);
-		for (int i = 0; i < fns.length; i++) {
-			OutputSet function = fns[i];
-			if (function != null && function.isLoaded()) {
+		for (int i = 0; i < sets.length; i++) {
+			OutputSet set = sets[i];
+			if (set != null && set.isLoaded()) {
 				float[] colorArray = new float[3];
-				function.getColor().getColorComponents(colorArray);
+				set.getColor().getColorComponents(colorArray);
 				gl.glColor3f(colorArray[0], colorArray[1], colorArray[2]);
 
 				gl.glBegin(GL.GL_POINTS);
-				for (ComplexNumber point : function.getPoints())
+				for (ComplexNumber point : set.getPoints())
 					if (point != null)
 						gl.glVertex2d(point.getX(), point.getY());
 				gl.glEnd();
@@ -268,8 +268,8 @@ public class GLListener implements GLEventListener, ListSelectionListener,
 		support.firePropertyChange("paneHeight", null, paneHeight);
 	}
 
-	public OutputSet[] getFns() {
-		return fns;
+	public OutputSet[] getSets() {
+		return sets;
 	}
 
 	public boolean isUnsized() {
@@ -306,19 +306,19 @@ public class GLListener implements GLEventListener, ListSelectionListener,
 
 	public void enable() {
 		enabled = true;
-		JList outList = parentFrame.getOutputFunctionList();
+		JList outList = parentFrame.getOutputSetList();
 		DefaultListModel model = (DefaultListModel) outList.getModel();
-		if (fns != null) {
-			int[] indices = new int[fns.length];
-			for (int i = 0; i < fns.length; i++) {
-				indices[i] = model.indexOf(fns[i]);
+		if (sets != null) {
+			int[] indices = new int[sets.length];
+			for (int i = 0; i < sets.length; i++) {
+				indices[i] = model.indexOf(sets[i]);
 				if (indices[i] == -1)
-					fns[i] = null;
+					sets[i] = null;
 			}
 			outList.setSelectedIndices(indices);
-			for (int j = 0; j < fns.length; j++)
-				if (fns[j] != null)
-					fns[j].addListener(this);
+			for (int j = 0; j < sets.length; j++)
+				if (sets[j] != null)
+					sets[j].addListener(this);
 		} else
 			outList.clearSelection();
 		outList.addListSelectionListener(this);
@@ -326,11 +326,11 @@ public class GLListener implements GLEventListener, ListSelectionListener,
 
 	public void disable() {
 		enabled = false;
-		parentFrame.getOutputFunctionList().removeListSelectionListener(this);
-		if (fns != null)
-			for (int j = 0; j < fns.length; j++)
-				if (fns[j] != null)
-					fns[j].removeListener(this);
+		parentFrame.getOutputSetList().removeListSelectionListener(this);
+		if (sets != null)
+			for (int j = 0; j < sets.length; j++)
+				if (sets[j] != null)
+					sets[j].removeListener(this);
 	}
 
 	public void mouseWheelMoved(MouseWheelEvent event) {
@@ -348,17 +348,17 @@ public class GLListener implements GLEventListener, ListSelectionListener,
 
 	public void valueChanged(ListSelectionEvent e) {
 		JList list = (JList) e.getSource();
-		if (fns != null)
-			for (int j = 0; j < fns.length; j++)
-				fns[j].removeListener(this);
-		Object[] obFns = list.getSelectedValues();
-		fns = new OutputSet[obFns.length];
-		for (int i = 0; i < obFns.length; i++) {
-			OutputSet function = (OutputSet) obFns[i];
-			fns[i] = function;
-			function.addListener(this);
+		if (sets != null)
+			for (int j = 0; j < sets.length; j++)
+				sets[j].removeListener(this);
+		Object[] objArray = list.getSelectedValues();
+		sets = new OutputSet[objArray.length];
+		for (int i = 0; i < objArray.length; i++) {
+			OutputSet set = (OutputSet) objArray[i];
+			sets[i] = set;
+			set.addListener(this);
 		}
-		support.firePropertyChange("fns", null, fns);
+		support.firePropertyChange("sets", null, sets);
 		parentFrame.repaint();
 	}
 
@@ -366,7 +366,7 @@ public class GLListener implements GLEventListener, ListSelectionListener,
 		String name = event.getPropertyName();
 		if (name.equals("Color")) {
 			parentFrame.repaint();
-			support.firePropertyChange("fns", null, fns);
+			support.firePropertyChange("sets", null, sets);
 		} else if (name.equals("dotSize")) {
 			parentFrame.repaint();
 		}

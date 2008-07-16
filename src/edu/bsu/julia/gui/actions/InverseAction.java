@@ -6,11 +6,11 @@ import javax.swing.AbstractAction;
 import javax.swing.ButtonGroup;
 
 import edu.bsu.julia.Julia;
-import edu.bsu.julia.generators.InverseOutputSetGenerator;
+import edu.bsu.julia.generators.RecursiveOutputSetGenerator;
 import edu.bsu.julia.generators.OutputSetGenerator;
 import edu.bsu.julia.gui.InputPanel;
 import edu.bsu.julia.input.InputFunction;
-import edu.bsu.julia.output.InverseOutputFunction;
+import edu.bsu.julia.output.RecursiveOutputSet;
 import edu.bsu.julia.output.OutputSet;
 import edu.bsu.julia.session.Session;
 
@@ -39,27 +39,27 @@ public class InverseAction extends AbstractAction {
 				.getSelectedFunctions();
 
 		// build list of output functions
-		Object[] objArray = parentFrame.getOutputFunctionList()
+		Object[] objArray = parentFrame.getOutputSetList()
 				.getSelectedValues();
 		if (objArray.length == 0)
 			return;
 		OutputSet[] outFunc = new OutputSet[objArray.length];
 		for (int i = 0; i < objArray.length; i++)
 			outFunc[i] = (OutputSet) objArray[i];
-		parentFrame.getOutputFunctionList().clearSelection();
+		parentFrame.getOutputSetList().clearSelection();
 
 		// create and add the Output Functions
 		String command = methodGroup.getSelection().getActionCommand().toUpperCase();
 		Session session = parentFrame.getCurrentSession();
 		for (InputFunction function : inFunc) {
-			OutputSetGenerator generator = new InverseOutputSetGenerator(
+			OutputSetGenerator generator = new RecursiveOutputSetGenerator(
 					parentFrame, function, outFunc,
-					InverseOutputSetGenerator.Type.valueOf(command));
-			OutputSet outputFunction = new InverseOutputFunction(session,
+					RecursiveOutputSetGenerator.Type.valueOf(command));
+			OutputSet outputSet = new RecursiveOutputSet(session,
 					new InputFunction[] { function },
-					InverseOutputSetGenerator.Type.valueOf(command)
+					RecursiveOutputSetGenerator.Type.valueOf(command)
 							.outputType(), generator, outFunc);
-			session.addOutputFunction(outputFunction);
+			session.addOutputSet(outputSet);
 		}
 	}
 }

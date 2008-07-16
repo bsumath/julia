@@ -24,9 +24,8 @@ public class ColorIcon extends JPanel implements PropertyChangeListener{
 		setBackground(newColor);
 	}
 	
-	public void setFunction(OutputSet fn) {
-		OutputSet function = fn;
-		function.addListener(this);
+	public void setFunction(OutputSet set) {
+		set.addListener(this);
 	}
 	
 	public void propertyChange(PropertyChangeEvent event) {

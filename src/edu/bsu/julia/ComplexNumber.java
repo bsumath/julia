@@ -211,6 +211,7 @@ public final class ComplexNumber {
 	 * Provides a string representation of the complex number in the form: "{x,
 	 * y}". "Computerized Scientific Notation" (the E form) is replaced with
 	 * standard scientific notation.
+	 * 
 	 * @return the {@link String} representation of the {@link ComplexNumber}
 	 */
 	public String toString() {
@@ -250,6 +251,7 @@ public final class ComplexNumber {
 	public static ComplexNumber parseComplexNumber(String s) {
 		// remove the braces and split on the comma
 		s = s.replace("{", "").replace("}", "").replace(",", "");
+		s = s.replace("\t", " ");
 		String[] parts = s.split(" ");
 		if (parts.length != 2)
 			return null;
