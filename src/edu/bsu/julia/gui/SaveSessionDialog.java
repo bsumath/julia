@@ -26,7 +26,7 @@ public class SaveSessionDialog {
 
 		switch (choice) {
 		case 0: // save
-			new SaveSessionAction(parentFrame).actionPerformed(null);
+			new SaveSessionAction(parentFrame, false).actionPerformed(null);
 			
 			//check to see if the session was actually saved
 			if (parentFrame.getCurrentSession().isModified())

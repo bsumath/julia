@@ -51,7 +51,7 @@ public class MainToolBar extends JToolBar {
 		editButton.setToolTipText
 			((String)editSessionAction.getValue("SHORT_DESCRIPTION"));
 		editButton.addMouseListener(parentFrame.getStatusBar());
-		SaveSessionAction saveSessionAction = new SaveSessionAction(parentFrame);
+		SaveSessionAction saveSessionAction = new SaveSessionAction(parentFrame,false);
 		JButton saveSessionButton = add(saveSessionAction);
 		saveSessionButton.setFocusable(false);
 		saveSessionButton.setToolTipText
