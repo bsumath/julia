@@ -100,8 +100,8 @@ public abstract class InputFunction {
 	 * @return The subscript number identifying this function within the
 	 *         session.
 	 */
-	public int getSubscript() {
-		return sub;
+	public String getSubscript() {
+		return (sub == 0) ? "?" : sub + "";
 	}
 
 	/**
