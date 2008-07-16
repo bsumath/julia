@@ -1,5 +1,6 @@
 package edu.bsu.julia.gui.actions;
 
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -7,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 import java.util.Stack;
 
@@ -43,7 +45,9 @@ public class HelpAction extends AbstractAction {
 	private final JButton home;
 	private final JButton back;
 	private final JButton forward;
-	private static final ClassLoader CL = Thread.currentThread().getContextClassLoader();
+	private static final ClassLoader CL = Thread.currentThread()
+			.getContextClassLoader();
+
 	public HelpAction(Julia f) {
 		super("Help", new ImageIcon(CL.getResource("help.png")));
 		putValue("SHORT_DESCRIPTION", "Open Help");
@@ -109,6 +113,27 @@ public class HelpAction extends AbstractAction {
 		});
 		home.setIcon(new ImageIcon(CL.getResource("home.png")));
 
+		JButton external = null;
+		if (Desktop.isDesktopSupported()) {
+			final Desktop desktop = Desktop.getDesktop();
+			if (desktop.isSupported(Desktop.Action.BROWSE)) {
+				external = new JButton(new AbstractAction(
+						"Open help in web browser") {
+					private static final long serialVersionUID = 2278765590225068684L;
+
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						// TODO Auto-generated method stub
+						try {
+							desktop.browse(new URI(HELP_URL_BASE
+									+ HELP_URL_START));
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			}
+		}
 		editor = new JEditorPane();
 		editor.setEditable(false);
 		editor.setContentType("text/html");
@@ -146,10 +171,19 @@ public class HelpAction extends AbstractAction {
 		c.gridx = 3;
 		c.gridy = 0;
 		panel.add(new JLabel(), c);
+		if (external != null) {
+			c.gridx = 4;
+			c.gridy = 0;
+			panel.add(external, c);
+		} else {
+			c.gridx = 4;
+			c.gridy = 0;
+			panel.add(new JLabel(), c);
+		}
 		c.fill = GridBagConstraints.NONE;
 		c.gridx = 0;
 		c.gridy = 1;
-		c.gridwidth = 4;
+		c.gridwidth = 5;
 		panel.add(scrollPane, c);
 
 		// create a backup help in case the html doesn't load
