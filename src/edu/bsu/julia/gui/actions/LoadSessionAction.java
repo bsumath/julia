@@ -1,23 +1,34 @@
 package edu.bsu.julia.gui.actions;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowStateListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JProgressBar;
+import javax.swing.SwingWorker;
+import javax.swing.SwingWorker.StateValue;
+import javax.swing.filechooser.FileFilter;
 
 import edu.bsu.julia.Julia;
 import edu.bsu.julia.gui.SaveSessionDialog;
 import edu.bsu.julia.session.LegacyFileImporter;
 import edu.bsu.julia.session.Session;
 import edu.bsu.julia.session.SessionFileImporter;
+import edu.bsu.julia.session.Session.InvalidSessionParametersException;
 
 public class LoadSessionAction extends AbstractAction {
 
 	private Julia parentFrame;
 	JuliaFileFilter juliafilefilter = new JuliaFileFilter();
+	private File file;
 	// for serializable interface: do not use
 	public static final long serialVersionUID = 0;
 
@@ -44,8 +55,6 @@ public class LoadSessionAction extends AbstractAction {
 				return;
 		}
 
-		File file;
-
 		JFileChooser chooser = new JFileChooser();
 		String path = parentFrame.getFilePath();
 		if (!path.equals(""))
@@ -62,23 +71,72 @@ public class LoadSessionAction extends AbstractAction {
 			JOptionPane.showMessageDialog(parentFrame, "Invalid File Name",
 					"Invalid File Name", JOptionPane.ERROR_MESSAGE);
 
-		try {
-			Session.Importer importer;
-			if (file.getName().endsWith(FILE_EXTENSION))
-				importer = new SessionFileImporter(file);
-			else
-				importer = new LegacyFileImporter(file);
-			parentFrame.setCurrentSession(new Session(parentFrame, importer));
-			parentFrame.getCurrentSession().setFile(file);
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(parentFrame, "Error Reading File",
-					"Error Reading File", JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
-		}
-		parentFrame.setFilePath(file.getAbsolutePath());
+		// create a dialog window and progress bar
+		final JDialog dialog = new JDialog(parentFrame, "Loading File ...",
+				true);
+		final JProgressBar bar = new JProgressBar(0, 100);
+
+		// create an importer to load the file
+		final SwingWorker<Boolean, Void> importer = (file.getName()
+				.endsWith(FILE_EXTENSION)) ? new SessionFileImporter(file)
+				: new LegacyFileImporter(file);
+		importer.addPropertyChangeListener(new PropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				if ("progress".equals(evt.getPropertyName())) {
+					bar.setValue((Integer) evt.getNewValue());
+				} else if ("state".equals(evt.getPropertyName())
+						&& (StateValue) evt.getNewValue() == StateValue.DONE) {
+					boolean result = false;
+					try {
+						result = importer.get();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+
+					if (result) {
+						try {
+							parentFrame.setCurrentSession(new Session(
+									parentFrame, (Session.Importer) importer));
+						} catch (InvalidSessionParametersException e) {
+							JOptionPane.showMessageDialog(parentFrame,
+									"Error Reading File", "Error Reading File",
+									JOptionPane.ERROR_MESSAGE);
+							e.printStackTrace();
+						}
+						parentFrame.getCurrentSession().setFile(file);
+						parentFrame.setFilePath(file.getAbsolutePath());
+					} else {
+						JOptionPane.showMessageDialog(parentFrame,
+								"Error Reading File", "Error Reading File",
+								JOptionPane.ERROR_MESSAGE);
+					}
+
+					dialog.setVisible(false);
+					dialog.dispose();
+				}
+			}
+		});
+
+		// add the progress bar to the dialog and start saving the file
+		bar.setValue(0);
+		dialog.add(bar);
+		dialog.pack();
+		dialog.addWindowStateListener(new WindowStateListener() {
+			@Override
+			public void windowStateChanged(WindowEvent e) {
+				if (e.getNewState() == WindowEvent.WINDOW_CLOSING) {
+					importer.cancel(true);
+					dialog.setVisible(false);
+					dialog.dispose();
+				}
+			}
+		});
+		importer.execute();
+		dialog.setVisible(true);
 	}
 
-	private class JuliaFileFilter extends javax.swing.filechooser.FileFilter {
+	private final class JuliaFileFilter extends FileFilter {
 		public boolean accept(File file) {
 			return file.getName().toLowerCase().endsWith(LEGACY_EXTENSION)
 					|| file.getName().toLowerCase().endsWith(FILE_EXTENSION)

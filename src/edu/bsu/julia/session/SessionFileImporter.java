@@ -20,6 +20,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import javax.swing.JFrame;
+import javax.swing.SwingWorker;
 
 import edu.bsu.julia.ComplexNumber;
 import edu.bsu.julia.generators.DummyOutputSetGenerator;
@@ -38,7 +39,8 @@ import edu.bsu.julia.session.Session.InvalidSessionParametersException;
  * 
  * @author Ben Dean
  */
-public class SessionFileImporter implements Importer {
+public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
+		Importer {
 	private static final int BUFFER_SIZE = 2048;
 	private int iterations;
 	private int skips;
@@ -51,23 +53,38 @@ public class SessionFileImporter implements Importer {
 	private final Map<Long, File> inputMap;
 	private final Map<Long, File> outputInfoMap;
 	private final Map<Long, File> outputDataMap;
+	private final File sessionFile;
+	private float maxProgress = 0;
+	private float progress = 0;
 
-	public SessionFileImporter(File f) throws IOException,
-			ClassNotFoundException, IllegalArgumentException,
-			InstantiationException, IllegalAccessException,
-			InvocationTargetException {
-
-		// open the file and set up a scanner
-		ZipInputStream zipStream = new ZipInputStream(new FileInputStream(f));
-		ZipEntry entry;
-
+	public SessionFileImporter(File f) {
 		// maps to keep track of temp files associated with input and output
 		inputMap = new HashMap<Long, File>();
 		outputInfoMap = new HashMap<Long, File>();
 		outputDataMap = new HashMap<Long, File>();
 
+		sessionFile = f;
+	}
+
+	protected Boolean doInBackground() throws Exception {
+		// open the file and set up a scanner
+		ZipInputStream zipStream = new ZipInputStream(new FileInputStream(
+				sessionFile));
+		ZipEntry entry;
+
+		// count the number of entries
+		while ((entry = zipStream.getNextEntry()) != null) {
+			maxProgress += 2;
+		}
+		maxProgress -= 1; //the session.txt is only looked at once
+		zipStream.close();
+		zipStream = new ZipInputStream(new FileInputStream(sessionFile));
+
 		// read each of the zip entries
 		while ((entry = zipStream.getNextEntry()) != null) {
+			progress += 1;
+			setProgress((int) (progress / maxProgress * 100));
+
 			String[] nameParts = entry.getName().split("\\.");
 			if (nameParts[0].equals("session")) {
 				readSessionInfo(zipStream);
@@ -85,6 +102,9 @@ public class SessionFileImporter implements Importer {
 		zipStream.close();
 
 		for (Map.Entry<Long, File> item : inputMap.entrySet()) {
+			progress += 1;
+			setProgress((int) (progress / maxProgress * 100));
+			
 			File file = item.getValue();
 			Long key = item.getKey();
 			Scanner in = new Scanner(new BufferedInputStream(
@@ -111,6 +131,7 @@ public class SessionFileImporter implements Importer {
 		}
 
 		clearTempFiles();
+		return true;
 	}
 
 	private void readSessionInfo(ZipInputStream zipStream) {
@@ -202,6 +223,9 @@ public class SessionFileImporter implements Importer {
 			throws IOException, ClassNotFoundException,
 			IllegalArgumentException, InstantiationException,
 			IllegalAccessException, InvocationTargetException {
+		progress += 1;
+		setProgress((int) (progress / maxProgress * 100));		
+		
 		int iterations = 0;
 		int skips = 0;
 		ComplexNumber seed = new ComplexNumber();
