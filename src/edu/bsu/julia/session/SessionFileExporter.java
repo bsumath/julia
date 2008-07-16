@@ -103,7 +103,7 @@ public class SessionFileExporter extends SwingWorker<Boolean, Void> implements
 
 		out.println("iterations: " + iterations);
 		out.println("skips: " + skips);
-		out.println("seed: " + seed);
+		out.println("seed: " + seed.exportString());
 		out.println();
 
 		out.close();

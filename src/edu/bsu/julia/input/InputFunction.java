@@ -234,7 +234,7 @@ public abstract class InputFunction {
 		result.add("class: " + this.getClass().getName());
 		result.add("m: " + m);
 		for (ComplexNumber coefficient : coefficientArray) {
-			result.add("coefficient: " + coefficient);
+			result.add("coefficient: " + coefficient.exportString());
 		}
 		return result;
 	}

@@ -319,7 +319,7 @@ public class OutputFunction {
 							new FileOutputStream(file));
 
 					for (ComplexNumber p : points)
-						out.println(p);
+						out.println(p.exportString());
 
 					out.close();
 					return file;
@@ -461,7 +461,7 @@ public class OutputFunction {
 		result.add("type: " + functionType);
 		result.add("iterations: " + iterations);
 		result.add("skips: " + skips);
-		result.add("seed: " + seed);
+		result.add("seed: " + seed.exportString());
 
 		for (InputFunction function : inputFunctions) {
 			result.add("begin_input_function: " + function.getInputID());
