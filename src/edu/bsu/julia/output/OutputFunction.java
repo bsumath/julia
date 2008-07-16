@@ -136,8 +136,8 @@ public class OutputFunction {
 		return functionType;
 	}
 
-	public int getSubscript() {
-		return sub;
+	public String getSubscript() {
+		return (sub == 0) ? "?" : sub + "";
 	}
 
 	public void setSubscript(int subscript) {

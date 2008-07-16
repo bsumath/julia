@@ -11,6 +11,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,14 @@ import edu.bsu.julia.output.OutputFunction;
 import edu.bsu.julia.session.Session.Importer;
 import edu.bsu.julia.session.Session.InvalidSessionParametersException;
 
+/**
+ * this is a {@link Session.Importer} that reads *.julia.zip saved sessions. It
+ * does this by extracting the zip file into temporary files and then processing
+ * each of the temporary files to get information about the
+ * {@link InputFunction} and {@link OutputFunction} of the {@link Session}
+ * 
+ * @author Ben Dean
+ */
 public class SessionFileImporter implements Importer {
 	private static final int BUFFER_SIZE = 2048;
 	private int iterations;
@@ -76,17 +85,29 @@ public class SessionFileImporter implements Importer {
 		zipStream.close();
 
 		for (Map.Entry<Long, File> item : inputMap.entrySet()) {
-			InputFunction function = readInputFunction(item.getKey(), item
-					.getValue());
-			inputFunctions.put(item.getKey(), function);
+			File file = item.getValue();
+			Long key = item.getKey();
+			Scanner in = new Scanner(new BufferedInputStream(
+					new FileInputStream(file)));
+			readInputFunction(key, in);
+			in.close();
 		}
 
 		while (!outputInfoMap.isEmpty()) {
 			List<Map.Entry<Long, File>> entries = new ArrayList<Map.Entry<Long, File>>(
 					outputInfoMap.entrySet());
 			Map.Entry<Long, File> item = entries.get(0);
-			readOutputFunction(item.getKey(), item.getValue(), outputDataMap
-					.get(item.getKey()));
+			File infoFile = item.getValue();
+			File dataFile = outputDataMap.get(item.getKey());
+			Long key = item.getKey();
+
+			Scanner infoScanner = new Scanner(new BufferedInputStream(
+					new FileInputStream(infoFile)));
+			Scanner dataScanner = new Scanner(new BufferedInputStream(
+					new FileInputStream(dataFile)));
+			readOutputFunction(key, infoScanner, dataScanner);
+			infoScanner.close();
+			dataScanner.close();
 		}
 
 		clearTempFiles();
@@ -132,7 +153,7 @@ public class SessionFileImporter implements Importer {
 			temp.delete();
 	}
 
-	private InputFunction readInputFunction(Long inputID, File file)
+	private void readInputFunction(Long inputID, Scanner in)
 			throws IOException, ClassNotFoundException,
 			IllegalArgumentException, InstantiationException,
 			IllegalAccessException, InvocationTargetException {
@@ -140,14 +161,14 @@ public class SessionFileImporter implements Importer {
 		List<ComplexNumber> coefficients = new ArrayList<ComplexNumber>();
 		String className = "";
 
-		Scanner in = new Scanner(new BufferedInputStream(new FileInputStream(
-				file)));
 		while (in.hasNextLine()) {
 			// read the next line, ignore comments,
 			// break at the end of input function
-			String line = in.nextLine();
+			String line = in.nextLine().trim();
 			if (line.length() == 0 || line.charAt(0) == '#')
 				continue;
+			if (line.equalsIgnoreCase("end_input_function"))
+				break;
 
 			// split the line on the : character and trim the parts
 			String[] lineParts = splitLine(line);
@@ -161,7 +182,6 @@ public class SessionFileImporter implements Importer {
 						.add(ComplexNumber.parseComplexNumber(lineParts[1]));
 			}
 		}
-		in.close();
 
 		Class<?> functionClass = Class.forName(className);
 		Constructor<?>[] constructors = functionClass.getConstructors();
@@ -173,13 +193,12 @@ public class SessionFileImporter implements Importer {
 					args[i] = coefficients.get(i - 1);
 				}
 				InputFunction function = (InputFunction) c.newInstance(args);
-				return function;
+				inputFunctions.put(inputID, function);
 			}
 		}
-		return null;
 	}
 
-	private void readOutputFunction(Long outputID, File infoFile, File dataFile)
+	private void readOutputFunction(Long outputID, Scanner info, Scanner data)
 			throws IOException, ClassNotFoundException,
 			IllegalArgumentException, InstantiationException,
 			IllegalAccessException, InvocationTargetException {
@@ -192,14 +211,15 @@ public class SessionFileImporter implements Importer {
 		OutputFunction.Type type = OutputFunction.Type.BASIC;
 		String className = "";
 
-		Scanner in = new Scanner(new BufferedInputStream(new FileInputStream(
-				infoFile)));
-		while (in.hasNextLine()) {
+		// read all the history information from the txt info file
+		while (info.hasNextLine()) {
 			// read the next line, ignore comments,
 			// break at the end of output function
-			String line = in.nextLine();
+			String line = info.nextLine().trim();
 			if (line.length() == 0 || line.charAt(0) == '#')
 				continue;
+			if (line.equalsIgnoreCase("end_output_function"))
+				break;
 
 			// split the line
 			String[] lineParts = splitLine(line);
@@ -212,66 +232,78 @@ public class SessionFileImporter implements Importer {
 				skips = Integer.parseInt(lineParts[1]);
 			} else if (lineParts[0].equalsIgnoreCase("seed")) {
 				seed = ComplexNumber.parseComplexNumber(lineParts[1]);
-			} else if (lineParts[0].equalsIgnoreCase("input_function")) {
+			} else if (lineParts[0].equalsIgnoreCase("begin_input_function")) {
+				// if the key exists, use that input function
 				long key = Long.parseLong(lineParts[1]);
-				if (inputFunctions.containsKey(key))
+				if (inputFunctions.containsKey(key)) {
 					inFunctions.add(inputFunctions.get(key));
+
+					// skip all the lines until end_input_function
+					while (info.hasNextLine()
+							&& !info.nextLine().trim().equalsIgnoreCase(
+									"end_input_function"))
+						;// do nothing
+				} else {
+					// the key didn't exist so create a new function
+					readInputFunction(key, info);
+					inFunctions.add(inputFunctions.remove(key));
+				}
 			} else if (lineParts[0].equalsIgnoreCase("type")) {
 				type = OutputFunction.Type.valueOf(lineParts[1]);
-			} else if (lineParts[0].equalsIgnoreCase("output_function")) {
+			} else if (lineParts[0].equalsIgnoreCase("begin_output_function")) {
 				long key = Long.parseLong(lineParts[1]);
-				if (!outputFunctions.containsKey(key)
-						&& outputInfoMap.containsKey(key)) {
-					File info = outputInfoMap.get(key);
-					File data = outputDataMap.get(key);
-					readOutputFunction(key, info, data);
+				if (outputFunctions.containsKey(key)) {
+					// get the output function for the key
+					outFunctions.add(outputFunctions.get(key));
+
+					// skip all the lines until end_output_function
+					while (info.hasNextLine()
+							&& !info.nextLine().trim().equalsIgnoreCase(
+									"end_output_function"))
+						;// do nothing
+				} else if (outputInfoMap.containsKey(key)) {
+					// output function exists but hasn't been loaded
+					File infoFile = outputInfoMap.get(key);
+					File dataFile = outputDataMap.get(key);
+					Scanner infoScanner = new Scanner(new BufferedInputStream(
+							new FileInputStream(infoFile)));
+					Scanner dataScanner = new Scanner(new BufferedInputStream(
+							new FileInputStream(dataFile)));
+					readOutputFunction(key, infoScanner, dataScanner);
+					infoScanner.close();
+					dataScanner.close();
+
+					outFunctions.add(outputFunctions.get(key));
+
+					// skip all the lines until end_output_function
+					while (info.hasNextLine()
+							&& !info.nextLine().trim().equalsIgnoreCase(
+									"end_output_function"))
+						;// do nothing
+				} else {
+					// output function does not exist, the data file is a dummy
+					// file
+					File temp = File.createTempFile("dummy", ".tmp");
+					Scanner dataScanner = new Scanner(new FileInputStream(temp));
+					readOutputFunction(key, info, dataScanner);
+					dataScanner.close();
+					temp.delete();
+
+					outFunctions.add(outputFunctions.remove(key));
 				}
-				outFunctions.add(outputFunctions.get(key));
 			}
 		}
-		in.close();
 
-		in = new Scanner(new BufferedInputStream(new FileInputStream(dataFile)));
-		while (in.hasNextLine()) {
-			points.add(ComplexNumber.parseComplexNumber(in.nextLine()));
+		// read the points from the data file
+		while (data.hasNextLine()) {
+			points.add(ComplexNumber.parseComplexNumber(data.nextLine()));
 		}
-		in.close();
 
 		// create a dummy session with the iteration, skip, and seed values
-		final int iter = iterations;
-		final int sk = skips;
-		final ComplexNumber sd = seed;
 		Session tempSession;
 		try {
-			tempSession = new Session(new JFrame(), new Session.Importer() {
-				public Collection<InputFunction> provideInputFunctions() {
-					return new ArrayList<InputFunction>();
-				}
-
-				public int provideInputSubscript() {
-					return 0;
-				}
-
-				public int provideIterations() {
-					return iter;
-				}
-
-				public Collection<OutputFunction> provideOutputFunctions() {
-					return new ArrayList<OutputFunction>();
-				}
-
-				public int provideOutputSubscript() {
-					return 0;
-				}
-
-				public ComplexNumber provideSeedValue() {
-					return sd;
-				}
-
-				public int provideSkips() {
-					return sk;
-				}
-			});
+			tempSession = new Session(new JFrame(), new DummyImporter(
+					iterations, skips, seed));
 		} catch (InvalidSessionParametersException e) {
 			e.printStackTrace();
 			return;
@@ -311,11 +343,18 @@ public class SessionFileImporter implements Importer {
 	}
 
 	public Collection<InputFunction> provideInputFunctions() {
-		List<InputFunction> temp = new ArrayList<InputFunction>(inputFunctions
-				.values());
-		for (int i = 0; i < temp.size(); i++)
-			temp.get(i).setSubscript(i + 1);
-		return temp;
+		// sort the functions by the keys and set the subscripts
+		List<Long> keys = new ArrayList<Long>(inputFunctions.keySet());
+		Collections.sort(keys);
+
+		List<InputFunction> result = new ArrayList<InputFunction>();
+		for (int i = 0; i < keys.size(); i++) {
+			InputFunction function = inputFunctions.get(keys.get(i));
+			function.setSubscript(i + 1);
+			result.add(function);
+		}
+
+		return result;
 	}
 
 	public int provideIterations() {
@@ -323,11 +362,18 @@ public class SessionFileImporter implements Importer {
 	}
 
 	public Collection<OutputFunction> provideOutputFunctions() {
-		List<OutputFunction> temp = new ArrayList<OutputFunction>(
-				outputFunctions.values());
-		for (int i = 0; i < temp.size(); i++)
-			temp.get(i).setSubscript(i + 1);
-		return temp;
+		// sort the functions by the keys and set the subscripts
+		List<Long> keys = new ArrayList<Long>(outputFunctions.keySet());
+		Collections.sort(keys);
+
+		List<OutputFunction> result = new ArrayList<OutputFunction>();
+		for (int i = 0; i < keys.size(); i++) {
+			OutputFunction function = outputFunctions.get(keys.get(i));
+			function.setSubscript(i + 1);
+			result.add(function);
+		}
+
+		return result;
 	}
 
 	public ComplexNumber provideSeedValue() {
@@ -345,4 +391,50 @@ public class SessionFileImporter implements Importer {
 	public int provideOutputSubscript() {
 		return outputFunctions.size();
 	}
+
+	/**
+	 * a class to use to create dummy {@link Session} objects for constructing
+	 * {@link OutputFunction}
+	 * 
+	 * @author Ben Dean
+	 */
+	private final class DummyImporter implements Session.Importer {
+		private final int iterations;
+		private final ComplexNumber seed;
+		private final int skips;
+
+		public DummyImporter(int iter, int sk, ComplexNumber sd) {
+			iterations = iter;
+			seed = sd;
+			skips = sk;
+		}
+
+		public Collection<InputFunction> provideInputFunctions() {
+			return new ArrayList<InputFunction>();
+		}
+
+		public int provideInputSubscript() {
+			return 0;
+		}
+
+		public int provideIterations() {
+			return iterations;
+		}
+
+		public Collection<OutputFunction> provideOutputFunctions() {
+			return new ArrayList<OutputFunction>();
+		}
+
+		public int provideOutputSubscript() {
+			return 0;
+		}
+
+		public ComplexNumber provideSeedValue() {
+			return seed;
+		}
+
+		public int provideSkips() {
+			return skips;
+		}
+	};
 }
