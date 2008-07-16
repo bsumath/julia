@@ -1,23 +1,31 @@
 package edu.bsu.julia.gui.actions;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowStateListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.io.IOException;
 
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JProgressBar;
+import javax.swing.SwingWorker.StateValue;
 import javax.swing.filechooser.FileFilter;
 
 import edu.bsu.julia.Julia;
 import edu.bsu.julia.session.SessionFileExporter;
 
 public class SaveSessionAction extends AbstractAction {
-	private Julia parentFrame;
 	// for serializable interface: do not use
 	public static final long serialVersionUID = 0;
 	public static final String FILE_EXTENSION = ".julia.zip";
+
+	private Julia parentFrame;
+	private File file;
 
 	public SaveSessionAction(Julia f) {
 		super("Save Session", new ImageIcon(Thread.currentThread()
@@ -32,14 +40,8 @@ public class SaveSessionAction extends AbstractAction {
 
 		if (!parentFrame.getCurrentSession().isModified())
 			return;
-		if (!saveFile()) {
-			JOptionPane.showMessageDialog(null, "IO error in saving file!!",
-					"File Save Error", JOptionPane.ERROR_MESSAGE);
-		}
-	}
 
-	public boolean saveFile() {
-		File file = parentFrame.getCurrentSession().getFile();
+		file = parentFrame.getCurrentSession().getFile();
 		if (file == null) {
 			JFileChooser filechooser = new JFileChooser();
 			filechooser.setFileFilter(new FileFilter() {
@@ -58,10 +60,8 @@ public class SaveSessionAction extends AbstractAction {
 			if (!path.equals(""))
 				filechooser.setCurrentDirectory(new File(path));
 			int result = filechooser.showSaveDialog(parentFrame);
-			if (result == JFileChooser.CANCEL_OPTION) {
-				return true;
-			} else if (result != JFileChooser.APPROVE_OPTION) {
-				return false;
+			if (result != JFileChooser.APPROVE_OPTION) {
+				return;
 			}
 			file = filechooser.getSelectedFile();
 
@@ -74,24 +74,66 @@ public class SaveSessionAction extends AbstractAction {
 						JOptionPane.OK_CANCEL_OPTION,
 						JOptionPane.QUESTION_MESSAGE);
 				if (response == JOptionPane.CANCEL_OPTION)
-					return false;
+					return;
 			}
 			parentFrame.setFilePath(file.getAbsolutePath());
 		}
 
-		// try to write to a file
-		SessionFileExporter exporter = new SessionFileExporter();
-		parentFrame.getCurrentSession().export(exporter);
-		try {
-			exporter.writeToFile(file);
-			parentFrame.getCurrentSession().markUnmodified();
-			parentFrame.getCurrentSession().setFile(file);
-			return true;
-		} catch (IOException e) {
-			System.err.println(e);
-			return false;
-		}
+		// create a dialog window and progress bar
+		final JDialog dialog = new JDialog(parentFrame, "Saving File ...", true);
+		final JProgressBar bar = new JProgressBar(0, 100);
 
+		// create an exporter to save the file
+		final SessionFileExporter exporter = new SessionFileExporter(file);
+		parentFrame.getCurrentSession().export(exporter);
+		exporter.addPropertyChangeListener(new PropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				if ("progress".equals(evt.getPropertyName())) {
+					bar.setValue((Integer) evt.getNewValue());
+				} else if ("state".equals(evt.getPropertyName())
+						&& (StateValue) evt.getNewValue() == StateValue.DONE) {
+					boolean result;
+					try {
+						result = exporter.get();
+					} catch (Exception e) {
+						JOptionPane.showMessageDialog(parentFrame,
+								"Error Saving Session", "Error Saving Session",
+								JOptionPane.ERROR_MESSAGE);
+						e.printStackTrace();
+						return;
+					}
+
+					if (result) {
+						parentFrame.getCurrentSession().markUnmodified();
+						parentFrame.getCurrentSession().setFile(file);
+						dialog.setVisible(false);
+						dialog.dispose();
+					} else {
+						JOptionPane.showMessageDialog(parentFrame,
+								"Error Saving Session", "Error Saving Session",
+								JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			}
+		});
+
+		// add the progress bar to the dialog and start saving the file
+		bar.setValue(0);
+		dialog.add(bar);
+		dialog.pack();
+		dialog.addWindowStateListener(new WindowStateListener() {
+			@Override
+			public void windowStateChanged(WindowEvent e) {
+				if (e.getNewState() == WindowEvent.WINDOW_CLOSING) {
+					exporter.cancel(true);
+					dialog.setVisible(false);
+					dialog.dispose();
+				}
+			}
+		});
+		exporter.execute();
+		dialog.setVisible(true);
 	}
 
 }

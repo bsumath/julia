@@ -14,18 +14,26 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import javax.swing.SwingWorker;
+
 import edu.bsu.julia.ComplexNumber;
 import edu.bsu.julia.input.InputFunction;
 import edu.bsu.julia.output.OutputFunction;
 import edu.bsu.julia.session.Session.Exporter;
 
-public class SessionFileExporter implements Exporter {
+public class SessionFileExporter extends SwingWorker<Boolean, Void> implements
+		Exporter {
 	private static final int BUFFER_SIZE = 2048;
 	private List<InputFunction> inputFunctions;
 	private int iterations;
 	private List<OutputFunction> outputFunctions;
 	private ComplexNumber seed;
 	private int skips;
+	private final File file;
+
+	public SessionFileExporter(File f) {
+		file = f;
+	}
 
 	public void addInputFunctions(Collection<InputFunction> i) {
 		inputFunctions = new ArrayList<InputFunction>(i);
@@ -47,13 +55,18 @@ public class SessionFileExporter implements Exporter {
 		skips = s;
 	}
 
-	public void writeToFile(File f) throws IOException {
+	protected Boolean doInBackground() throws Exception {
+		float maxProgress = 1 + inputFunctions.size() + outputFunctions.size();
+		float progress = 0;
+
 		// create a new zip file output stream
 		ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(
-				new FileOutputStream(f)));
+				new FileOutputStream(file)));
 
 		// write the session info the zip
 		writeFileToZip(createSessionInfoFile(), "session.txt", out);
+		progress++;
+		setProgress((int) (progress / maxProgress * 100));
 
 		for (InputFunction function : inputFunctions) {
 			File temp = function.getFile();
@@ -61,6 +74,9 @@ public class SessionFileExporter implements Exporter {
 			if (temp != null) {
 				writeFileToZip(temp, name, out);
 			}
+
+			progress++;
+			setProgress((int) (progress / maxProgress * 100));
 		}
 
 		for (OutputFunction function : outputFunctions) {
@@ -70,9 +86,13 @@ public class SessionFileExporter implements Exporter {
 				writeFileToZip(temp[0], name + ".txt", out);
 				writeFileToZip(temp[1], name + ".dat", out);
 			}
+
+			progress++;
+			setProgress((int) (progress / maxProgress * 100));
 		}
 
 		out.close();
+		return true;
 	}
 
 	private File createSessionInfoFile() throws IOException {
