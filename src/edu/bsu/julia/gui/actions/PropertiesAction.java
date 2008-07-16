@@ -18,25 +18,25 @@ import javax.swing.JScrollPane;
 
 import edu.bsu.julia.Julia;
 import edu.bsu.julia.input.InputFunction;
-import edu.bsu.julia.output.InverseOutputFunction;
 import edu.bsu.julia.output.OutputSet;
+import edu.bsu.julia.output.RecursiveOutputSet;
 
 public class PropertiesAction extends AbstractAction {
 	
 	private Julia parentFrame;
-	private OutputSet function;
+	private OutputSet set;
 	//for serializable interface: do not use
 	public static final long serialVersionUID = 0;
 	
-	public PropertiesAction(Julia f, OutputSet func) {
+	public PropertiesAction(Julia f, OutputSet s) {
 		super("Properties", new ImageIcon
 				(Thread.currentThread().getContextClassLoader().getResource
 						("prop.png")));
 		putValue("SHORT_DESCRIPTION", "Properties");
 		putValue("LONG_DESCRIPTION", "Open the properties tab for the "
-				+ "chosen function.");
+				+ "chosen set.");
 		parentFrame = f;
-		function = func;
+		set = s;
 	}
 	
 	public void actionPerformed(ActionEvent arg0) {
@@ -44,29 +44,29 @@ public class PropertiesAction extends AbstractAction {
 		component.setLayout(new BorderLayout());
 		
 		Box panel = Box.createVerticalBox();
-		JLabel type = new JLabel(function.toString());
+		JLabel type = new JLabel(set.toString());
 		panel.add(type);
-		String iterations = "Points to Plot:  " + function.getIterations();
+		String iterations = "Points to Plot:  " + set.getIterations();
 		JLabel iterLabel = new JLabel(iterations);
 		panel.add(iterLabel);
-		String skips = "Skips:  " + function.getSkips();
+		String skips = "Skips:  " + set.getSkips();
 		JLabel skipsLabel = new JLabel(skips);
 		panel.add(skipsLabel);
-		String seed = "Seed Value:  " + function.getSeedValue();
+		String seed = "Seed Value:  " + set.getSeedValue();
 		JLabel seedLabel = new JLabel(seed);
 		panel.add(seedLabel);
-		String numOfPoints = "Actual number of points in the set:   "+function.getNumOfPoints();
+		String numOfPoints = "Actual number of points in the set:   "+set.getNumOfPoints();
 		JLabel numOfPointsLabel = new JLabel(numOfPoints);
 		panel.add(numOfPointsLabel);
 		JLabel spacer = new JLabel("    ");
 		panel.add(spacer);
 		component.add(panel, BorderLayout.NORTH);
 		
-		InputFunction[] input = function.getInputFunctions();
+		InputFunction[] input = set.getInputFunctions();
 		List<Object> objList = new ArrayList<Object>(Arrays.asList(input));
 		objList.add(" ");
-		if (function instanceof InverseOutputFunction){
-			OutputSet[] output = ((InverseOutputFunction)function).getOutputFunctions();
+		if (set instanceof RecursiveOutputSet){
+			OutputSet[] output = ((RecursiveOutputSet)set).getOutputSets();
 			objList.addAll(Arrays.asList(output));
 		}
 		

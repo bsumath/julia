@@ -58,21 +58,21 @@ public class OutputPanel extends JPanel implements PropertyChangeListener {
 		private void checkPopup(MouseEvent e) {
 			if (e.isPopupTrigger()) {
 				final int index = outputList.locationToIndex(e.getPoint());
-				List<OutputSet> functions = parentFrame.getCurrentSession()
-						.getOutputFunctions();
-				if(index >= functions.size()) return;
+				List<OutputSet> sets = parentFrame.getCurrentSession()
+						.getOutputSets();
+				if(index >= sets.size()) return;
 				
-				OutputSet function = functions.get(index);
+				OutputSet set = sets.get(index);
 
 				JPopupMenu popup = new JPopupMenu();
-				popup.add(new ChangeColorAction(parentFrame, function));
-				if (function.isLoaded())
-					popup.add(new DeleteOutputAction(parentFrame, function));
+				popup.add(new ChangeColorAction(parentFrame, set));
+				if (set.isLoaded())
+					popup.add(new DeleteOutputAction(parentFrame, set));
 				else
-					popup.add(new CancelOutputAction(parentFrame, function));
-				popup.add(new SaveSetAction(parentFrame, function));
+					popup.add(new CancelOutputAction(parentFrame, set));
+				popup.add(new SaveSetAction(parentFrame, set));
 				popup.addSeparator();
-				popup.add(new PropertiesAction(parentFrame, function));
+				popup.add(new PropertiesAction(parentFrame, set));
 				popup.addSeparator();
 				popup.add(new DeleteSelectedAction(parentFrame,
 						Julia.OUTPUTTYPE));
@@ -99,9 +99,9 @@ public class OutputPanel extends JPanel implements PropertyChangeListener {
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
 
-		List<OutputSet> fns = s.getOutputFunctions();
-		for (int i = 0; i < fns.size(); i++)
-			listModel.addElement(fns.get(i));
+		List<OutputSet> sets = s.getOutputSets();
+		for (int i = 0; i < sets.size(); i++)
+			listModel.addElement(sets.get(i));
 
 		outputList = new JList(listModel);
 		outputList
@@ -154,15 +154,15 @@ public class OutputPanel extends JPanel implements PropertyChangeListener {
 
 	public void propertyChange(PropertyChangeEvent event) {
 		String name = event.getPropertyName();
-		if (name.equals("addOutputFunction")) {
-			OutputSet fn = (OutputSet) event.getNewValue();
+		if (name.equals("addOutputSet")) {
+			OutputSet set = (OutputSet) event.getNewValue();
 			if (listModel.isEmpty()) {
 				inverseButton.setEnabled(true);
 				forwardButton.setEnabled(true);
 				outputList.addMouseListener(mouseListener);
 			}
-			listModel.addElement(fn);
-			fn.addListener(this);
+			listModel.addElement(set);
+			set.addListener(this);
 			outputList.addSelectionInterval(listModel.size() - 1, listModel
 					.size() - 1);
 		} else if (name.equals("session")) {
@@ -171,7 +171,7 @@ public class OutputPanel extends JPanel implements PropertyChangeListener {
 			listModel.clear();
 
 			// populate the listModel
-			for (OutputSet o : s.getOutputFunctions())
+			for (OutputSet o : s.getOutputSets())
 				listModel.addElement(o);
 
 			// see if buttons should be enabled or not
@@ -189,7 +189,7 @@ public class OutputPanel extends JPanel implements PropertyChangeListener {
 			s.addListener(this);
 		} else if (name.equals("Color") || name.equals("repaint")) {
 			outputList.repaint();
-		} else if (name.equals("deleteOutputFunction")) {
+		} else if (name.equals("deleteOutputSet")) {
 			listModel.removeElement(event.getNewValue());
 			if (listModel.isEmpty()) {
 				inverseButton.setEnabled(false);

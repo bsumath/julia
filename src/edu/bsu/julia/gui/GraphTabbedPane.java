@@ -19,7 +19,7 @@ public class GraphTabbedPane extends JTabbedPane implements ChangeListener{
 		GraphScrollPane scrollPane = new GraphScrollPane(parentFrame);
 		addTab("Output Graph "+tabNumber, scrollPane);
 		parentFrame.addKeyListener(scrollPane.getGLListener());
-		parentFrame.getOutputFunctionList().addListSelectionListener
+		parentFrame.getOutputSetList().addListSelectionListener
 			(scrollPane.getGLListener());
 		activePane = scrollPane;
 		getModel().addChangeListener(this);

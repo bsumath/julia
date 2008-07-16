@@ -33,7 +33,7 @@ public class Session {
 
 		public Collection<InputFunction> provideInputFunctions();
 
-		public Collection<OutputSet> provideOutputFunctions();
+		public Collection<OutputSet> provideOutputSets();
 
 		public int provideInputSubscript();
 
@@ -55,7 +55,7 @@ public class Session {
 
 		public void addInputFunctions(Collection<InputFunction> i);
 
-		public void addOutputFunctions(Collection<OutputSet> o);
+		public void addOutputSets(Collection<OutputSet> o);
 	}
 
 	/**
@@ -79,7 +79,7 @@ public class Session {
 	private int skips;
 	private ComplexNumber seed;
 	private List<InputFunction> inputFunctions;
-	private List<OutputSet> outputFunctions;
+	private List<OutputSet> outputSets;
 	private Queue<OutputSet> outputQueue;
 	private int inputSubscript;
 	private int outputSubscript;
@@ -97,9 +97,9 @@ public class Session {
 		seed = importer.provideSeedValue();
 		inputFunctions = new ArrayList<InputFunction>(importer
 				.provideInputFunctions());
-		outputFunctions = new ArrayList<OutputSet>(importer
-				.provideOutputFunctions());
-		outputQueue = new LinkedList<OutputSet>(outputFunctions);
+		outputSets = new ArrayList<OutputSet>(importer
+				.provideOutputSets());
+		outputQueue = new LinkedList<OutputSet>(outputSets);
 		inputSubscript = importer.provideInputSubscript();
 		outputSubscript = importer.provideOutputSubscript();
 
@@ -176,34 +176,34 @@ public class Session {
 		support.firePropertyChange("deleteInputFunction", null, fn);
 	}
 
-	public List<OutputSet> getOutputFunctions() {
-		return outputFunctions;
+	public List<OutputSet> getOutputSets() {
+		return outputSets;
 	}
 
-	public void addOutputFunction(OutputSet fn) {
+	public void addOutputSet(OutputSet set) {
 		markModified();
-		outputFunctions.add(fn);
-		outputQueue.add(fn);
-		fn.setSubscript(getNextOutSubscript());
-		support.firePropertyChange("addOutputFunction", null, fn);
+		outputSets.add(set);
+		outputQueue.add(set);
+		set.setSubscript(getNextOutSubscript());
+		support.firePropertyChange("addOutputSet", null, set);
 	}
 
-	public void deleteOutputFunction(OutputSet function) {
+	public void deleteOutputSet(OutputSet set) {
 		markModified();
-		outputFunctions.remove(function);
-		outputQueue.remove(function);
-		function.delete();
-		support.firePropertyChange("deleteOutputFunction", null, function);
+		outputSets.remove(set);
+		outputQueue.remove(set);
+		set.delete();
+		support.firePropertyChange("deleteOutputSet", null, set);
 	}
 
 	/**
-	 * method to unload an OutputFunction to try and free some heap space
+	 * method to unload an {@link OutputSet} to try and free some heap space
 	 */
 	public void freeHeapSpace() {
-		OutputSet function = outputQueue.poll();
-		if (function != null) {
-			function.unload();
-			outputQueue.add(function);
+		OutputSet set = outputQueue.poll();
+		if (set != null) {
+			set.unload();
+			outputQueue.add(set);
 		}
 	}
 
@@ -224,7 +224,7 @@ public class Session {
 		exporter.addSkips(skips);
 		exporter.addSeedValue(seed);
 		exporter.addInputFunctions(inputFunctions);
-		exporter.addOutputFunctions(outputFunctions);
+		exporter.addOutputSets(outputSets);
 	}
 
 	public boolean isModified() {

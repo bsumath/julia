@@ -16,18 +16,18 @@ import edu.bsu.julia.output.OutputSet;
  * 
  * @author Ben Dean
  */
-public class InverseOutputSetGenerator extends OutputSetGenerator {
+public class RecursiveOutputSetGenerator extends OutputSetGenerator {
 	/**
-	 * enum to determine full or ergodic method
+	 * enum to determine full or random method
 	 * 
 	 * @author Ben Dean
 	 */
 	public enum Type {
-		ERGODIC, FULL;
+		RANDOM, FULL;
 
 		public OutputSet.Type outputType() {
 			switch (this) {
-			case ERGODIC:
+			case RANDOM:
 				return OutputSet.Type.RANDOM_INVERSE_IMAGE;
 			case FULL:
 				return OutputSet.Type.FULL_INVERSE_IMAGE;
@@ -43,28 +43,28 @@ public class InverseOutputSetGenerator extends OutputSetGenerator {
 	private final Type type;
 
 	/**
-	 * constructor for {@link InverseOutputSetGenerator}
+	 * constructor for {@link RecursiveOutputSetGenerator}
 	 * 
 	 * @param parent
 	 *            {@link JFrame} where the generator was executed
 	 * @param inFunc
 	 *            an {@link InputFunction} to apply to all the points
-	 * @param outFunc
+	 * @param outSets
 	 *            an array of {@link OutputSet} to use as seed points
 	 * @param t
-	 *            {@link InverseOutputSetGenerator.Type} to determine full or
+	 *            {@link RecursiveOutputSetGenerator.Type} to determine full or
 	 *            ergodic method
 	 */
-	public InverseOutputSetGenerator(JFrame parent, InputFunction inFunc,
-			OutputSet[] outFunc, Type t) {
+	public RecursiveOutputSetGenerator(JFrame parent, InputFunction inFunc,
+			OutputSet[] outSets, Type t) {
 		parentFrame = parent;
 		inputFunction = inFunc;
 		type = t;
 
-		// build a list of starting points from the output functions
+		// build a list of starting points from the output sets
 		seedList = new ArrayList<ComplexNumber>();
-		for (OutputSet function : outFunc) {
-			for (ComplexNumber point : function.getPoints())
+		for (OutputSet set : outSets) {
+			for (ComplexNumber point : set.getPoints())
 				seedList.add(point);
 		}
 	}

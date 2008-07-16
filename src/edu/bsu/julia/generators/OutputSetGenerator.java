@@ -3,10 +3,11 @@ package edu.bsu.julia.generators;
 import javax.swing.SwingWorker;
 
 import edu.bsu.julia.ComplexNumber;
+import edu.bsu.julia.output.OutputSet;
 
 /**
  * This abstract class defines the algorithms to be run when creating an
- * OutputFunction. It extends {@link SwingWorker} and returns an array of
+ * {@link OutputSet}. It extends {@link SwingWorker} and returns an array of
  * {@link ComplexNumber} after the worker has finished
  * 
  * @author Ben Dean

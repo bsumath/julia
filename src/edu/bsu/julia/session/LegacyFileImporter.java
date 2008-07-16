@@ -13,7 +13,7 @@ import edu.bsu.julia.input.InputFunction;
 import edu.bsu.julia.input.LinearInputFunction;
 import edu.bsu.julia.input.MobiusInputFunction;
 import edu.bsu.julia.input.QuadraticInputFunction;
-import edu.bsu.julia.input.RealAfflineLinearInputFunction;
+import edu.bsu.julia.input.RealAffineLinearInputFunction;
 import edu.bsu.julia.output.OutputSet;
 import edu.bsu.julia.session.Session.Importer;
 
@@ -73,7 +73,7 @@ public class LegacyFileImporter extends SwingWorker<Boolean, Void> implements
 					y = Double.parseDouble(input.readLine());
 					var[j] = new ComplexNumber(x, y);
 				}
-				inputFunctions.add(new RealAfflineLinearInputFunction(m,
+				inputFunctions.add(new RealAffineLinearInputFunction(m,
 						var[0], var[1], var[2], var[3], var[4], var[5]));
 			} else if (type.equals("mobius")) {
 				int m = Integer.parseInt(input.readLine());
@@ -116,7 +116,7 @@ public class LegacyFileImporter extends SwingWorker<Boolean, Void> implements
 		return iterations;
 	}
 
-	public Vector<OutputSet> provideOutputFunctions() {
+	public Vector<OutputSet> provideOutputSets() {
 		return new Vector<OutputSet>();
 	}
 

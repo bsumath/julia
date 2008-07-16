@@ -13,18 +13,18 @@ import edu.bsu.julia.session.Session;
 public class DeleteOutputAction extends AbstractAction{
 
 	private Julia parentFrame;
-	private OutputSet function;
+	private OutputSet set;
 	//for serializable interface: do not use
 	public static final long serialVersionUID = 0;
 	
-	public DeleteOutputAction(Julia f, OutputSet func) {
+	public DeleteOutputAction(Julia f, OutputSet s) {
 		super("Delete", new ImageIcon
 				(Thread.currentThread().getContextClassLoader().getResource
 						("delete.png")));
 		putValue("SHORT_DESCRIPTION", "Delete");
 		putValue("LONG_DESCRIPTION", "Delete the chosen function.");
 		parentFrame = f;
-		function = func;
+		set = s;
 	}
 	
 	public void actionPerformed(ActionEvent arg0) {
@@ -35,7 +35,7 @@ public class DeleteOutputAction extends AbstractAction{
 				"Are you sure?",
 				"Delete?",JOptionPane.OK_CANCEL_OPTION);
 		if (choice == JOptionPane.OK_OPTION){
-			s.deleteOutputFunction(function);
+			s.deleteOutputSet(set);
 		}
 		
 	}

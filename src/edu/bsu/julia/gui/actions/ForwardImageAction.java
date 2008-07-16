@@ -9,7 +9,7 @@ import edu.bsu.julia.Julia;
 import edu.bsu.julia.generators.FullAttrOutputSetGenerator;
 import edu.bsu.julia.generators.OutputSetGenerator;
 import edu.bsu.julia.input.InputFunction;
-import edu.bsu.julia.output.InverseOutputFunction;
+import edu.bsu.julia.output.RecursiveOutputSet;
 import edu.bsu.julia.output.OutputSet;
 import edu.bsu.julia.session.Session;
 
@@ -35,14 +35,14 @@ public class ForwardImageAction extends AbstractAction {
 				.getSelectedFunctions();
 
 		// build list of output functions
-		Object[] objArray = parentFrame.getOutputFunctionList()
+		Object[] objArray = parentFrame.getOutputSetList()
 				.getSelectedValues();
 		if (objArray.length == 0)
 			return;
 		OutputSet[] outFunc = new OutputSet[objArray.length];
 		for (int i = 0; i < objArray.length; i++)
 			outFunc[i] = (OutputSet) objArray[i];
-		parentFrame.getOutputFunctionList().clearSelection();
+		parentFrame.getOutputSetList().clearSelection();
 
 		// build list of points
 		int size = 0;
@@ -56,7 +56,7 @@ public class ForwardImageAction extends AbstractAction {
 				points[index++] = p;
 		}
 
-		// create and add the OutputFunctions
+		// create and add the OutputSets
 		Session session = parentFrame.getCurrentSession();
 		for (InputFunction function : inFunc) {
 			InputFunction[] inArray = new InputFunction[] { function };
@@ -67,10 +67,10 @@ public class ForwardImageAction extends AbstractAction {
 					points,
 					inArray,
 					FullAttrOutputSetGenerator.Options.DISCARD_INTERMEDIATE_POINTS);
-			OutputSet outputFunction = new InverseOutputFunction(session,
+			OutputSet outputSet = new RecursiveOutputSet(session,
 					inArray, OutputSet.Type.FORWARD_IMAGE, generator, outFunc);
 			
-			session.addOutputFunction(outputFunction);
+			session.addOutputSet(outputSet);
 		}
 	}
 }

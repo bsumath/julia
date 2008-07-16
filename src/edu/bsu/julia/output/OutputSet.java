@@ -121,7 +121,7 @@ public class OutputSet {
 
 					// if the points are null then there was some sort of error
 					if (points == null) {
-						session.deleteOutputFunction(OutputSet.this);
+						session.deleteOutputSet(OutputSet.this);
 					} else {
 						writePointsTempFile();
 						support.firePropertyChange("reselect", null, null);
@@ -396,7 +396,7 @@ public class OutputSet {
 	}
 
 	/**
-	 * called when an OutputFunction is deleted from the session
+	 * called when an {@link OutputSet} is deleted from the session
 	 */
 	public void delete() {
 		if (!generator.isDone())

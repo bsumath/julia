@@ -12,27 +12,27 @@ import edu.bsu.julia.generators.OutputSetGenerator;
 import edu.bsu.julia.input.InputFunction;
 import edu.bsu.julia.session.Session;
 
-public class InverseOutputFunction extends OutputSet {
+public class RecursiveOutputSet extends OutputSet {
 
-	private OutputSet[] outputFunctions = new OutputSet[] {};
+	private OutputSet[] outputSets = new OutputSet[] {};
 
-	public InverseOutputFunction(Session s, InputFunction[] i, Type type,
+	public RecursiveOutputSet(Session s, InputFunction[] i, Type type,
 			OutputSetGenerator g, OutputSet[] o) {
 		super(s, i, type, g);
-		outputFunctions = o;
+		outputSets = o;
 	}
 
-	public OutputSet[] getOutputFunctions() {
-		return outputFunctions;
+	public OutputSet[] getOutputSets() {
+		return outputSets;
 	}
 
 	public String toString() {
 		String s = "o" + getSubscript() + " = " + functionType.description()
 				+ " of ";
 
-		for (int x = 0; x < outputFunctions.length; x++) {
-			s = s + "o" + outputFunctions[x].getSubscript();
-			if (x != (outputFunctions.length - 1))
+		for (int x = 0; x < outputSets.length; x++) {
+			s = s + "o" + outputSets[x].getSubscript();
+			if (x != (outputSets.length - 1))
 				s = s + ", ";
 		}
 		s = s + " using ";
@@ -76,14 +76,14 @@ public class InverseOutputFunction extends OutputSet {
 
 	public boolean equals(Object obj) {
 		try {
-			InverseOutputFunction other = (InverseOutputFunction) obj;
+			RecursiveOutputSet other = (RecursiveOutputSet) obj;
 			boolean result = super.equals(obj);
 			result = result
-					&& outputFunctions.length == other.outputFunctions.length;
+					&& outputSets.length == other.outputSets.length;
 
-			for (int i = 0; result && i < outputFunctions.length; i++) {
+			for (int i = 0; result && i < outputSets.length; i++) {
 				result = result
-						&& outputFunctions[i].equals(other.outputFunctions[i]);
+						&& outputSets[i].equals(other.outputSets[i]);
 			}
 
 			return result;
@@ -93,12 +93,12 @@ public class InverseOutputFunction extends OutputSet {
 	}
 
 	/**
-	 * method to access the files this OutputFunction
+	 * method to access the files this {@link OutputSet}
 	 * 
 	 * @see OutputSet#getFiles()
 	 * @return an array of {@link File} containing two entries, one for point
 	 *         data and one for the other information about the
-	 *         {@link InverseOutputFunction}
+	 *         {@link RecursiveOutputSet}
 	 */
 	@Override
 	public File[] getFiles() {
@@ -125,15 +125,15 @@ public class InverseOutputFunction extends OutputSet {
 	/**
 	 * @see OutputSet#historyInfo()
 	 * @return a {@link String} with the history information about this
-	 *         {@link InverseOutputFunction}
+	 *         {@link RecursiveOutputSet}
 	 */
 	@Override
 	public List<String> historyInfo() {
 		List<String> result = super.historyInfo();
 
-		for (OutputSet function : outputFunctions) {
-			result.add("begin_output_function: " + function.getOutputID());
-			for (String s : function.historyInfo())
+		for (OutputSet set : outputSets) {
+			result.add("begin_output_function: " + set.getOutputID());
+			for (String s : set.historyInfo())
 				result.add("\t" + s);
 			result.add("end_output_function");
 		}

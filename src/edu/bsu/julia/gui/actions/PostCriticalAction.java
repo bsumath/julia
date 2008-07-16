@@ -40,7 +40,7 @@ public class PostCriticalAction extends AbstractAction {
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
-		parentFrame.getOutputFunctionList().clearSelection();
+		parentFrame.getOutputSetList().clearSelection();
 		new PostCriticalDialog(parentFrame);
 	}
 
@@ -156,7 +156,7 @@ public class PostCriticalAction extends AbstractAction {
 						"No critical Points exist");
 			} else {
 				// create the output function and add it to the session
-				session.addOutputFunction(new OutputSet(session, inFunc,
+				session.addOutputSet(new OutputSet(session, inFunc,
 						OutputSet.Type.POST_CRITICAL,
 						new FullAttrOutputSetGenerator(parentFrame, session
 								.getIterations(), seedList

@@ -98,7 +98,7 @@ public class CreateCompositeIndAction extends AbstractAction {
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
-		parentFrame.getOutputFunctionList().clearSelection();
+		parentFrame.getOutputSetList().clearSelection();
 		Session session = parentFrame.getCurrentSession();
 
 		// build list of input functions
@@ -109,22 +109,22 @@ public class CreateCompositeIndAction extends AbstractAction {
 		String command = (methodGroup.getSelection().getActionCommand() + "_" + typeGroup
 				.getSelection().getActionCommand()).toUpperCase();
 
-		// a list for all the new OutputFunctions
-		List<OutputSet> newFunctions = new ArrayList<OutputSet>();
+		// a list for all the new OutputSets
+		List<OutputSet> newSets = new ArrayList<OutputSet>();
 
-		// create an OutputFunction based on the OutputFunction.Type
+		// create an OutputSet based on the OutputSet.Type
 		OutputSet.Type type = OutputSet.Type.valueOf(command);
 		switch (type) {
 		case RANDOM_JULIA:
 			if (mode == Mode.COMPOSITE || mode == Mode.BOTH)
-				newFunctions.add(new OutputSet(session, inFunc, type,
+				newSets.add(new OutputSet(session, inFunc, type,
 						new ErgodicJuliaOutputSetGenerator(parentFrame, session
 								.getIterations(), session.getSkips(), session
 								.getSeedValue(), inFunc)));
 			if (mode == Mode.INDIVIDUAL || mode == Mode.BOTH)
 				for (InputFunction function : inFunc) {
 					InputFunction[] inArray = new InputFunction[] { function };
-					newFunctions.add(new OutputSet(session, inArray,
+					newSets.add(new OutputSet(session, inArray,
 							OutputSet.Type.valueOf("IND_" + command),
 							new ErgodicJuliaOutputSetGenerator(parentFrame,
 									session.getIterations(),
@@ -134,14 +134,14 @@ public class CreateCompositeIndAction extends AbstractAction {
 			break;
 		case FULL_JULIA:
 			if (mode == Mode.COMPOSITE || mode == Mode.BOTH)
-				newFunctions.add(new OutputSet(session, inFunc, type,
+				newSets.add(new OutputSet(session, inFunc, type,
 						new FullJuliaOutputSetGenerator(parentFrame, session
 								.getIterations(), session.getSeedValue(),
 								inFunc)));
 			if (mode == Mode.INDIVIDUAL || mode == Mode.BOTH)
 				for (InputFunction function : inFunc) {
 					InputFunction[] inArray = new InputFunction[] { function };
-					newFunctions.add(new OutputSet(session, inArray,
+					newSets.add(new OutputSet(session, inArray,
 							OutputSet.Type.valueOf("IND_" + command),
 							new FullJuliaOutputSetGenerator(parentFrame,
 									session.getIterations(), session
@@ -150,14 +150,14 @@ public class CreateCompositeIndAction extends AbstractAction {
 			break;
 		case RANDOM_ATTR:
 			if (mode == Mode.COMPOSITE || mode == Mode.BOTH)
-				newFunctions.add(new OutputSet(session, inFunc, type,
+				newSets.add(new OutputSet(session, inFunc, type,
 						new ErgodicAttrOutputSetGenerator(parentFrame, session
 								.getIterations(), session.getSkips(), session
 								.getSeedValue(), inFunc)));
 			if (mode == Mode.INDIVIDUAL || mode == Mode.BOTH)
 				for (InputFunction function : inFunc) {
 					InputFunction[] inArray = new InputFunction[] { function };
-					newFunctions.add(new OutputSet(session, inArray,
+					newSets.add(new OutputSet(session, inArray,
 							OutputSet.Type.valueOf("IND_" + command),
 							new ErgodicAttrOutputSetGenerator(parentFrame,
 									session.getIterations(),
@@ -169,14 +169,14 @@ public class CreateCompositeIndAction extends AbstractAction {
 			ComplexNumber[] seedList = new ComplexNumber[] { session
 					.getSeedValue() };
 			if (mode == Mode.COMPOSITE || mode == Mode.BOTH)
-				newFunctions.add(new OutputSet(session, inFunc, type,
+				newSets.add(new OutputSet(session, inFunc, type,
 						new FullAttrOutputSetGenerator(parentFrame, session
 								.getIterations(), seedList, inFunc,
 								Options.DISCARD_INTERMEDIATE_POINTS)));
 			if (mode == Mode.INDIVIDUAL || mode == Mode.BOTH)
 				for (InputFunction function : inFunc) {
 					InputFunction[] inArray = new InputFunction[] { function };
-					newFunctions.add(new OutputSet(session, inArray,
+					newSets.add(new OutputSet(session, inArray,
 							OutputSet.Type.valueOf("IND_" + command),
 							new FullAttrOutputSetGenerator(parentFrame, session
 									.getIterations(), seedList, inArray,
@@ -187,9 +187,9 @@ public class CreateCompositeIndAction extends AbstractAction {
 			return;
 		}
 
-		// add the new OutputFunctions to the session
-		for (OutputSet function : newFunctions) {
-			session.addOutputFunction(function);
+		// add the new OutputSets to the session
+		for (OutputSet set : newSets) {
+			session.addOutputSet(set);
 		}
 	}
 }

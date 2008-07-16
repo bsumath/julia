@@ -89,7 +89,7 @@ public class Julia extends JFrame {
 		return inputPanel;
 	}
 
-	public JList getOutputFunctionList() {
+	public JList getOutputSetList() {
 		return outputPanel.getOutputList();
 	}
 
