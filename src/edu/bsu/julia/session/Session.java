@@ -12,6 +12,7 @@ import java.util.Queue;
 import javax.swing.JFrame;
 
 import edu.bsu.julia.ComplexNumber;
+import edu.bsu.julia.Julia;
 import edu.bsu.julia.input.InputFunction;
 import edu.bsu.julia.output.OutputFunction;
 
@@ -232,9 +233,7 @@ public class Session {
 
 	public void markUnmodified() {
 		if (modified) {
-			String title = parentFrame.getTitle();
-			parentFrame.setTitle(title.substring(0, title
-					.indexOf(MODIFIED_TITLE)));
+			((Julia)parentFrame).resetTitle();
 		}
 		modified = false;
 	}
@@ -246,7 +245,8 @@ public class Session {
 	}
 
 	public void setFile(File file) {
-		if (sessionFile == null && file != null) {
+		if (file != null) {
+			((Julia)parentFrame).resetTitle();
 			parentFrame.setTitle(parentFrame.getTitle() + " - "
 					+ file.getName());
 		}

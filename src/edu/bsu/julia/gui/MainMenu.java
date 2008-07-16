@@ -54,10 +54,13 @@ public class MainMenu extends JMenuBar {
 		editSessionItem.setMnemonic('d');
 		editSessionItem.addMouseListener(parentFrame.getStatusBar());
 		fileMenu.add(editSessionItem);
-		JMenuItem saveSessionItem = new JMenuItem (new SaveSessionAction(parentFrame));
+		JMenuItem saveSessionItem = new JMenuItem (new SaveSessionAction(parentFrame,false));
 		saveSessionItem.setMnemonic('v');
 		saveSessionItem.addMouseListener(parentFrame.getStatusBar());
 		fileMenu.add(saveSessionItem);
+		JMenuItem saveSessionAsItem = new JMenuItem (new SaveSessionAction(parentFrame,true));
+		saveSessionAsItem.addMouseListener(parentFrame.getStatusBar());
+		fileMenu.add(saveSessionAsItem);
 		JMenuItem loadSessionItem = new JMenuItem(new LoadSessionAction(parentFrame));
 		loadSessionItem.setMnemonic('l');
 		loadSessionItem.addMouseListener(parentFrame.getStatusBar());

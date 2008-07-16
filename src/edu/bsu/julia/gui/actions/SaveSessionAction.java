@@ -26,23 +26,30 @@ public class SaveSessionAction extends AbstractAction {
 
 	private Julia parentFrame;
 	private File file;
+	private boolean saveAsMode = false;
 
-	public SaveSessionAction(Julia f) {
-		super("Save Session", new ImageIcon(Thread.currentThread()
-				.getContextClassLoader().getResource("sessionsave.png")));
-		putValue("SHORT_DESCRIPTION", "Save Session");
+	public SaveSessionAction(Julia f, boolean alwaysPrompt) {
+		super(alwaysPrompt ? "Save Session As..." : "Save Session",
+				new ImageIcon(Thread.currentThread().getContextClassLoader()
+						.getResource("sessionsave.png")));
+		if (alwaysPrompt)
+			putValue("SHORT_DESCRIPTION", "Save Session As ...");
+		else
+			putValue("SHORT_DESCRIPTION", "Save Session");
 		putValue("LONG_DESCRIPTION", "Save the current session to disk.");
 		parentFrame = f;
+
+		saveAsMode = alwaysPrompt;
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
 		parentFrame.loseFocus();
 
-		if (!parentFrame.getCurrentSession().isModified())
+		if (!parentFrame.getCurrentSession().isModified() && !saveAsMode)
 			return;
 
 		file = parentFrame.getCurrentSession().getFile();
-		if (file == null) {
+		if (file == null || saveAsMode) {
 			JFileChooser filechooser = new JFileChooser();
 			filechooser.setFileFilter(new JuliaFileFilter());
 
@@ -67,6 +74,11 @@ public class SaveSessionAction extends AbstractAction {
 					return;
 			}
 			parentFrame.setFilePath(file.getAbsolutePath());
+		}
+		
+		// check for saving legacy files and rename
+		if (file.getName().endsWith("julia")){
+			file = new File(file.getAbsolutePath()+".zip");
 		}
 
 		// create a dialog window and progress bar

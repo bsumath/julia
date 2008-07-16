@@ -44,9 +44,10 @@ public class Julia extends JFrame {
 	private String filePath = "";
 	// for serializable interface: do not use
 	public static final long serialVersionUID = 0;
+	private static final String TITLE = "Julia";
 
 	public Julia() {
-		super("Julia");
+		super(TITLE);
 
 		try {
 			currentSession = new Session(this, new EmptySessionImporter());
@@ -59,17 +60,17 @@ public class Julia extends JFrame {
 		axisTrigger = true;
 		grilTrigger = false;
 		inputPanel = new InputPanel(this);
-		outputPanel = new OutputPanel(this);		
+		outputPanel = new OutputPanel(this);
 	}
 
 	public static void main(String[] args) {
-		//create the instance of Julia
+		// create the instance of Julia
 		final Julia application = new Julia();
 		application.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		
-		//start the GUI
-		SwingUtilities.invokeLater(new Runnable(){
-			public void run(){
+
+		// start the GUI
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
 				application.createAndShowGUI();
 			}
 		});
@@ -203,6 +204,13 @@ public class Julia extends JFrame {
 				l.focusLost(focusLost);
 			}
 		}
+	}
+
+	/**
+	 * method to reset the title to the default
+	 */
+	public void resetTitle() {
+		setTitle(TITLE);
 	}
 
 }
