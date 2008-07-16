@@ -1,10 +1,24 @@
 package edu.bsu.julia.gui.actions;
 
-import java.awt.event.*;
-import javax.swing.*;
-import java.awt.*;
-import edu.bsu.julia.*;
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+
+import edu.bsu.julia.Julia;
 import edu.bsu.julia.input.InputFunction;
+import edu.bsu.julia.output.InverseOutputFunction;
 import edu.bsu.julia.output.OutputFunction;
 
 public class PropertiesAction extends AbstractAction {
@@ -49,10 +63,17 @@ public class PropertiesAction extends AbstractAction {
 		component.add(panel, BorderLayout.NORTH);
 		
 		InputFunction[] input = function.getInputFunctions();
-		JList list = new JList(input);
+		List<Object> objList = new ArrayList<Object>(Arrays.asList(input));
+		objList.add(" ");
+		if (function instanceof InverseOutputFunction){
+			OutputFunction[] output = ((InverseOutputFunction)function).getOutputFunctions();
+			objList.addAll(Arrays.asList(output));
+		}
+		
+		JList list = new JList(objList.toArray());
 		list.setVisibleRowCount(6);
 		JScrollPane scroller = new JScrollPane(list);
-		scroller.setBorder(BorderFactory.createTitledBorder("Input Functions"));
+		scroller.setBorder(BorderFactory.createTitledBorder("History"));
 		component.add(scroller);
 		
 		JOptionPane.showMessageDialog(parentFrame, component, "Properties",
