@@ -22,7 +22,7 @@ import javax.swing.event.ListSelectionListener;
 
 import edu.bsu.julia.ComplexNumber;
 import edu.bsu.julia.Julia;
-import edu.bsu.julia.output.OutputFunction;
+import edu.bsu.julia.output.OutputSet;
 
 public class GLListener implements GLEventListener, ListSelectionListener,
 		PropertyChangeListener, MouseWheelListener, KeyListener,
@@ -30,7 +30,7 @@ public class GLListener implements GLEventListener, ListSelectionListener,
 
 	public final double ZOOM_CONSTANT = 1.25;
 	private Julia parentFrame;
-	private OutputFunction[] fns;
+	private OutputSet[] fns;
 	private double x, y, width, height, paneWidth, paneHeight, dragX, dragY;
 	private boolean enabled, unsized, dragInProgress;
 	private boolean axisEnabled;
@@ -189,7 +189,7 @@ public class GLListener implements GLEventListener, ListSelectionListener,
 		int dSize = parentFrame.getDotSize();
 		gl.glPointSize(dSize);
 		for (int i = 0; i < fns.length; i++) {
-			OutputFunction function = fns[i];
+			OutputSet function = fns[i];
 			if (function != null && function.isLoaded()) {
 				float[] colorArray = new float[3];
 				function.getColor().getColorComponents(colorArray);
@@ -268,7 +268,7 @@ public class GLListener implements GLEventListener, ListSelectionListener,
 		support.firePropertyChange("paneHeight", null, paneHeight);
 	}
 
-	public OutputFunction[] getFns() {
+	public OutputSet[] getFns() {
 		return fns;
 	}
 
@@ -352,9 +352,9 @@ public class GLListener implements GLEventListener, ListSelectionListener,
 			for (int j = 0; j < fns.length; j++)
 				fns[j].removeListener(this);
 		Object[] obFns = list.getSelectedValues();
-		fns = new OutputFunction[obFns.length];
+		fns = new OutputSet[obFns.length];
 		for (int i = 0; i < obFns.length; i++) {
-			OutputFunction function = (OutputFunction) obFns[i];
+			OutputSet function = (OutputSet) obFns[i];
 			fns[i] = function;
 			function.addListener(this);
 		}

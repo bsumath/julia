@@ -245,7 +245,7 @@ public class InputPanel extends JPanel implements PropertyChangeListener {
 		buttonPanel2.add(fullButton);
 		ergodicButton = new JToggleButton("Random", true);
 		// ergodicButton.setFocusable(false);
-		ergodicButton.setActionCommand("ergodic");
+		ergodicButton.setActionCommand("random");
 		ergodicButton.setName("Process functions using the random method.");
 		ergodicButton.addMouseListener(parentFrame.getStatusBar());
 		methodGroup.add(ergodicButton);

@@ -8,11 +8,11 @@ import javax.swing.JFrame;
 import edu.bsu.julia.ComplexNumber;
 import edu.bsu.julia.gui.JuliaError;
 import edu.bsu.julia.input.InputFunction;
-import edu.bsu.julia.output.OutputFunction;
+import edu.bsu.julia.output.OutputSet;
 
 /**
  * an {@link OutputSetGenerator} that applies one {@link InputFunction} to the
- * points of a {@link List} of {@link OutputFunction}.
+ * points of a {@link List} of {@link OutputSet}.
  * 
  * @author Ben Dean
  */
@@ -25,14 +25,14 @@ public class InverseOutputSetGenerator extends OutputSetGenerator {
 	public enum Type {
 		ERGODIC, FULL;
 
-		public OutputFunction.Type outputType() {
+		public OutputSet.Type outputType() {
 			switch (this) {
 			case ERGODIC:
-				return OutputFunction.Type.INVERSE_ERGODIC_JULIA;
+				return OutputSet.Type.RANDOM_INVERSE_IMAGE;
 			case FULL:
-				return OutputFunction.Type.INVERSE_FULL_JULIA;
+				return OutputSet.Type.FULL_INVERSE_IMAGE;
 			default:
-				return OutputFunction.Type.BASIC;
+				return OutputSet.Type.BASIC;
 			}
 		}
 	}
@@ -50,20 +50,20 @@ public class InverseOutputSetGenerator extends OutputSetGenerator {
 	 * @param inFunc
 	 *            an {@link InputFunction} to apply to all the points
 	 * @param outFunc
-	 *            an array of {@link OutputFunction} to use as seed points
+	 *            an array of {@link OutputSet} to use as seed points
 	 * @param t
 	 *            {@link InverseOutputSetGenerator.Type} to determine full or
 	 *            ergodic method
 	 */
 	public InverseOutputSetGenerator(JFrame parent, InputFunction inFunc,
-			OutputFunction[] outFunc, Type t) {
+			OutputSet[] outFunc, Type t) {
 		parentFrame = parent;
 		inputFunction = inFunc;
 		type = t;
 
 		// build a list of starting points from the output functions
 		seedList = new ArrayList<ComplexNumber>();
-		for (OutputFunction function : outFunc) {
+		for (OutputSet function : outFunc) {
 			for (ComplexNumber point : function.getPoints())
 				seedList.add(point);
 		}

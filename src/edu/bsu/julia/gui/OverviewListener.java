@@ -7,14 +7,14 @@ import javax.media.opengl.glu.GLU;
 import javax.swing.*;
 import java.awt.event.*;
 import edu.bsu.julia.*;
-import edu.bsu.julia.output.OutputFunction;
+import edu.bsu.julia.output.OutputSet;
 
 public class OverviewListener implements GLEventListener, PropertyChangeListener,
 	MouseListener, MouseMotionListener {
 	private Julia parentFrame;
 	private double x, y, width, height, boxX, boxY, boxWidth, boxHeight,
 		paneHeight, paneWidth, boxPHeight, boxPWidth, dragX, dragY;
-	private OutputFunction fns[];
+	private OutputSet fns[];
 	private JDialog frame;
 	private GLListener list;
 	private boolean dragInProgress;
@@ -85,7 +85,7 @@ public class OverviewListener implements GLEventListener, PropertyChangeListener
 		gl.glPointSize(1);
 		for(int i=0; i<fns.length; i++) {
 			if(fns[i]!=null) {
-				OutputFunction function = fns[i];
+				OutputSet function = fns[i];
 				float[] cArray = new float[3];
 				function.getColor().getColorComponents(cArray);
 				gl.glColor3f(cArray[0], cArray[1], cArray[2]);
@@ -141,7 +141,7 @@ public class OverviewListener implements GLEventListener, PropertyChangeListener
 			frame.repaint();
 		}
 		else if(name.equals("fns")) {
-			fns = (OutputFunction[])e.getNewValue();
+			fns = (OutputSet[])e.getNewValue();
 			frame.repaint();
 		}
 		else if(name.equals("paneHeight")) {

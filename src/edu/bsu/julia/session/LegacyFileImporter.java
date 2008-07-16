@@ -14,7 +14,7 @@ import edu.bsu.julia.input.LinearInputFunction;
 import edu.bsu.julia.input.MobiusInputFunction;
 import edu.bsu.julia.input.QuadraticInputFunction;
 import edu.bsu.julia.input.RealAfflineLinearInputFunction;
-import edu.bsu.julia.output.OutputFunction;
+import edu.bsu.julia.output.OutputSet;
 import edu.bsu.julia.session.Session.Importer;
 
 /**
@@ -116,8 +116,8 @@ public class LegacyFileImporter extends SwingWorker<Boolean, Void> implements
 		return iterations;
 	}
 
-	public Vector<OutputFunction> provideOutputFunctions() {
-		return new Vector<OutputFunction>();
+	public Vector<OutputSet> provideOutputFunctions() {
+		return new Vector<OutputSet>();
 	}
 
 	public int provideOutputSubscript() {

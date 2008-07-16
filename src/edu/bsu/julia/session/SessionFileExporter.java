@@ -18,7 +18,7 @@ import javax.swing.SwingWorker;
 
 import edu.bsu.julia.ComplexNumber;
 import edu.bsu.julia.input.InputFunction;
-import edu.bsu.julia.output.OutputFunction;
+import edu.bsu.julia.output.OutputSet;
 import edu.bsu.julia.session.Session.Exporter;
 
 public class SessionFileExporter extends SwingWorker<Boolean, Void> implements
@@ -26,7 +26,7 @@ public class SessionFileExporter extends SwingWorker<Boolean, Void> implements
 	private static final int BUFFER_SIZE = 2048;
 	private List<InputFunction> inputFunctions;
 	private int iterations;
-	private List<OutputFunction> outputFunctions;
+	private List<OutputSet> outputFunctions;
 	private ComplexNumber seed;
 	private int skips;
 	private final File file;
@@ -43,8 +43,8 @@ public class SessionFileExporter extends SwingWorker<Boolean, Void> implements
 		iterations = i;
 	}
 
-	public void addOutputFunctions(Collection<OutputFunction> o) {
-		outputFunctions = new ArrayList<OutputFunction>(o);
+	public void addOutputFunctions(Collection<OutputSet> o) {
+		outputFunctions = new ArrayList<OutputSet>(o);
 	}
 
 	public void addSeedValue(ComplexNumber s) {
@@ -79,7 +79,7 @@ public class SessionFileExporter extends SwingWorker<Boolean, Void> implements
 			setProgress((int) (progress / maxProgress * 100));
 		}
 
-		for (OutputFunction function : outputFunctions) {
+		for (OutputSet function : outputFunctions) {
 			File[] temp = function.getFiles();
 			String name = "out." + function.getOutputID();
 			if (temp != null && temp.length == 2) {

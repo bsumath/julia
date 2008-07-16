@@ -27,7 +27,7 @@ import edu.bsu.julia.generators.DummyOutputSetGenerator;
 import edu.bsu.julia.generators.OutputSetGenerator;
 import edu.bsu.julia.input.InputFunction;
 import edu.bsu.julia.output.InverseOutputFunction;
-import edu.bsu.julia.output.OutputFunction;
+import edu.bsu.julia.output.OutputSet;
 import edu.bsu.julia.session.Session.Importer;
 import edu.bsu.julia.session.Session.InvalidSessionParametersException;
 
@@ -35,7 +35,7 @@ import edu.bsu.julia.session.Session.InvalidSessionParametersException;
  * this is a {@link Session.Importer} that reads *.julia.zip saved sessions. It
  * does this by extracting the zip file into temporary files and then processing
  * each of the temporary files to get information about the
- * {@link InputFunction} and {@link OutputFunction} of the {@link Session}
+ * {@link InputFunction} and {@link OutputSet} of the {@link Session}
  * 
  * @author Ben Dean
  */
@@ -47,7 +47,7 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 	private ComplexNumber seed = new ComplexNumber();
 
 	private final Map<Long, InputFunction> inputFunctions = new HashMap<Long, InputFunction>();
-	private final Map<Long, OutputFunction> outputFunctions = new HashMap<Long, OutputFunction>();
+	private final Map<Long, OutputSet> outputFunctions = new HashMap<Long, OutputSet>();
 
 	private final List<File> tempFiles = new ArrayList<File>();
 	private final Map<Long, File> inputMap;
@@ -231,8 +231,8 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 		ComplexNumber seed = new ComplexNumber();
 		List<InputFunction> inFunctions = new ArrayList<InputFunction>();
 		List<ComplexNumber> points = new ArrayList<ComplexNumber>();
-		List<OutputFunction> outFunctions = new ArrayList<OutputFunction>();
-		OutputFunction.Type type = OutputFunction.Type.BASIC;
+		List<OutputSet> outFunctions = new ArrayList<OutputSet>();
+		OutputSet.Type type = OutputSet.Type.BASIC;
 		String className = "";
 
 		// read all the history information from the txt info file
@@ -273,7 +273,7 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 					inFunctions.add(inputFunctions.remove(key));
 				}
 			} else if (lineParts[0].equalsIgnoreCase("type")) {
-				type = OutputFunction.Type.valueOf(lineParts[1]);
+				type = OutputSet.Type.valueOf(lineParts[1]);
 			} else if (lineParts[0].equalsIgnoreCase("begin_output_function")) {
 				long key = Long.parseLong(lineParts[1]);
 				if (outputFunctions.containsKey(key)) {
@@ -334,15 +334,15 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 		}
 
 		// create the output function
-		OutputFunction function;
+		OutputSet function;
 		OutputSetGenerator generator = new DummyOutputSetGenerator(points
 				.toArray(new ComplexNumber[] {}));
 		if (className.endsWith("InverseOutputFunction")) {
 			function = new InverseOutputFunction(tempSession, inFunctions
 					.toArray(new InputFunction[] {}), type, generator,
-					outFunctions.toArray(new OutputFunction[] {}));
+					outFunctions.toArray(new OutputSet[] {}));
 		} else {
-			function = new OutputFunction(tempSession, inFunctions
+			function = new OutputSet(tempSession, inFunctions
 					.toArray(new InputFunction[] {}), type, generator);
 		}
 
@@ -385,14 +385,14 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 		return iterations;
 	}
 
-	public Collection<OutputFunction> provideOutputFunctions() {
+	public Collection<OutputSet> provideOutputFunctions() {
 		// sort the functions by the keys and set the subscripts
 		List<Long> keys = new ArrayList<Long>(outputFunctions.keySet());
 		Collections.sort(keys);
 
-		List<OutputFunction> result = new ArrayList<OutputFunction>();
+		List<OutputSet> result = new ArrayList<OutputSet>();
 		for (int i = 0; i < keys.size(); i++) {
-			OutputFunction function = outputFunctions.get(keys.get(i));
+			OutputSet function = outputFunctions.get(keys.get(i));
 			function.setSubscript(i + 1);
 			result.add(function);
 		}
@@ -418,7 +418,7 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 
 	/**
 	 * a class to use to create dummy {@link Session} objects for constructing
-	 * {@link OutputFunction}
+	 * {@link OutputSet}
 	 * 
 	 * @author Ben Dean
 	 */
@@ -445,8 +445,8 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 			return iterations;
 		}
 
-		public Collection<OutputFunction> provideOutputFunctions() {
-			return new ArrayList<OutputFunction>();
+		public Collection<OutputSet> provideOutputFunctions() {
+			return new ArrayList<OutputSet>();
 		}
 
 		public int provideOutputSubscript() {

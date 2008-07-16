@@ -24,7 +24,7 @@ import edu.bsu.julia.gui.TextFieldFocusListener;
 import edu.bsu.julia.input.CubicInputFunction;
 import edu.bsu.julia.input.InputFunction;
 import edu.bsu.julia.input.QuadraticInputFunction;
-import edu.bsu.julia.output.OutputFunction;
+import edu.bsu.julia.output.OutputSet;
 import edu.bsu.julia.session.Session;
 
 public class PostCriticalAction extends AbstractAction {
@@ -156,8 +156,8 @@ public class PostCriticalAction extends AbstractAction {
 						"No critical Points exist");
 			} else {
 				// create the output function and add it to the session
-				session.addOutputFunction(new OutputFunction(session, inFunc,
-						OutputFunction.Type.POST_CRITICAL,
+				session.addOutputFunction(new OutputSet(session, inFunc,
+						OutputSet.Type.POST_CRITICAL,
 						new FullAttrOutputSetGenerator(parentFrame, session
 								.getIterations(), seedList
 								.toArray(new ComplexNumber[] {}), inFunc,

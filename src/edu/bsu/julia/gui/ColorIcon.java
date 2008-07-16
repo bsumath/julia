@@ -7,7 +7,7 @@ import java.beans.PropertyChangeListener;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
-import edu.bsu.julia.output.OutputFunction;
+import edu.bsu.julia.output.OutputSet;
 
 public class ColorIcon extends JPanel implements PropertyChangeListener{
 	
@@ -24,8 +24,8 @@ public class ColorIcon extends JPanel implements PropertyChangeListener{
 		setBackground(newColor);
 	}
 	
-	public void setFunction(OutputFunction fn) {
-		OutputFunction function = fn;
+	public void setFunction(OutputSet fn) {
+		OutputSet function = fn;
 		function.addListener(this);
 	}
 	

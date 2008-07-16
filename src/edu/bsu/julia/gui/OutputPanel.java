@@ -28,7 +28,7 @@ import edu.bsu.julia.gui.actions.ForwardImageAction;
 import edu.bsu.julia.gui.actions.InverseAction;
 import edu.bsu.julia.gui.actions.PropertiesAction;
 import edu.bsu.julia.gui.actions.SaveSetAction;
-import edu.bsu.julia.output.OutputFunction;
+import edu.bsu.julia.output.OutputSet;
 import edu.bsu.julia.session.Session;
 
 public class OutputPanel extends JPanel implements PropertyChangeListener {
@@ -58,11 +58,11 @@ public class OutputPanel extends JPanel implements PropertyChangeListener {
 		private void checkPopup(MouseEvent e) {
 			if (e.isPopupTrigger()) {
 				final int index = outputList.locationToIndex(e.getPoint());
-				List<OutputFunction> functions = parentFrame.getCurrentSession()
+				List<OutputSet> functions = parentFrame.getCurrentSession()
 						.getOutputFunctions();
 				if(index >= functions.size()) return;
 				
-				OutputFunction function = functions.get(index);
+				OutputSet function = functions.get(index);
 
 				JPopupMenu popup = new JPopupMenu();
 				popup.add(new ChangeColorAction(parentFrame, function));
@@ -99,7 +99,7 @@ public class OutputPanel extends JPanel implements PropertyChangeListener {
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
 
-		List<OutputFunction> fns = s.getOutputFunctions();
+		List<OutputSet> fns = s.getOutputFunctions();
 		for (int i = 0; i < fns.size(); i++)
 			listModel.addElement(fns.get(i));
 
@@ -155,7 +155,7 @@ public class OutputPanel extends JPanel implements PropertyChangeListener {
 	public void propertyChange(PropertyChangeEvent event) {
 		String name = event.getPropertyName();
 		if (name.equals("addOutputFunction")) {
-			OutputFunction fn = (OutputFunction) event.getNewValue();
+			OutputSet fn = (OutputSet) event.getNewValue();
 			if (listModel.isEmpty()) {
 				inverseButton.setEnabled(true);
 				forwardButton.setEnabled(true);
@@ -171,7 +171,7 @@ public class OutputPanel extends JPanel implements PropertyChangeListener {
 			listModel.clear();
 
 			// populate the listModel
-			for (OutputFunction o : s.getOutputFunctions())
+			for (OutputSet o : s.getOutputFunctions())
 				listModel.addElement(o);
 
 			// see if buttons should be enabled or not

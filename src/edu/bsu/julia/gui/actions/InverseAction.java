@@ -11,7 +11,7 @@ import edu.bsu.julia.generators.OutputSetGenerator;
 import edu.bsu.julia.gui.InputPanel;
 import edu.bsu.julia.input.InputFunction;
 import edu.bsu.julia.output.InverseOutputFunction;
-import edu.bsu.julia.output.OutputFunction;
+import edu.bsu.julia.output.OutputSet;
 import edu.bsu.julia.session.Session;
 
 public class InverseAction extends AbstractAction {
@@ -43,9 +43,9 @@ public class InverseAction extends AbstractAction {
 				.getSelectedValues();
 		if (objArray.length == 0)
 			return;
-		OutputFunction[] outFunc = new OutputFunction[objArray.length];
+		OutputSet[] outFunc = new OutputSet[objArray.length];
 		for (int i = 0; i < objArray.length; i++)
-			outFunc[i] = (OutputFunction) objArray[i];
+			outFunc[i] = (OutputSet) objArray[i];
 		parentFrame.getOutputFunctionList().clearSelection();
 
 		// create and add the Output Functions
@@ -55,7 +55,7 @@ public class InverseAction extends AbstractAction {
 			OutputSetGenerator generator = new InverseOutputSetGenerator(
 					parentFrame, function, outFunc,
 					InverseOutputSetGenerator.Type.valueOf(command));
-			OutputFunction outputFunction = new InverseOutputFunction(session,
+			OutputSet outputFunction = new InverseOutputFunction(session,
 					new InputFunction[] { function },
 					InverseOutputSetGenerator.Type.valueOf(command)
 							.outputType(), generator, outFunc);

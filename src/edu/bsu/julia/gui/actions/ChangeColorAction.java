@@ -8,16 +8,16 @@ import javax.swing.ImageIcon;
 import javax.swing.JColorChooser;
 
 import edu.bsu.julia.Julia;
-import edu.bsu.julia.output.OutputFunction;
+import edu.bsu.julia.output.OutputSet;
 
 public class ChangeColorAction extends AbstractAction {
 
 	private Julia parentFrame;
-	private OutputFunction function;
+	private OutputSet function;
 	// for serializable interface: do not use
 	public static final long serialVersionUID = 0;
 
-	public ChangeColorAction(Julia f, OutputFunction func) {
+	public ChangeColorAction(Julia f, OutputSet func) {
 		super("Change Color", new ImageIcon(Thread.currentThread()
 				.getContextClassLoader().getResource("color.png")));
 		putValue("SHORT_DESCRIPTION", "Change Color");
