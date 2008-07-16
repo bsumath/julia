@@ -2,6 +2,7 @@ package edu.bsu.julia.session;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -70,8 +71,7 @@ public class Session {
 		}
 	}
 
-	private static final String UNMODIFIED_TITLE = "Julia";
-	private static final String MODIFIED_TITLE = "Julia *session modified*";
+	private static final String MODIFIED_TITLE = " *session modified*";
 
 	private PropertyChangeSupport support = new PropertyChangeSupport(this);
 	private int iterations;
@@ -84,6 +84,8 @@ public class Session {
 	private int outputSubscript;
 	private boolean modified = false;
 	private final JFrame parentFrame;
+
+	private File sessionFile;
 
 	public Session(JFrame frame, Importer importer)
 			throws InvalidSessionParametersException {
@@ -229,13 +231,29 @@ public class Session {
 	}
 
 	public void markUnmodified() {
+		if (modified) {
+			String title = parentFrame.getTitle();
+			parentFrame.setTitle(title.substring(0, title
+					.indexOf(MODIFIED_TITLE)));
+		}
 		modified = false;
-		parentFrame.setTitle(UNMODIFIED_TITLE);
 	}
 
 	private void markModified() {
+		if (!modified)
+			parentFrame.setTitle(parentFrame.getTitle() + MODIFIED_TITLE);
 		modified = true;
-		parentFrame.setTitle(MODIFIED_TITLE);
 	}
 
+	public void setFile(File file) {
+		if (sessionFile == null && file != null) {
+			parentFrame.setTitle(parentFrame.getTitle() + " - "
+					+ file.getName());
+		}
+		sessionFile = file;
+	}
+
+	public File getFile() {
+		return sessionFile;
+	}
 }

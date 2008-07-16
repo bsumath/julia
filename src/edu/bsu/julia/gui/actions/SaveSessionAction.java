@@ -15,7 +15,6 @@ import edu.bsu.julia.session.SessionFileExporter;
 
 public class SaveSessionAction extends AbstractAction {
 	private Julia parentFrame;
-	private File file = null;
 	// for serializable interface: do not use
 	public static final long serialVersionUID = 0;
 	public static final String FILE_EXTENSION = ".julia.zip";
@@ -40,26 +39,32 @@ public class SaveSessionAction extends AbstractAction {
 	}
 
 	public boolean saveFile() {
-		JFileChooser filechooser = new JFileChooser();
-		filechooser.setFileFilter(new FileFilter() {
-			public boolean accept(File file) {
-				return file.getName().toLowerCase().endsWith(FILE_EXTENSION)
-						|| file.isDirectory();
-			}
+		File file = parentFrame.getCurrentSession().getFile();
+		if (file == null) {
+			JFileChooser filechooser = new JFileChooser();
+			filechooser.setFileFilter(new FileFilter() {
+				public boolean accept(File file) {
+					return file.getName().toLowerCase()
+							.endsWith(FILE_EXTENSION)
+							|| file.isDirectory();
+				}
 
-			public String getDescription() {
-				return "Julia files (*" + FILE_EXTENSION + ")";
-			}
-		});
+				public String getDescription() {
+					return "Julia files (*" + FILE_EXTENSION + ")";
+				}
+			});
 
-		String path = parentFrame.getFilePath();
-		if (!path.equals(""))
-			filechooser.setCurrentDirectory(new File(path));
-		int result = filechooser.showSaveDialog(parentFrame);
-		if (result == JFileChooser.CANCEL_OPTION) {
-			return true;
-		} else if (result == JFileChooser.APPROVE_OPTION) {
+			String path = parentFrame.getFilePath();
+			if (!path.equals(""))
+				filechooser.setCurrentDirectory(new File(path));
+			int result = filechooser.showSaveDialog(parentFrame);
+			if (result == JFileChooser.CANCEL_OPTION) {
+				return true;
+			} else if (result != JFileChooser.APPROVE_OPTION) {
+				return false;
+			}
 			file = filechooser.getSelectedFile();
+
 			if (!(file.getName().endsWith(FILE_EXTENSION))) {
 				file = new File(file.getAbsolutePath() + FILE_EXTENSION);
 			}
@@ -72,22 +77,21 @@ public class SaveSessionAction extends AbstractAction {
 					return false;
 			}
 			parentFrame.setFilePath(file.getAbsolutePath());
+		}
 
-			// try to write to a file
-			SessionFileExporter exporter = new SessionFileExporter();
-			parentFrame.getCurrentSession().export(exporter);
-			try {
-				exporter.writeToFile(file);
-				parentFrame.getCurrentSession().markUnmodified();
-				return true;
-			} catch (IOException e) {
-				System.err.println(e);
-				return false;
-			}
-
-		} else {
+		// try to write to a file
+		SessionFileExporter exporter = new SessionFileExporter();
+		parentFrame.getCurrentSession().export(exporter);
+		try {
+			exporter.writeToFile(file);
+			parentFrame.getCurrentSession().markUnmodified();
+			parentFrame.getCurrentSession().setFile(file);
+			return true;
+		} catch (IOException e) {
+			System.err.println(e);
 			return false;
 		}
+
 	}
 
 }

@@ -69,6 +69,7 @@ public class LoadSessionAction extends AbstractAction {
 			else
 				importer = new LegacyFileImporter(file);
 			parentFrame.setCurrentSession(new Session(parentFrame, importer));
+			parentFrame.getCurrentSession().setFile(file);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(parentFrame, "Error Reading File",
 					"Error Reading File", JOptionPane.ERROR_MESSAGE);
