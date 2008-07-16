@@ -10,7 +10,7 @@ import edu.bsu.julia.generators.FullAttrOutputSetGenerator;
 import edu.bsu.julia.generators.OutputSetGenerator;
 import edu.bsu.julia.input.InputFunction;
 import edu.bsu.julia.output.InverseOutputFunction;
-import edu.bsu.julia.output.OutputFunction;
+import edu.bsu.julia.output.OutputSet;
 import edu.bsu.julia.session.Session;
 
 public class ForwardImageAction extends AbstractAction {
@@ -39,19 +39,19 @@ public class ForwardImageAction extends AbstractAction {
 				.getSelectedValues();
 		if (objArray.length == 0)
 			return;
-		OutputFunction[] outFunc = new OutputFunction[objArray.length];
+		OutputSet[] outFunc = new OutputSet[objArray.length];
 		for (int i = 0; i < objArray.length; i++)
-			outFunc[i] = (OutputFunction) objArray[i];
+			outFunc[i] = (OutputSet) objArray[i];
 		parentFrame.getOutputFunctionList().clearSelection();
 
 		// build list of points
 		int size = 0;
-		for (OutputFunction out : outFunc) {
+		for (OutputSet out : outFunc) {
 			size += out.getNumOfPoints();
 		}
 		ComplexNumber[] points = new ComplexNumber[size];
 		int index = 0;
-		for (OutputFunction out : outFunc) {
+		for (OutputSet out : outFunc) {
 			for (ComplexNumber p : out.getPoints())
 				points[index++] = p;
 		}
@@ -67,8 +67,8 @@ public class ForwardImageAction extends AbstractAction {
 					points,
 					inArray,
 					FullAttrOutputSetGenerator.Options.DISCARD_INTERMEDIATE_POINTS);
-			OutputFunction outputFunction = new InverseOutputFunction(session,
-					inArray, OutputFunction.Type.INVERSE_ATTR, generator, outFunc);
+			OutputSet outputFunction = new InverseOutputFunction(session,
+					inArray, OutputSet.Type.FORWARD_IMAGE, generator, outFunc);
 			
 			session.addOutputFunction(outputFunction);
 		}

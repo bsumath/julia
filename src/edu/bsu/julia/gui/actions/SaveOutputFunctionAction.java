@@ -14,13 +14,13 @@ import javax.swing.JOptionPane;
 import edu.bsu.julia.ComplexNumber;
 import edu.bsu.julia.Julia;
 import edu.bsu.julia.input.InputFunction;
-import edu.bsu.julia.output.OutputFunction;
+import edu.bsu.julia.output.OutputSet;
 import edu.bsu.julia.session.Session;
 
 public class SaveOutputFunctionAction extends AbstractAction {
 
 	private Julia parentFrame;
-	private static List<OutputFunction> func;
+	private static List<OutputSet> func;
 	File file;
 	// for serializable interface: do not use
 	public static final long serialVersionUID = 0;
@@ -42,7 +42,7 @@ public class SaveOutputFunctionAction extends AbstractAction {
 		Session s = parentFrame.getCurrentSession();
 		FileOutputStream out;
 		PrintStream ps;
-		func = new ArrayList<OutputFunction>();
+		func = new ArrayList<OutputSet>();
 		func = s.getOutputFunctions();
 
 		try {

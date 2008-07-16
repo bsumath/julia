@@ -19,16 +19,16 @@ import javax.swing.JScrollPane;
 import edu.bsu.julia.Julia;
 import edu.bsu.julia.input.InputFunction;
 import edu.bsu.julia.output.InverseOutputFunction;
-import edu.bsu.julia.output.OutputFunction;
+import edu.bsu.julia.output.OutputSet;
 
 public class PropertiesAction extends AbstractAction {
 	
 	private Julia parentFrame;
-	private OutputFunction function;
+	private OutputSet function;
 	//for serializable interface: do not use
 	public static final long serialVersionUID = 0;
 	
-	public PropertiesAction(Julia f, OutputFunction func) {
+	public PropertiesAction(Julia f, OutputSet func) {
 		super("Properties", new ImageIcon
 				(Thread.currentThread().getContextClassLoader().getResource
 						("prop.png")));
@@ -66,7 +66,7 @@ public class PropertiesAction extends AbstractAction {
 		List<Object> objList = new ArrayList<Object>(Arrays.asList(input));
 		objList.add(" ");
 		if (function instanceof InverseOutputFunction){
-			OutputFunction[] output = ((InverseOutputFunction)function).getOutputFunctions();
+			OutputSet[] output = ((InverseOutputFunction)function).getOutputFunctions();
 			objList.addAll(Arrays.asList(output));
 		}
 		

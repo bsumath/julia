@@ -12,17 +12,17 @@ import edu.bsu.julia.generators.OutputSetGenerator;
 import edu.bsu.julia.input.InputFunction;
 import edu.bsu.julia.session.Session;
 
-public class InverseOutputFunction extends OutputFunction {
+public class InverseOutputFunction extends OutputSet {
 
-	private OutputFunction[] outputFunctions = new OutputFunction[] {};
+	private OutputSet[] outputFunctions = new OutputSet[] {};
 
 	public InverseOutputFunction(Session s, InputFunction[] i, Type type,
-			OutputSetGenerator g, OutputFunction[] o) {
+			OutputSetGenerator g, OutputSet[] o) {
 		super(s, i, type, g);
 		outputFunctions = o;
 	}
 
-	public OutputFunction[] getOutputFunctions() {
+	public OutputSet[] getOutputFunctions() {
 		return outputFunctions;
 	}
 
@@ -95,7 +95,7 @@ public class InverseOutputFunction extends OutputFunction {
 	/**
 	 * method to access the files this OutputFunction
 	 * 
-	 * @see OutputFunction#getFiles()
+	 * @see OutputSet#getFiles()
 	 * @return an array of {@link File} containing two entries, one for point
 	 *         data and one for the other information about the
 	 *         {@link InverseOutputFunction}
@@ -123,7 +123,7 @@ public class InverseOutputFunction extends OutputFunction {
 	}
 
 	/**
-	 * @see OutputFunction#historyInfo()
+	 * @see OutputSet#historyInfo()
 	 * @return a {@link String} with the history information about this
 	 *         {@link InverseOutputFunction}
 	 */
@@ -131,7 +131,7 @@ public class InverseOutputFunction extends OutputFunction {
 	public List<String> historyInfo() {
 		List<String> result = super.historyInfo();
 
-		for (OutputFunction function : outputFunctions) {
+		for (OutputSet function : outputFunctions) {
 			result.add("begin_output_function: " + function.getOutputID());
 			for (String s : function.historyInfo())
 				result.add("\t" + s);

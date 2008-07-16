@@ -11,7 +11,7 @@ import javax.swing.JTextArea;
 import javax.swing.ListCellRenderer;
 import javax.swing.border.Border;
 
-import edu.bsu.julia.output.OutputFunction;
+import edu.bsu.julia.output.OutputSet;
 
 public class OutputListCellRenderer implements ListCellRenderer {
 	private Border raised = BorderFactory.createRaisedBevelBorder();
@@ -39,7 +39,7 @@ public class OutputListCellRenderer implements ListCellRenderer {
 
 	public Component getListCellRendererComponent(JList list, Object fn,
 			int index, boolean selected, boolean focus) {
-		OutputFunction function = (OutputFunction) fn;
+		OutputSet function = (OutputSet) fn;
 		functionDescription.setText(function.toString() + ". Points:"
 				+ function.getNumOfPoints());
 		icon.setFunction(function);

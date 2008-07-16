@@ -7,17 +7,17 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 import edu.bsu.julia.Julia;
-import edu.bsu.julia.output.OutputFunction;
+import edu.bsu.julia.output.OutputSet;
 import edu.bsu.julia.session.Session;
 
 public class DeleteOutputAction extends AbstractAction{
 
 	private Julia parentFrame;
-	private OutputFunction function;
+	private OutputSet function;
 	//for serializable interface: do not use
 	public static final long serialVersionUID = 0;
 	
-	public DeleteOutputAction(Julia f, OutputFunction func) {
+	public DeleteOutputAction(Julia f, OutputSet func) {
 		super("Delete", new ImageIcon
 				(Thread.currentThread().getContextClassLoader().getResource
 						("delete.png")));

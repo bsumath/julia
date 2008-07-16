@@ -25,31 +25,31 @@ import edu.bsu.julia.generators.OutputSetGenerator;
 import edu.bsu.julia.input.InputFunction;
 import edu.bsu.julia.session.Session;
 
-public class OutputFunction {
+public class OutputSet {
 	public static enum Type {
 		BASIC("Basic Output Set"),
 
 		FULL_JULIA("Full Composite Julia Set"),
 
-		ERGODIC_JULIA("Random Composite Julia Set"),
+		RANDOM_JULIA("Random Composite Julia Set"),
 
 		FULL_ATTR("Full Composite Attractor Set"),
 
-		ERGODIC_ATTR("Random Composite Attractor Set"),
+		RANDOM_ATTR("Random Composite Attractor Set"),
 
-		INVERSE_ATTR("Forward Image"),
+		FORWARD_IMAGE("Forward Image"),
 
-		INVERSE_ERGODIC_JULIA("Random Inverse Image"),
+		RANDOM_INVERSE_IMAGE("Random Inverse Image"),
 
-		INVERSE_FULL_JULIA("Full Inverse Image"),
+		FULL_INVERSE_IMAGE("Full Inverse Image"),
 
 		IND_FULL_JULIA("Full Individual Julia Set"),
 
-		IND_ERGODIC_JULIA("Random Individual Julia Set"),
+		IND_RANDOM_JULIA("Random Individual Julia Set"),
 
 		IND_FULL_ATTR("Full Individual Attractor Set"),
 
-		IND_ERGODIC_ATTR("Random Individual Attractor Set"),
+		IND_RANDOM_ATTR("Random Individual Attractor Set"),
 
 		POST_CRITICAL("Post Critical Set");
 
@@ -85,7 +85,7 @@ public class OutputFunction {
 	private SwingWorker<ComplexNumber[], Void> tempFileReader;
 	protected final long creationTime;
 
-	public OutputFunction(final Session session, InputFunction[] i, Type type,
+	public OutputSet(final Session session, InputFunction[] i, Type type,
 			OutputSetGenerator gen) {
 		iterations = session.getIterations();
 		functionType = type;
@@ -121,7 +121,7 @@ public class OutputFunction {
 
 					// if the points are null then there was some sort of error
 					if (points == null) {
-						session.deleteOutputFunction(OutputFunction.this);
+						session.deleteOutputFunction(OutputSet.this);
 					} else {
 						writePointsTempFile();
 						support.firePropertyChange("reselect", null, null);
@@ -261,7 +261,7 @@ public class OutputFunction {
 
 	public boolean equals(Object obj) {
 		try {
-			OutputFunction other = (OutputFunction) obj;
+			OutputSet other = (OutputSet) obj;
 			boolean result = iterations == other.iterations;
 			result = result && skips == other.skips;
 			result = result && seed.equals(other.seed);
@@ -269,8 +269,8 @@ public class OutputFunction {
 			result = result
 					&& inputFunctions.length == other.inputFunctions.length;
 
-			if (points == null) {
-				result = result && other.points == null;
+			if (points == null || other.points == null) {
+				result = result && other.points == null && points == null;
 			} else {
 				result = result && points.length == other.points.length;
 				for (int i = 0; result && i < points.length; i++) {
@@ -405,11 +405,11 @@ public class OutputFunction {
 	}
 
 	/**
-	 * method to access the files this OutputFunction
+	 * method to access the files this {@link OutputSet}
 	 * 
 	 * @return an array of {@link File} containing two entries, one for point
 	 *         data and one for the other information about the
-	 *         {@link OutputFunction}
+	 *         {@link OutputSet}
 	 */
 	public File[] getFiles() {
 		if (pointsFile == null)
@@ -417,7 +417,7 @@ public class OutputFunction {
 				pointsFile = tempFileWriter.get();
 			} catch (Exception e1) {
 				System.err
-						.println("OutputFunction.getFiles(): temp file error");
+						.println("OutputSet.getFiles(): temp file error");
 				return null;
 			}
 
@@ -434,16 +434,16 @@ public class OutputFunction {
 
 			return new File[] { info, pointsFile };
 		} catch (IOException e) {
-			System.err.println("OutputFunction.getFiles(): IO exception");
+			System.err.println("OutputSet.getFiles(): IO exception");
 			return null;
 		}
 	}
 
 	/**
-	 * method to uniquely identify each {@link OutputFunction}
+	 * method to uniquely identify each {@link OutputSet}
 	 * 
 	 * @return a long integer that uniquely identifies each
-	 *         {@link OutputFunction}
+	 *         {@link OutputSet}
 	 */
 	public long getOutputID() {
 		return creationTime;
@@ -453,7 +453,7 @@ public class OutputFunction {
 	 * create a string to represent this function's history
 	 * 
 	 * @return a {@link String} containing the class, m value, and coefficients
-	 *         of this {@link OutputFunction}
+	 *         of this {@link OutputSet}
 	 */
 	public List<String> historyInfo() {
 		List<String> result = new ArrayList<String>();

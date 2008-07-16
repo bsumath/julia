@@ -14,7 +14,7 @@ import javax.swing.JFrame;
 import edu.bsu.julia.ComplexNumber;
 import edu.bsu.julia.Julia;
 import edu.bsu.julia.input.InputFunction;
-import edu.bsu.julia.output.OutputFunction;
+import edu.bsu.julia.output.OutputSet;
 
 public class Session {
 	/**
@@ -33,7 +33,7 @@ public class Session {
 
 		public Collection<InputFunction> provideInputFunctions();
 
-		public Collection<OutputFunction> provideOutputFunctions();
+		public Collection<OutputSet> provideOutputFunctions();
 
 		public int provideInputSubscript();
 
@@ -55,7 +55,7 @@ public class Session {
 
 		public void addInputFunctions(Collection<InputFunction> i);
 
-		public void addOutputFunctions(Collection<OutputFunction> o);
+		public void addOutputFunctions(Collection<OutputSet> o);
 	}
 
 	/**
@@ -79,8 +79,8 @@ public class Session {
 	private int skips;
 	private ComplexNumber seed;
 	private List<InputFunction> inputFunctions;
-	private List<OutputFunction> outputFunctions;
-	private Queue<OutputFunction> outputQueue;
+	private List<OutputSet> outputFunctions;
+	private Queue<OutputSet> outputQueue;
 	private int inputSubscript;
 	private int outputSubscript;
 	private boolean modified = false;
@@ -97,9 +97,9 @@ public class Session {
 		seed = importer.provideSeedValue();
 		inputFunctions = new ArrayList<InputFunction>(importer
 				.provideInputFunctions());
-		outputFunctions = new ArrayList<OutputFunction>(importer
+		outputFunctions = new ArrayList<OutputSet>(importer
 				.provideOutputFunctions());
-		outputQueue = new LinkedList<OutputFunction>(outputFunctions);
+		outputQueue = new LinkedList<OutputSet>(outputFunctions);
 		inputSubscript = importer.provideInputSubscript();
 		outputSubscript = importer.provideOutputSubscript();
 
@@ -176,11 +176,11 @@ public class Session {
 		support.firePropertyChange("deleteInputFunction", null, fn);
 	}
 
-	public List<OutputFunction> getOutputFunctions() {
+	public List<OutputSet> getOutputFunctions() {
 		return outputFunctions;
 	}
 
-	public void addOutputFunction(OutputFunction fn) {
+	public void addOutputFunction(OutputSet fn) {
 		markModified();
 		outputFunctions.add(fn);
 		outputQueue.add(fn);
@@ -188,7 +188,7 @@ public class Session {
 		support.firePropertyChange("addOutputFunction", null, fn);
 	}
 
-	public void deleteOutputFunction(OutputFunction function) {
+	public void deleteOutputFunction(OutputSet function) {
 		markModified();
 		outputFunctions.remove(function);
 		outputQueue.remove(function);
@@ -200,7 +200,7 @@ public class Session {
 	 * method to unload an OutputFunction to try and free some heap space
 	 */
 	public void freeHeapSpace() {
-		OutputFunction function = outputQueue.poll();
+		OutputSet function = outputQueue.poll();
 		if (function != null) {
 			function.unload();
 			outputQueue.add(function);

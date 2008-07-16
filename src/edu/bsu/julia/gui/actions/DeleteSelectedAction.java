@@ -8,7 +8,7 @@ import javax.swing.JOptionPane;
 
 import edu.bsu.julia.Julia;
 import edu.bsu.julia.input.InputFunction;
-import edu.bsu.julia.output.OutputFunction;
+import edu.bsu.julia.output.OutputSet;
 import edu.bsu.julia.session.Session;
 
 public class DeleteSelectedAction extends AbstractAction {
@@ -36,11 +36,11 @@ public class DeleteSelectedAction extends AbstractAction {
 		if (choice == JOptionPane.OK_OPTION){
 			if (type == Julia.OUTPUTTYPE) {
 				Object[] outObjs = parentFrame.getOutputFunctionList().getSelectedValues();
-				OutputFunction[] outFns = new OutputFunction[outObjs.length];
+				OutputSet[] outFns = new OutputSet[outObjs.length];
 				for(int j = 0; j<outObjs.length; j++) {
-					outFns[j] = (OutputFunction)outObjs[j];
+					outFns[j] = (OutputSet)outObjs[j];
 				}
-				for(OutputFunction function : outFns){
+				for(OutputSet function : outFns){
 					s.deleteOutputFunction(function);
 				}
 			}

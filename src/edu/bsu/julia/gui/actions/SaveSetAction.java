@@ -8,7 +8,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import edu.bsu.julia.Julia;
-import edu.bsu.julia.output.OutputFunction;
+import edu.bsu.julia.output.OutputSet;
 
 public class SaveSetAction extends AbstractAction {
 	
@@ -20,7 +20,7 @@ public class SaveSetAction extends AbstractAction {
 	//for serializable interface: do not use
 	public static final long serialVersionUID = 0;
 	
-	public SaveSetAction(Julia f, OutputFunction func) {
+	public SaveSetAction(Julia f, OutputSet func) {
 		super("Save Output Set");
 		putValue("SHORT_DESCRIPTION", "Save Output Set");
 		putValue("LONG_DESCRIPTION", "Save this output set to a file.");
