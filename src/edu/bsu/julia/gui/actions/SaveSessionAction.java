@@ -44,17 +44,7 @@ public class SaveSessionAction extends AbstractAction {
 		file = parentFrame.getCurrentSession().getFile();
 		if (file == null) {
 			JFileChooser filechooser = new JFileChooser();
-			filechooser.setFileFilter(new FileFilter() {
-				public boolean accept(File file) {
-					return file.getName().toLowerCase()
-							.endsWith(FILE_EXTENSION)
-							|| file.isDirectory();
-				}
-
-				public String getDescription() {
-					return "Julia files (*" + FILE_EXTENSION + ")";
-				}
-			});
+			filechooser.setFileFilter(new JuliaFileFilter());
 
 			String path = parentFrame.getFilePath();
 			if (!path.equals(""))
@@ -93,27 +83,24 @@ public class SaveSessionAction extends AbstractAction {
 					bar.setValue((Integer) evt.getNewValue());
 				} else if ("state".equals(evt.getPropertyName())
 						&& (StateValue) evt.getNewValue() == StateValue.DONE) {
-					boolean result;
+					boolean result = false;
 					try {
 						result = exporter.get();
 					} catch (Exception e) {
-						JOptionPane.showMessageDialog(parentFrame,
-								"Error Saving Session", "Error Saving Session",
-								JOptionPane.ERROR_MESSAGE);
 						e.printStackTrace();
-						return;
 					}
 
 					if (result) {
 						parentFrame.getCurrentSession().markUnmodified();
 						parentFrame.getCurrentSession().setFile(file);
-						dialog.setVisible(false);
-						dialog.dispose();
 					} else {
 						JOptionPane.showMessageDialog(parentFrame,
 								"Error Saving Session", "Error Saving Session",
 								JOptionPane.ERROR_MESSAGE);
 					}
+
+					dialog.setVisible(false);
+					dialog.dispose();
 				}
 			}
 		});
@@ -136,4 +123,14 @@ public class SaveSessionAction extends AbstractAction {
 		dialog.setVisible(true);
 	}
 
+	private final class JuliaFileFilter extends FileFilter {
+		public boolean accept(File file) {
+			return file.getName().toLowerCase().endsWith(FILE_EXTENSION)
+					|| file.isDirectory();
+		}
+
+		public String getDescription() {
+			return "Julia files (*" + FILE_EXTENSION + ")";
+		}
+	}
 }
