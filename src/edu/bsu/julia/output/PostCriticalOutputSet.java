@@ -41,7 +41,7 @@ public class PostCriticalOutputSet extends OutputSet {
 	 */
 	public String toString() {
 		String s = super.toString();
-		s += ". tvalue: " + tValue + ".";
+		s += ". tvalue: " + tValue;
 		return s;
 	}
 
