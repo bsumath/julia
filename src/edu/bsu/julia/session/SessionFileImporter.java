@@ -48,11 +48,13 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 
 	private final Map<Long, InputFunction> inputFunctions = new HashMap<Long, InputFunction>();
 	private final Map<Long, OutputSet> outputSets = new HashMap<Long, OutputSet>();
+	private final List<OutputSet> basicSets = new ArrayList<OutputSet>();
 
 	private final List<File> tempFiles = new ArrayList<File>();
 	private final Map<Long, File> inputMap;
 	private final Map<Long, File> outputInfoMap;
 	private final Map<Long, File> outputDataMap;
+	private final List<File> outputDataList;
 	private final File sessionFile;
 	private float maxProgress = 0;
 	private float progress = 0;
@@ -62,6 +64,7 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 		inputMap = new HashMap<Long, File>();
 		outputInfoMap = new HashMap<Long, File>();
 		outputDataMap = new HashMap<Long, File>();
+		outputDataList = new ArrayList<File>();
 
 		sessionFile = f;
 	}
@@ -76,7 +79,7 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 		while ((entry = zipStream.getNextEntry()) != null) {
 			maxProgress += 2;
 		}
-		maxProgress -= 1; //the session.txt is only looked at once
+		maxProgress -= 1; // the session.txt is only looked at once
 		zipStream.close();
 		zipStream = new ZipInputStream(new FileInputStream(sessionFile));
 
@@ -95,8 +98,12 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 				outputInfoMap.put(Long.parseLong(nameParts[1]),
 						createTempFile(zipStream));
 			} else if (nameParts[0].equals("out") && nameParts[2].equals("dat")) {
-				outputDataMap.put(Long.parseLong(nameParts[1]),
-						createTempFile(zipStream));
+				try {
+					Long key = Long.parseLong(nameParts[1]);
+					outputDataMap.put(key, createTempFile(zipStream));
+				} catch (NumberFormatException e) {
+					outputDataList.add(createTempFile(zipStream));
+				}
 			}
 		}
 		zipStream.close();
@@ -104,7 +111,7 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 		for (Map.Entry<Long, File> item : inputMap.entrySet()) {
 			progress += 1;
 			setProgress((int) (progress / maxProgress * 100));
-			
+
 			File file = item.getValue();
 			Long key = item.getKey();
 			Scanner in = new Scanner(new BufferedInputStream(
@@ -127,6 +134,16 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 					new FileInputStream(dataFile)));
 			readOutputSet(key, infoScanner, dataScanner);
 			infoScanner.close();
+			dataScanner.close();
+		}
+
+		for (File dataFile : outputDataList) {
+			progress += 1;
+			setProgress((int) (progress / maxProgress * 100));
+
+			Scanner dataScanner = new Scanner(new BufferedInputStream(
+					new FileInputStream(dataFile)));
+			readBasicOutputSet(dataScanner);
 			dataScanner.close();
 		}
 
@@ -224,8 +241,8 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 			IllegalArgumentException, InstantiationException,
 			IllegalAccessException, InvocationTargetException {
 		progress += 1;
-		setProgress((int) (progress / maxProgress * 100));		
-		
+		setProgress((int) (progress / maxProgress * 100));
+
 		int iterations = 0;
 		int skips = 0;
 		ComplexNumber seed = new ComplexNumber();
@@ -242,7 +259,7 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 			String line = info.nextLine().trim();
 			if (line.length() == 0 || line.charAt(0) == '#')
 				continue;
-			if (line.equalsIgnoreCase("end_output_function"))
+			if (line.equalsIgnoreCase("end_output_set"))
 				break;
 
 			// split the line
@@ -274,7 +291,7 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 				}
 			} else if (lineParts[0].equalsIgnoreCase("type")) {
 				type = OutputSet.Type.valueOf(lineParts[1]);
-			} else if (lineParts[0].equalsIgnoreCase("begin_output_function")) {
+			} else if (lineParts[0].equalsIgnoreCase("begin_output_set")) {
 				long key = Long.parseLong(lineParts[1]);
 				if (outputSets.containsKey(key)) {
 					// get the output function for the key
@@ -339,17 +356,46 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 				.toArray(new ComplexNumber[] {}));
 		if (className.endsWith("RecursiveOutputSet")) {
 			set = new RecursiveOutputSet(tempSession, inFunctions
-					.toArray(new InputFunction[] {}), type, generator,
-					outSets.toArray(new OutputSet[] {}));
+					.toArray(new InputFunction[] {}), type, generator, outSets
+					.toArray(new OutputSet[] {}));
 		} else {
 			set = new OutputSet(tempSession, inFunctions
 					.toArray(new InputFunction[] {}), type, generator);
 		}
 
-		// function created successfully, remove it from the maps
+		// set created successfully, remove it from the maps
 		outputDataMap.remove(outputID);
 		outputInfoMap.remove(outputID);
+
+		// add to map of sets
 		outputSets.put(outputID, set);
+	}
+
+	private void readBasicOutputSet(Scanner data) {
+		// read the points from the data file
+		List<ComplexNumber> points = new ArrayList<ComplexNumber>();
+		while (data.hasNextLine()) {
+			points.add(ComplexNumber.parseComplexNumber(data.nextLine()));
+		}
+
+		// create a dummy session with the iteration, skip, and seed values
+		Session tempSession;
+		try {
+			tempSession = new Session(new JFrame(), new DummyImporter(points.size(), 0,
+					new ComplexNumber()));
+		} catch (InvalidSessionParametersException e) {
+			e.printStackTrace();
+			return;
+		}
+
+		// create the output function
+		OutputSetGenerator generator = new DummyOutputSetGenerator(points
+				.toArray(new ComplexNumber[] {}));
+		OutputSet set = new OutputSet(tempSession, new InputFunction[] {},
+				OutputSet.Type.BASIC, generator);
+		
+		//add to list of basic sets
+		basicSets.add(set);
 	}
 
 	/**
@@ -396,6 +442,13 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 			set.setSubscript(i + 1);
 			result.add(set);
 		}
+		
+		int size = keys.size();
+		for (int i = 0; i < basicSets.size(); i++){
+			OutputSet set = basicSets.get(i);
+			set.setSubscript(i+1+size);
+			result.add(set);
+		}
 
 		return result;
 	}
@@ -413,7 +466,7 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 	}
 
 	public int provideOutputSubscript() {
-		return outputSets.size();
+		return outputSets.size()+basicSets.size();
 	}
 
 	/**

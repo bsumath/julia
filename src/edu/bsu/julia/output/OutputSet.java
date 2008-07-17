@@ -416,8 +416,7 @@ public class OutputSet {
 			try {
 				pointsFile = tempFileWriter.get();
 			} catch (Exception e1) {
-				System.err
-						.println("OutputSet.getFiles(): temp file error");
+				System.err.println("OutputSet.getFiles(): temp file error");
 				return null;
 			}
 
@@ -442,8 +441,7 @@ public class OutputSet {
 	/**
 	 * method to uniquely identify each {@link OutputSet}
 	 * 
-	 * @return a long integer that uniquely identifies each
-	 *         {@link OutputSet}
+	 * @return a long integer that uniquely identifies each {@link OutputSet}
 	 */
 	public long getOutputID() {
 		return creationTime;
@@ -462,12 +460,14 @@ public class OutputSet {
 		result.add("iterations: " + iterations);
 		result.add("skips: " + skips);
 		result.add("seed: " + seed.exportString());
+		result.add("\r\n \n \n\r");
 
 		for (InputFunction function : inputFunctions) {
 			result.add("begin_input_function: " + function.getInputID());
 			for (String s : function.historyInfo())
 				result.add("\t" + s);
 			result.add("end_input_function");
+			result.add("\r\n \n \n\r");
 		}
 
 		return result;
