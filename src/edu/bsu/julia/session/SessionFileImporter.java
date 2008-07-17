@@ -26,8 +26,9 @@ import edu.bsu.julia.ComplexNumber;
 import edu.bsu.julia.generators.DummyOutputSetGenerator;
 import edu.bsu.julia.generators.OutputSetGenerator;
 import edu.bsu.julia.input.InputFunction;
-import edu.bsu.julia.output.RecursiveOutputSet;
 import edu.bsu.julia.output.OutputSet;
+import edu.bsu.julia.output.PostCriticalOutputSet;
+import edu.bsu.julia.output.RecursiveOutputSet;
 import edu.bsu.julia.session.Session.Importer;
 import edu.bsu.julia.session.Session.InvalidSessionParametersException;
 
@@ -250,6 +251,7 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 		List<ComplexNumber> points = new ArrayList<ComplexNumber>();
 		List<OutputSet> outSets = new ArrayList<OutputSet>();
 		OutputSet.Type type = OutputSet.Type.BASIC;
+		int tValue = 0;
 		String className = "";
 
 		// read all the history information from the txt info file
@@ -271,6 +273,8 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 				iterations = Integer.parseInt(lineParts[1]);
 			} else if (lineParts[0].equalsIgnoreCase("skips")) {
 				skips = Integer.parseInt(lineParts[1]);
+			} else if (lineParts[0].equalsIgnoreCase("tvalue")) {
+				tValue = Integer.parseInt(lineParts[1]);
 			} else if (lineParts[0].equalsIgnoreCase("seed")) {
 				seed = ComplexNumber.parseComplexNumber(lineParts[1]);
 			} else if (lineParts[0].equalsIgnoreCase("begin_input_function")) {
@@ -358,7 +362,10 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 			set = new RecursiveOutputSet(tempSession, inFunctions
 					.toArray(new InputFunction[] {}), type, generator, outSets
 					.toArray(new OutputSet[] {}));
-		} else {
+		} else if (className.endsWith("PostCriticalOutputSet")){
+			set = new PostCriticalOutputSet(tempSession, inFunctions
+					.toArray(new InputFunction[] {}), type, tValue, generator);			
+		}else {
 			set = new OutputSet(tempSession, inFunctions
 					.toArray(new InputFunction[] {}), type, generator);
 		}

@@ -30,7 +30,7 @@ public class PostCriticalOutputSet extends OutputSet {
 	 *            the t value for the post critical set
 	 */
 	public PostCriticalOutputSet(Session session, InputFunction[] i,
-			OutputSet.Type type, OutputSetGenerator gen, int t) {
+			OutputSet.Type type, int t, OutputSetGenerator gen) {
 		super(session, i, type, gen);
 
 		tValue = t;
