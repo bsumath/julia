@@ -16,7 +16,13 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
 import javax.swing.SwingWorker;
 import javax.swing.SwingWorker.StateValue;
 
@@ -249,7 +255,8 @@ public class OutputSet {
 	}
 
 	public String toString() {
-		String s = "o" + sub + " = " + functionType.description() + " of ";
+		String s = "o" + getSubscript() + " = " + functionType.description()
+				+ " of ";
 
 		for (int x = 0; x < inputFunctions.length; x++) {
 			s = s + "f" + inputFunctions[x].getSubscript();
@@ -471,5 +478,21 @@ public class OutputSet {
 		}
 
 		return result;
+	}
+
+	public JComponent[] propertiesComponents() {
+		Box panel = Box.createVerticalBox();
+		panel.add(new JLabel(this.toString()));
+		panel.add(new JLabel("Points to Plot:  " + iterations));
+		panel.add(new JLabel("Skips:  " + skips));
+		panel.add(new JLabel("Seed Value:  " + seed));
+		panel.add(new JLabel("Actual number of points in the set:   "
+				+ points.length));
+
+		JList list = new JList(inputFunctions);
+		list.setVisibleRowCount(6);
+		JScrollPane scroller = new JScrollPane(list);
+		scroller.setBorder(BorderFactory.createTitledBorder("Input Functions"));
+		return new JComponent[] { panel, scroller };
 	}
 }
