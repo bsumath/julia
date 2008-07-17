@@ -7,9 +7,9 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import edu.bsu.julia.ComplexNumber;
+import edu.bsu.julia.Julia;
 
 /**
  * 
@@ -72,13 +72,7 @@ public abstract class InputFunction {
 		m = mValue;
 		coefficientArray = new ComplexNumber[coefficients];
 
-		// sleep random amount of time to make sure creationTime is unique
-		try {
-			Random rand = new Random();
-			Thread.sleep(rand.nextInt(50) + 1);
-		} catch (InterruptedException e) {
-		}
-		creationTime = System.currentTimeMillis();
+		creationTime = Julia.nextTimestamp();
 	}
 
 	/**
