@@ -9,11 +9,11 @@ import javax.swing.ButtonGroup;
 
 import edu.bsu.julia.ComplexNumber;
 import edu.bsu.julia.Julia;
-import edu.bsu.julia.generators.ErgodicAttrOutputSetGenerator;
-import edu.bsu.julia.generators.ErgodicJuliaOutputSetGenerator;
-import edu.bsu.julia.generators.FullAttrOutputSetGenerator;
-import edu.bsu.julia.generators.FullJuliaOutputSetGenerator;
-import edu.bsu.julia.generators.FullAttrOutputSetGenerator.Options;
+import edu.bsu.julia.generators.RandomForwardsOutputSetGenerator;
+import edu.bsu.julia.generators.RandomBackwardsOutputSetGenerator;
+import edu.bsu.julia.generators.FullForwardsOutputSetGenerator;
+import edu.bsu.julia.generators.FullBackwardsOutputSetGenerator;
+import edu.bsu.julia.generators.FullForwardsOutputSetGenerator.Options;
 import edu.bsu.julia.gui.InputPanel;
 import edu.bsu.julia.input.InputFunction;
 import edu.bsu.julia.output.OutputSet;
@@ -118,7 +118,7 @@ public class CreateCompositeIndAction extends AbstractAction {
 		case RANDOM_JULIA:
 			if (mode == Mode.COMPOSITE || mode == Mode.BOTH)
 				newSets.add(new OutputSet(session, inFunc, type,
-						new ErgodicJuliaOutputSetGenerator(parentFrame, session
+						new RandomBackwardsOutputSetGenerator(parentFrame, session
 								.getIterations(), session.getSkips(), session
 								.getSeedValue(), inFunc)));
 			if (mode == Mode.INDIVIDUAL || mode == Mode.BOTH)
@@ -126,7 +126,7 @@ public class CreateCompositeIndAction extends AbstractAction {
 					InputFunction[] inArray = new InputFunction[] { function };
 					newSets.add(new OutputSet(session, inArray,
 							OutputSet.Type.valueOf("IND_" + command),
-							new ErgodicJuliaOutputSetGenerator(parentFrame,
+							new RandomBackwardsOutputSetGenerator(parentFrame,
 									session.getIterations(),
 									session.getSkips(), session.getSeedValue(),
 									inArray)));
@@ -135,7 +135,7 @@ public class CreateCompositeIndAction extends AbstractAction {
 		case FULL_JULIA:
 			if (mode == Mode.COMPOSITE || mode == Mode.BOTH)
 				newSets.add(new OutputSet(session, inFunc, type,
-						new FullJuliaOutputSetGenerator(parentFrame, session
+						new FullBackwardsOutputSetGenerator(parentFrame, session
 								.getIterations(), session.getSeedValue(),
 								inFunc)));
 			if (mode == Mode.INDIVIDUAL || mode == Mode.BOTH)
@@ -143,7 +143,7 @@ public class CreateCompositeIndAction extends AbstractAction {
 					InputFunction[] inArray = new InputFunction[] { function };
 					newSets.add(new OutputSet(session, inArray,
 							OutputSet.Type.valueOf("IND_" + command),
-							new FullJuliaOutputSetGenerator(parentFrame,
+							new FullBackwardsOutputSetGenerator(parentFrame,
 									session.getIterations(), session
 											.getSeedValue(), inArray)));
 				}
@@ -151,7 +151,7 @@ public class CreateCompositeIndAction extends AbstractAction {
 		case RANDOM_ATTR:
 			if (mode == Mode.COMPOSITE || mode == Mode.BOTH)
 				newSets.add(new OutputSet(session, inFunc, type,
-						new ErgodicAttrOutputSetGenerator(parentFrame, session
+						new RandomForwardsOutputSetGenerator(parentFrame, session
 								.getIterations(), session.getSkips(), session
 								.getSeedValue(), inFunc)));
 			if (mode == Mode.INDIVIDUAL || mode == Mode.BOTH)
@@ -159,7 +159,7 @@ public class CreateCompositeIndAction extends AbstractAction {
 					InputFunction[] inArray = new InputFunction[] { function };
 					newSets.add(new OutputSet(session, inArray,
 							OutputSet.Type.valueOf("IND_" + command),
-							new ErgodicAttrOutputSetGenerator(parentFrame,
+							new RandomForwardsOutputSetGenerator(parentFrame,
 									session.getIterations(),
 									session.getSkips(), session.getSeedValue(),
 									inArray)));
@@ -170,7 +170,7 @@ public class CreateCompositeIndAction extends AbstractAction {
 					.getSeedValue() };
 			if (mode == Mode.COMPOSITE || mode == Mode.BOTH)
 				newSets.add(new OutputSet(session, inFunc, type,
-						new FullAttrOutputSetGenerator(parentFrame, session
+						new FullForwardsOutputSetGenerator(parentFrame, session
 								.getIterations(), seedList, inFunc,
 								Options.DISCARD_INTERMEDIATE_POINTS)));
 			if (mode == Mode.INDIVIDUAL || mode == Mode.BOTH)
@@ -178,7 +178,7 @@ public class CreateCompositeIndAction extends AbstractAction {
 					InputFunction[] inArray = new InputFunction[] { function };
 					newSets.add(new OutputSet(session, inArray,
 							OutputSet.Type.valueOf("IND_" + command),
-							new FullAttrOutputSetGenerator(parentFrame, session
+							new FullForwardsOutputSetGenerator(parentFrame, session
 									.getIterations(), seedList, inArray,
 									Options.DISCARD_INTERMEDIATE_POINTS)));
 				}

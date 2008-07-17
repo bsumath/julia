@@ -9,13 +9,14 @@ import edu.bsu.julia.gui.JuliaError;
 import edu.bsu.julia.input.InputFunction;
 
 /**
- * An {@link OutputSetGenerator} that generates points of a julia set using the
- * ergodic method.
+ * An {@link OutputSetGenerator} to generate the points of an attractor set by
+ * evaluating functions forwards using the random method. Chooses a random input
+ * function at each iteration.
  * 
  * @author Ben Dean
  */
-public class ErgodicJuliaOutputSetGenerator extends OutputSetGenerator {
-	private static final Random RAND = new Random();
+public class RandomForwardsOutputSetGenerator extends OutputSetGenerator {
+	private final static Random RAND = new Random();
 
 	private final JFrame parentFrame;
 	private final int iterations;
@@ -24,7 +25,7 @@ public class ErgodicJuliaOutputSetGenerator extends OutputSetGenerator {
 	private final InputFunction[] inputFunctions;
 
 	/**
-	 * constructor for {@link ErgodicJuliaOutputSetGenerator}
+	 * constructor for {@link RandomForwardsOutputSetGenerator}
 	 * 
 	 * @param parent
 	 *            the {@link JFrame} this generator was executed from
@@ -37,7 +38,7 @@ public class ErgodicJuliaOutputSetGenerator extends OutputSetGenerator {
 	 * @param inFunc
 	 *            an array of {@link InputFunction}
 	 */
-	public ErgodicJuliaOutputSetGenerator(JFrame parent, int iter, int sk,
+	public RandomForwardsOutputSetGenerator(JFrame parent, int iter, int sk,
 			ComplexNumber sd, InputFunction[] inFunc) {
 		parentFrame = parent;
 		iterations = iter;
@@ -61,26 +62,21 @@ public class ErgodicJuliaOutputSetGenerator extends OutputSetGenerator {
 			int progress = 0;
 			int maxProgress = iterations + skips;
 
-
-			// iterate skips + iterations number of times
+			// iterate the number of skips + the number of iterations
 			for (int k = 0; k < iterations + skips; k++) {
-				// find the next iteration of the current point
+				// iterate the current point using a random input function
 				InputFunction function = inputFunctions[RAND
 						.nextInt(inputFunctions.length)];
-				currentPoint = function.evaluateBackwardsRandom(currentPoint);
-				if (currentPoint == null) {
-					JuliaError.ZERO_DETERMINANT.showDialog(parentFrame);
-					return null;
-				}
+				currentPoint = function.evaluateForwards(currentPoint);
 
-				// after the skips have been used up, add the current point
-				if (k >= skips) {
+				// if we've used up the skips, add the current point
+				if (k >= skips)
 					outputSet[k - skips] = currentPoint;
-				}
-				progress = k;
-				setProgress(Math.min((int)((progress*100f)/maxProgress),100));
+				progress += 1;
+				setProgress(Math.min((int) ((progress * 100f) / maxProgress),
+						100));
 			}
-			
+
 			return outputSet;
 		} catch (OutOfMemoryError e) {
 			JuliaError.OUT_OF_MEMORY.showDialog(parentFrame);

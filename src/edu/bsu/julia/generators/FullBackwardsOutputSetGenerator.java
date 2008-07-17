@@ -12,18 +12,18 @@ import edu.bsu.julia.input.InputFunction;
 
 /**
  * An {@link OutputSetGenerator} used to generate points using the full method
- * for julia sets.
+ * for julia sets. evaluates functions backwards.
  * 
  * @author Ben Dean
  */
-public class FullJuliaOutputSetGenerator extends OutputSetGenerator {
+public class FullBackwardsOutputSetGenerator extends OutputSetGenerator {
 	private final JFrame parentFrame;
 	private final int iterations;
 	private final ComplexNumber seed;
 	private final InputFunction[] inputFunctions;
 
 	/**
-	 * constructor for {@link FullJuliaOutputSetGenerator}
+	 * constructor for {@link FullBackwardsOutputSetGenerator}
 	 * 
 	 * @param parent
 	 *            the {@link JFrame} this generator was executed from
@@ -34,7 +34,7 @@ public class FullJuliaOutputSetGenerator extends OutputSetGenerator {
 	 * @param inFunc
 	 *            an array of {@link InputFunction}
 	 */
-	public FullJuliaOutputSetGenerator(JFrame parent, int iter,
+	public FullBackwardsOutputSetGenerator(JFrame parent, int iter,
 			ComplexNumber sd, InputFunction[] inFunc) {
 		parentFrame = parent;
 		iterations = iter;

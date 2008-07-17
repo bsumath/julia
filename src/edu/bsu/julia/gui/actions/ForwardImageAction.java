@@ -6,7 +6,7 @@ import javax.swing.AbstractAction;
 
 import edu.bsu.julia.ComplexNumber;
 import edu.bsu.julia.Julia;
-import edu.bsu.julia.generators.FullAttrOutputSetGenerator;
+import edu.bsu.julia.generators.FullForwardsOutputSetGenerator;
 import edu.bsu.julia.generators.OutputSetGenerator;
 import edu.bsu.julia.input.InputFunction;
 import edu.bsu.julia.output.RecursiveOutputSet;
@@ -61,12 +61,12 @@ public class ForwardImageAction extends AbstractAction {
 		for (InputFunction function : inFunc) {
 			InputFunction[] inArray = new InputFunction[] { function };
 
-			OutputSetGenerator generator = new FullAttrOutputSetGenerator(
+			OutputSetGenerator generator = new FullForwardsOutputSetGenerator(
 					parentFrame,
 					points.length,
 					points,
 					inArray,
-					FullAttrOutputSetGenerator.Options.DISCARD_INTERMEDIATE_POINTS);
+					FullForwardsOutputSetGenerator.Options.DISCARD_INTERMEDIATE_POINTS);
 			OutputSet outputSet = new RecursiveOutputSet(session,
 					inArray, OutputSet.Type.FORWARD_IMAGE, generator, outFunc);
 			

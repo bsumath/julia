@@ -53,7 +53,7 @@ public class RecursiveOutputSetGenerator extends OutputSetGenerator {
 	 *            an array of {@link OutputSet} to use as seed points
 	 * @param t
 	 *            {@link RecursiveOutputSetGenerator.Type} to determine full or
-	 *            ergodic method
+	 *            random method
 	 */
 	public RecursiveOutputSetGenerator(JFrame parent, InputFunction inFunc,
 			OutputSet[] outSets, Type t) {
@@ -89,7 +89,7 @@ public class RecursiveOutputSetGenerator extends OutputSetGenerator {
 			// apply the function to each point in the seedList
 			for (ComplexNumber point : seedList) {
 				ComplexNumber[] tempResult;
-				// create a temp array using full or ergodic method
+				// create a temp array using full or random method
 				if (type == Type.FULL) {
 					tempResult = inputFunction.evaluateBackwardsFull(point);
 					if (tempResult == null) {

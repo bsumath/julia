@@ -15,8 +15,8 @@ import javax.swing.JTextField;
 
 import edu.bsu.julia.ComplexNumber;
 import edu.bsu.julia.Julia;
-import edu.bsu.julia.generators.FullAttrOutputSetGenerator;
-import edu.bsu.julia.generators.FullAttrOutputSetGenerator.Options;
+import edu.bsu.julia.generators.FullForwardsOutputSetGenerator;
+import edu.bsu.julia.generators.FullForwardsOutputSetGenerator.Options;
 import edu.bsu.julia.gui.GUIUtil;
 import edu.bsu.julia.gui.InputPanel;
 import edu.bsu.julia.gui.JuliaError;
@@ -159,7 +159,7 @@ public class PostCriticalAction extends AbstractAction {
 				// create the output function and add it to the session
 				session.addOutputSet(new PostCriticalOutputSet(session, inFunc,
 						OutputSet.Type.POST_CRITICAL, tValue,
-						new FullAttrOutputSetGenerator(parentFrame, tValue-1, seedList
+						new FullForwardsOutputSetGenerator(parentFrame, tValue-1, seedList
 								.toArray(new ComplexNumber[] {}), inFunc,
 								Options.KEEP_INTERMEDIATE_POINTS)));
 			}
