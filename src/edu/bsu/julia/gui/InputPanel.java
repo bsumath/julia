@@ -51,7 +51,7 @@ public class InputPanel extends JPanel implements PropertyChangeListener {
 	private ButtonGroup methodGroup;
 	private JToggleButton attrButton;
 	private JToggleButton juliaButton;
-	private JToggleButton ergodicButton;
+	private JToggleButton randomButton;
 	private JToggleButton fullButton;
 	private JButton processButton;
 	private JButton postCriticalButton;
@@ -218,14 +218,12 @@ public class InputPanel extends JPanel implements PropertyChangeListener {
 
 		JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 5, 5));
 		attrButton = new JToggleButton("Attractor");
-		// attrButton.setFocusable(false);
 		attrButton.setActionCommand("attr");
 		attrButton.setName("Attractor set for selected functions.");
 		attrButton.addMouseListener(parentFrame.getStatusBar());
 		typeGroup.add(attrButton);
 		buttonPanel.add(attrButton);
 		juliaButton = new JToggleButton("Julia", true);
-		// juliaButton.setFocusable(false);
 		juliaButton.setActionCommand("julia");
 		juliaButton.setName("Julia set for selected functions.");
 		juliaButton.addMouseListener(parentFrame.getStatusBar());
@@ -237,19 +235,17 @@ public class InputPanel extends JPanel implements PropertyChangeListener {
 		constraints.gridy = 3;
 		JPanel buttonPanel2 = new JPanel(new GridLayout(1, 2, 5, 5));
 		fullButton = new JToggleButton("Full");
-		// fullButton.setFocusable(false);
 		fullButton.setActionCommand("full");
 		fullButton.setName("Process functions using the full method.");
 		fullButton.addMouseListener(parentFrame.getStatusBar());
 		methodGroup.add(fullButton);
 		buttonPanel2.add(fullButton);
-		ergodicButton = new JToggleButton("Random", true);
-		// ergodicButton.setFocusable(false);
-		ergodicButton.setActionCommand("random");
-		ergodicButton.setName("Process functions using the random method.");
-		ergodicButton.addMouseListener(parentFrame.getStatusBar());
-		methodGroup.add(ergodicButton);
-		buttonPanel2.add(ergodicButton);
+		randomButton = new JToggleButton("Random", true);
+		randomButton.setActionCommand("random");
+		randomButton.setName("Process functions using the random method.");
+		randomButton.addMouseListener(parentFrame.getStatusBar());
+		methodGroup.add(randomButton);
+		buttonPanel2.add(randomButton);
 		buttonPanel2
 				.setBorder(BorderFactory.createTitledBorder("Process Type"));
 		layout.setConstraints(buttonPanel2, constraints);

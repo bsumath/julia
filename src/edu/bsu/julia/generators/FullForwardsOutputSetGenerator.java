@@ -12,11 +12,12 @@ import edu.bsu.julia.input.InputFunction;
 
 /**
  * An {@link OutputSetGenerator} used to generate points using the full method
- * for attractor sets. Also used for forward image sets.
+ * for attractor sets, evaluating the functions forwards. Also used for forward
+ * image sets.
  * 
  * @author Ben Dean
  */
-public class FullAttrOutputSetGenerator extends OutputSetGenerator {
+public class FullForwardsOutputSetGenerator extends OutputSetGenerator {
 	/**
 	 * an enum to specify options describing whether or not to keep the
 	 * intermediate points at each iteration
@@ -34,7 +35,7 @@ public class FullAttrOutputSetGenerator extends OutputSetGenerator {
 	private final JFrame parentFrame;
 
 	/**
-	 * constructor for {@link FullAttrOutputSetGenerator}
+	 * constructor for {@link FullForwardsOutputSetGenerator}
 	 * 
 	 * @param parent
 	 *            the {@link JFrame} this generator is executed from
@@ -48,7 +49,7 @@ public class FullAttrOutputSetGenerator extends OutputSetGenerator {
 	 *            {@link Options} describing whether or not to keep the
 	 *            intermediate points at each iteration
 	 */
-	public FullAttrOutputSetGenerator(JFrame parent, int iter,
+	public FullForwardsOutputSetGenerator(JFrame parent, int iter,
 			ComplexNumber[] seed, InputFunction[] inFunc, Options opt) {
 		parentFrame = parent;
 		iterations = iter;
