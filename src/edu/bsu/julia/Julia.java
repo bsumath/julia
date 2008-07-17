@@ -73,7 +73,7 @@ public class Julia extends JFrame {
 	 * 
 	 * @return the next timestamp
 	 */
-	public static long nextTimestamp() {
+	synchronized public static long nextTimestamp() {
 		Long timestamp = System.currentTimeMillis();
 		while (timestamps.contains(timestamp)) {
 			try {
@@ -82,6 +82,8 @@ public class Julia extends JFrame {
 			}
 			timestamp = System.currentTimeMillis();
 		}
+
+		timestamps.add(timestamp);
 		return timestamp;
 	}
 

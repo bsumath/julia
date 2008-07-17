@@ -72,8 +72,8 @@ public class FullForwardsOutputSetGenerator extends OutputSetGenerator {
 			int maxProgress = iterations;
 
 			int iterationCounter = 0;
-			boolean specialCase = (option == Options.DISCARD_INTERMEDIATE_POINTS
-					&& inputFunctions.length == 1 && seedList.length == 1);
+			boolean specialCase = inputFunctions.length == 1
+					&& seedList.length == 1;
 			boolean isDone = false;
 
 			List<ComplexNumber> outputSet = new ArrayList<ComplexNumber>();
@@ -117,7 +117,7 @@ public class FullForwardsOutputSetGenerator extends OutputSetGenerator {
 						100));
 
 				// check for special case with one function and one point
-				if (specialCase) {
+				if (specialCase || option == Options.KEEP_INTERMEDIATE_POINTS) {
 					isDone = iterationCounter >= iterations;
 				}
 
