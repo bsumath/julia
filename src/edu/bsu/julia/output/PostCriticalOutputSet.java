@@ -2,6 +2,10 @@ package edu.bsu.julia.output;
 
 import java.util.List;
 
+import javax.swing.Box;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+
 import edu.bsu.julia.generators.OutputSetGenerator;
 import edu.bsu.julia.input.InputFunction;
 import edu.bsu.julia.session.Session;
@@ -41,7 +45,7 @@ public class PostCriticalOutputSet extends OutputSet {
 	 */
 	public String toString() {
 		String s = super.toString();
-		s += ". tvalue: " + tValue;
+		s += ". T value: " + tValue;
 		return s;
 	}
 
@@ -67,6 +71,13 @@ public class PostCriticalOutputSet extends OutputSet {
 		List<String> result = super.historyInfo();
 		result.add(5, "tvalue: " + tValue);
 		return result;
+	}
+
+	@Override
+	public JComponent[] propertiesComponents() {
+		JComponent[] superComponents = super.propertiesComponents();
+		((Box) superComponents[0]).add(new JLabel("T value: " + tValue));
+		return superComponents;
 	}
 
 }

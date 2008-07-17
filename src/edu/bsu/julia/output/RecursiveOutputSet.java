@@ -1,6 +1,14 @@
 package edu.bsu.julia.output;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
+
+import javax.swing.BorderFactory;
+import javax.swing.JComponent;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 
 import edu.bsu.julia.generators.OutputSetGenerator;
 import edu.bsu.julia.input.InputFunction;
@@ -73,6 +81,30 @@ public class RecursiveOutputSet extends OutputSet {
 		}
 
 		return result;
+	}
+
+	@Override
+	public JComponent[] propertiesComponents() {
+		JComponent[] superComponents = super.propertiesComponents();
+		JComponent[] components = new JComponent[superComponents.length + 1];
+		for (int i = 0; i < superComponents.length; i++)
+			components[i] = superComponents[i];
+
+		final JList list = new JList(outputSets);
+		list.setVisibleRowCount(6);
+		list.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent ev) {
+				int index = list.locationToIndex(ev.getPoint());
+				OutputSet set = (OutputSet) list.getModel().getElementAt(index);
+				JOptionPane.showMessageDialog(list, set.propertiesComponents(),
+						"Properties", JOptionPane.INFORMATION_MESSAGE);			}
+		});
+
+		JScrollPane scroller = new JScrollPane(list);
+		scroller.setBorder(BorderFactory.createTitledBorder("Output Sets"));
+		components[superComponents.length] = scroller;
+		return components;
 	}
 
 }
