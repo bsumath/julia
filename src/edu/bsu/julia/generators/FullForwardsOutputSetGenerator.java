@@ -106,20 +106,16 @@ public class FullForwardsOutputSetGenerator extends OutputSetGenerator {
 				iterationCounter += 1;
 
 				// determine if we're done iterating
-				if (option == Options.KEEP_INTERMEDIATE_POINTS) {
-					progress = outputSet.size();
-					isDone = outputSet.size() >= iterations;
+
+				if (specialCase || option == Options.KEEP_INTERMEDIATE_POINTS) {
+					progress = iterationCounter;
+					isDone = iterationCounter >= iterations;
 				} else {
 					progress = currentIteration.size();
 					isDone = currentIteration.size() >= iterations;
 				}
 				setProgress(Math.min((int) ((progress * 100f) / maxProgress),
 						100));
-
-				// check for special case with one function and one point
-				if (specialCase || option == Options.KEEP_INTERMEDIATE_POINTS) {
-					isDone = iterationCounter >= iterations;
-				}
 
 			} while (!isDone);
 
