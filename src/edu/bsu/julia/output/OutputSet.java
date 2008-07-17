@@ -486,8 +486,9 @@ public class OutputSet {
 		panel.add(new JLabel("Points to Plot:  " + iterations));
 		panel.add(new JLabel("Skips:  " + skips));
 		panel.add(new JLabel("Seed Value:  " + seed));
-		panel.add(new JLabel("Actual number of points in the set:   "
-				+ points.length));
+		if (points != null)
+			panel.add(new JLabel("Actual number of points in the set:   "
+					+ points.length));
 
 		JList list = new JList(inputFunctions);
 		list.setVisibleRowCount(6);
