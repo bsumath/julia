@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.Scanner;
 
 import javax.swing.BorderFactory;
@@ -27,6 +26,7 @@ import javax.swing.SwingWorker;
 import javax.swing.SwingWorker.StateValue;
 
 import edu.bsu.julia.ComplexNumber;
+import edu.bsu.julia.Julia;
 import edu.bsu.julia.generators.OutputSetGenerator;
 import edu.bsu.julia.input.InputFunction;
 import edu.bsu.julia.session.Session;
@@ -101,14 +101,7 @@ public class OutputSet {
 		inputFunctions = i;
 		generator = gen;
 		c = getNextColor();
-
-		// sleep random amount of time to make sure creationTime is unique
-		try {
-			Random rand = new Random();
-			Thread.sleep(rand.nextInt(50) + 1);
-		} catch (InterruptedException e) {
-		}
-		creationTime = System.currentTimeMillis();
+		creationTime = Julia.nextTimestamp();
 
 		// add a property change listener to detect when the generator is done
 		generator.addPropertyChangeListener(new PropertyChangeListener() {

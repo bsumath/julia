@@ -8,6 +8,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JList;
@@ -46,6 +48,8 @@ public class Julia extends JFrame {
 	public static final long serialVersionUID = 0;
 	private static final String TITLE = "Julia";
 
+	private static final List<Long> timestamps = new ArrayList<Long>();
+
 	public Julia() {
 		super(TITLE);
 
@@ -61,6 +65,24 @@ public class Julia extends JFrame {
 		grilTrigger = false;
 		inputPanel = new InputPanel(this);
 		outputPanel = new OutputPanel(this);
+	}
+
+	/**
+	 * method to get the next timestamp. makes sure that all timestamps are
+	 * unique.
+	 * 
+	 * @return the next timestamp
+	 */
+	public static long nextTimestamp() {
+		Long timestamp = System.currentTimeMillis();
+		while (timestamps.contains(timestamp)) {
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+			}
+			timestamp = System.currentTimeMillis();
+		}
+		return timestamp;
 	}
 
 	public static void main(String[] args) {
