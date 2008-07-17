@@ -109,15 +109,15 @@ public class PostCriticalAction extends AbstractAction {
 				return;
 			}
 
-			int t;
+			int tValue;
 			try {
-				t = Integer.parseInt(GUIUtil.removeCommas(tField.getText()));
+				tValue = Integer.parseInt(GUIUtil.removeCommas(tField.getText()));
 			} catch (NumberFormatException e) {
 				JuliaError.T_INTEGER_ERROR.showDialog(parentFrame);
 				return;
 			}
 
-			if (t <= 0) {
+			if (tValue <= 0) {
 				JuliaError.T_INTEGER_ERROR.showDialog(parentFrame);
 				return;
 			}
@@ -158,9 +158,8 @@ public class PostCriticalAction extends AbstractAction {
 			} else {
 				// create the output function and add it to the session
 				session.addOutputSet(new PostCriticalOutputSet(session, inFunc,
-						OutputSet.Type.POST_CRITICAL, t,
-						new FullAttrOutputSetGenerator(parentFrame, session
-								.getIterations(), seedList
+						OutputSet.Type.POST_CRITICAL, tValue,
+						new FullAttrOutputSetGenerator(parentFrame, tValue-1, seedList
 								.toArray(new ComplexNumber[] {}), inFunc,
 								Options.KEEP_INTERMEDIATE_POINTS)));
 			}

@@ -80,6 +80,13 @@ public class FullAttrOutputSetGenerator extends OutputSetGenerator {
 			List<ComplexNumber> currentIteration = new ArrayList<ComplexNumber>(
 					Arrays.asList(seedList));
 			List<ComplexNumber> tempList;
+
+			// check for case where the iterations are done before starting this
+			// is rare. namely a post critical set with t = 1
+			if (option == Options.KEEP_INTERMEDIATE_POINTS && iterations == 0) {
+				return currentIteration.toArray(new ComplexNumber[] {});
+			}
+
 			do {
 				if (option == Options.KEEP_INTERMEDIATE_POINTS)
 					outputSet.addAll(currentIteration);
