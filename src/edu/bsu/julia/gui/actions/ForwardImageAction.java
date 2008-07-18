@@ -66,7 +66,7 @@ public class ForwardImageAction extends AbstractAction {
 					points.length,
 					points,
 					inArray,
-					FullForwardsOutputSetGenerator.Options.DISCARD_INTERMEDIATE_POINTS);
+					FullForwardsOutputSetGenerator.Mode.DEFAULT);
 			OutputSet outputSet = new RecursiveOutputSet(session,
 					inArray, OutputSet.Type.FORWARD_IMAGE, generator, outFunc);
 			

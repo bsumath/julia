@@ -56,7 +56,6 @@ public class FullBackwardsOutputSetGenerator extends OutputSetGenerator {
 			int maxProgress = iterations;
 
 			int iterationCounter = 0;
-			boolean specialCase = inputFunctions.length == 1;
 			boolean isDone = false;
 
 			List<ComplexNumber> currentIteration = new ArrayList<ComplexNumber>();
@@ -85,13 +84,12 @@ public class FullBackwardsOutputSetGenerator extends OutputSetGenerator {
 				iterationCounter += 1;
 
 				// update the progress and isDone condition
-				if (specialCase) {
-					progress = iterationCounter;
-					isDone = iterationCounter >= iterations;
-				} else {
-					progress = currentIteration.size();
-					isDone = currentIteration.size() >= iterations;
-				}
+				progress = (iterationCounter > currentIteration.size()) ? iterationCounter
+						: currentIteration.size();
+				isDone = iterationCounter >= iterations
+						|| currentIteration.size() >= iterations;
+
+				// set the progress for the SwingWorker
 				setProgress(Math.min((int) ((progress * 100f) / maxProgress),
 						100));
 			} while (!isDone);

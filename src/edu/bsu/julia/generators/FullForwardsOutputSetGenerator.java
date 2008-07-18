@@ -24,14 +24,14 @@ public class FullForwardsOutputSetGenerator extends OutputSetGenerator {
 	 * 
 	 * @author Ben Dean
 	 */
-	public static enum Options {
-		DISCARD_INTERMEDIATE_POINTS, KEEP_INTERMEDIATE_POINTS;
+	public static enum Mode {
+		DEFAULT, POST_CRITICAL;
 	}
 
 	private final int iterations;
 	private final ComplexNumber[] seedList;
 	private final InputFunction[] inputFunctions;
-	private final Options option;
+	private final Mode mode;
 	private final JFrame parentFrame;
 
 	/**
@@ -46,16 +46,16 @@ public class FullForwardsOutputSetGenerator extends OutputSetGenerator {
 	 * @param inFunc
 	 *            an array of {@link InputFunction}
 	 * @param opt
-	 *            {@link Options} describing whether or not to keep the
+	 *            {@link Mode} describing whether or not to keep the
 	 *            intermediate points at each iteration
 	 */
 	public FullForwardsOutputSetGenerator(JFrame parent, int iter,
-			ComplexNumber[] seed, InputFunction[] inFunc, Options opt) {
+			ComplexNumber[] seed, InputFunction[] inFunc, Mode opt) {
 		parentFrame = parent;
 		iterations = iter;
 		seedList = seed;
 		inputFunctions = inFunc;
-		option = opt;
+		mode = opt;
 	}
 
 	/**
@@ -72,8 +72,6 @@ public class FullForwardsOutputSetGenerator extends OutputSetGenerator {
 			int maxProgress = iterations;
 
 			int iterationCounter = 0;
-			boolean specialCase = inputFunctions.length == 1
-					&& seedList.length == 1;
 			boolean isDone = false;
 
 			List<ComplexNumber> outputSet = new ArrayList<ComplexNumber>();
@@ -84,12 +82,12 @@ public class FullForwardsOutputSetGenerator extends OutputSetGenerator {
 
 			// check for case where the iterations are done before starting this
 			// is rare. namely a post critical set with t = 1
-			if (option == Options.KEEP_INTERMEDIATE_POINTS && iterations == 0) {
+			if (mode == Mode.POST_CRITICAL && iterations == 0) {
 				return currentIteration.toArray(new ComplexNumber[] {});
 			}
 
 			do {
-				if (option == Options.KEEP_INTERMEDIATE_POINTS)
+				if (mode == Mode.POST_CRITICAL)
 					outputSet.addAll(currentIteration);
 
 				// iterate each point by each function
@@ -105,15 +103,18 @@ public class FullForwardsOutputSetGenerator extends OutputSetGenerator {
 				currentIteration = tempList;
 				iterationCounter += 1;
 
-				// determine if we're done iterating
-
-				if (specialCase || option == Options.KEEP_INTERMEDIATE_POINTS) {
+				// update the progress and isDone condition
+				if (mode == Mode.POST_CRITICAL) {
 					progress = iterationCounter;
 					isDone = iterationCounter >= iterations;
 				} else {
-					progress = currentIteration.size();
-					isDone = currentIteration.size() >= iterations;
+					progress = (iterationCounter > currentIteration.size()) ? iterationCounter
+							: currentIteration.size();
+					isDone = iterationCounter >= iterations
+							|| currentIteration.size() >= iterations;
 				}
+
+				// set the progress for the SwingWorker
 				setProgress(Math.min((int) ((progress * 100f) / maxProgress),
 						100));
 

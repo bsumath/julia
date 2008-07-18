@@ -9,11 +9,10 @@ import javax.swing.ButtonGroup;
 
 import edu.bsu.julia.ComplexNumber;
 import edu.bsu.julia.Julia;
-import edu.bsu.julia.generators.RandomForwardsOutputSetGenerator;
-import edu.bsu.julia.generators.RandomBackwardsOutputSetGenerator;
-import edu.bsu.julia.generators.FullForwardsOutputSetGenerator;
 import edu.bsu.julia.generators.FullBackwardsOutputSetGenerator;
-import edu.bsu.julia.generators.FullForwardsOutputSetGenerator.Options;
+import edu.bsu.julia.generators.FullForwardsOutputSetGenerator;
+import edu.bsu.julia.generators.RandomBackwardsOutputSetGenerator;
+import edu.bsu.julia.generators.RandomForwardsOutputSetGenerator;
 import edu.bsu.julia.gui.InputPanel;
 import edu.bsu.julia.input.InputFunction;
 import edu.bsu.julia.output.OutputSet;
@@ -118,14 +117,14 @@ public class CreateCompositeIndAction extends AbstractAction {
 		case RANDOM_JULIA:
 			if (mode == Mode.COMPOSITE || mode == Mode.BOTH)
 				newSets.add(new OutputSet(session, inFunc, type,
-						new RandomBackwardsOutputSetGenerator(parentFrame, session
-								.getIterations(), session.getSkips(), session
-								.getSeedValue(), inFunc)));
+						new RandomBackwardsOutputSetGenerator(parentFrame,
+								session.getIterations(), session.getSkips(),
+								session.getSeedValue(), inFunc)));
 			if (mode == Mode.INDIVIDUAL || mode == Mode.BOTH)
 				for (InputFunction function : inFunc) {
 					InputFunction[] inArray = new InputFunction[] { function };
-					newSets.add(new OutputSet(session, inArray,
-							OutputSet.Type.valueOf("IND_" + command),
+					newSets.add(new OutputSet(session, inArray, OutputSet.Type
+							.valueOf("IND_" + command),
 							new RandomBackwardsOutputSetGenerator(parentFrame,
 									session.getIterations(),
 									session.getSkips(), session.getSeedValue(),
@@ -135,14 +134,14 @@ public class CreateCompositeIndAction extends AbstractAction {
 		case FULL_JULIA:
 			if (mode == Mode.COMPOSITE || mode == Mode.BOTH)
 				newSets.add(new OutputSet(session, inFunc, type,
-						new FullBackwardsOutputSetGenerator(parentFrame, session
-								.getIterations(), session.getSeedValue(),
-								inFunc)));
+						new FullBackwardsOutputSetGenerator(parentFrame,
+								session.getIterations(),
+								session.getSeedValue(), inFunc)));
 			if (mode == Mode.INDIVIDUAL || mode == Mode.BOTH)
 				for (InputFunction function : inFunc) {
 					InputFunction[] inArray = new InputFunction[] { function };
-					newSets.add(new OutputSet(session, inArray,
-							OutputSet.Type.valueOf("IND_" + command),
+					newSets.add(new OutputSet(session, inArray, OutputSet.Type
+							.valueOf("IND_" + command),
 							new FullBackwardsOutputSetGenerator(parentFrame,
 									session.getIterations(), session
 											.getSeedValue(), inArray)));
@@ -151,14 +150,14 @@ public class CreateCompositeIndAction extends AbstractAction {
 		case RANDOM_ATTR:
 			if (mode == Mode.COMPOSITE || mode == Mode.BOTH)
 				newSets.add(new OutputSet(session, inFunc, type,
-						new RandomForwardsOutputSetGenerator(parentFrame, session
-								.getIterations(), session.getSkips(), session
-								.getSeedValue(), inFunc)));
+						new RandomForwardsOutputSetGenerator(parentFrame,
+								session.getIterations(), session.getSkips(),
+								session.getSeedValue(), inFunc)));
 			if (mode == Mode.INDIVIDUAL || mode == Mode.BOTH)
 				for (InputFunction function : inFunc) {
 					InputFunction[] inArray = new InputFunction[] { function };
-					newSets.add(new OutputSet(session, inArray,
-							OutputSet.Type.valueOf("IND_" + command),
+					newSets.add(new OutputSet(session, inArray, OutputSet.Type
+							.valueOf("IND_" + command),
 							new RandomForwardsOutputSetGenerator(parentFrame,
 									session.getIterations(),
 									session.getSkips(), session.getSeedValue(),
@@ -172,15 +171,18 @@ public class CreateCompositeIndAction extends AbstractAction {
 				newSets.add(new OutputSet(session, inFunc, type,
 						new FullForwardsOutputSetGenerator(parentFrame, session
 								.getIterations(), seedList, inFunc,
-								Options.DISCARD_INTERMEDIATE_POINTS)));
+								FullForwardsOutputSetGenerator.Mode.DEFAULT)));
 			if (mode == Mode.INDIVIDUAL || mode == Mode.BOTH)
 				for (InputFunction function : inFunc) {
 					InputFunction[] inArray = new InputFunction[] { function };
-					newSets.add(new OutputSet(session, inArray,
+					OutputSet set = new OutputSet(
+							session,
+							inArray,
 							OutputSet.Type.valueOf("IND_" + command),
-							new FullForwardsOutputSetGenerator(parentFrame, session
-									.getIterations(), seedList, inArray,
-									Options.DISCARD_INTERMEDIATE_POINTS)));
+							new FullForwardsOutputSetGenerator(parentFrame,
+									session.getIterations(), seedList, inArray,
+									FullForwardsOutputSetGenerator.Mode.DEFAULT));
+					newSets.add(set);
 				}
 			break;
 		default:
