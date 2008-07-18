@@ -16,7 +16,7 @@ import javax.swing.JTextField;
 import edu.bsu.julia.ComplexNumber;
 import edu.bsu.julia.Julia;
 import edu.bsu.julia.generators.FullForwardsOutputSetGenerator;
-import edu.bsu.julia.generators.FullForwardsOutputSetGenerator.Options;
+import edu.bsu.julia.generators.FullForwardsOutputSetGenerator.Mode;
 import edu.bsu.julia.gui.GUIUtil;
 import edu.bsu.julia.gui.InputPanel;
 import edu.bsu.julia.gui.JuliaError;
@@ -161,7 +161,7 @@ public class PostCriticalAction extends AbstractAction {
 						OutputSet.Type.POST_CRITICAL, tValue,
 						new FullForwardsOutputSetGenerator(parentFrame, tValue-1, seedList
 								.toArray(new ComplexNumber[] {}), inFunc,
-								Options.KEEP_INTERMEDIATE_POINTS)));
+								Mode.POST_CRITICAL)));
 			}
 
 			// close the dialog window
