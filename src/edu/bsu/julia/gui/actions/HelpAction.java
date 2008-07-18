@@ -27,7 +27,7 @@ import javax.swing.event.HyperlinkListener;
 import edu.bsu.julia.Julia;
 
 public class HelpAction extends AbstractAction {
-	private static final String HELP_URL_BASE = "http://www.bsu.edu/web/rstankewitz/JuliaHelp/";
+	private static final String HELP_URL_BASE = "http://www.bsu.edu/web/rstankewitz/JuliaHelp2.0/";
 	private static final String HELP_URL_START = "JuliaHelp.htm";
 	private static final int WIDTH = 835;
 	private static final int HEIGHT = 650;
@@ -123,7 +123,6 @@ public class HelpAction extends AbstractAction {
 
 					@Override
 					public void actionPerformed(ActionEvent arg0) {
-						// TODO Auto-generated method stub
 						try {
 							desktop.browse(new URI(HELP_URL_BASE
 									+ HELP_URL_START));

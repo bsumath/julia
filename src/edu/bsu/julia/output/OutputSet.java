@@ -248,9 +248,11 @@ public class OutputSet {
 	}
 
 	public String toString() {
-		String s = "o" + getSubscript() + " = " + functionType.description()
-				+ " of ";
-
+		String s = "o" + getSubscript() + " = " + functionType.description();
+		if (functionType == Type.BASIC)
+			return s;
+		
+		s += " of ";
 		for (int x = 0; x < inputFunctions.length; x++) {
 			s = s + "f" + inputFunctions[x].getSubscript();
 			if (x != (inputFunctions.length - 1))
