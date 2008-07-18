@@ -191,20 +191,17 @@ public final class ComplexNumber {
 	 *         number.
 	 */
 	private double arg() {
-		double base = 0;
-		try {
-			base = Math.asin(y / Math.sqrt(x * x + y * y));
-		} catch (ArithmeticException e) {
-			// if division by zero occurs, base remains zero.
-		}
+		if (x == 0 && y == 0)
+			return 0;
+
+		double base = Math.asin(y / Math.sqrt(x * x + y * y));
+
 		if (x >= 0)
 			return base;
-		else {
-			if (y >= 0)
-				return Math.PI - base;
-			else
-				return -Math.PI - base;
-		}
+		else if (y >= 0)
+			return Math.PI - base;
+		else
+			return -Math.PI - base;
 	}
 
 	/**
