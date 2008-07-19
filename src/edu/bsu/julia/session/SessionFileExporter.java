@@ -39,7 +39,7 @@ public class SessionFileExporter extends SwingWorker<Boolean, Void> implements
 		inputFunctions = new ArrayList<InputFunction>(i);
 	}
 
-	public void addIterations(int i) {
+	public void addIterations(Integer i) {
 		iterations = i;
 	}
 
@@ -51,7 +51,7 @@ public class SessionFileExporter extends SwingWorker<Boolean, Void> implements
 		seed = s;
 	}
 
-	public void addSkips(int s) {
+	public void addSkips(Integer s) {
 		skips = s;
 	}
 

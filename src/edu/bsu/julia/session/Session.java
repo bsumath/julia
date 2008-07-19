@@ -25,9 +25,9 @@ public class Session {
 	 * @author benjamin
 	 */
 	public interface Importer {
-		public int provideIterations();
+		public Integer provideIterations();
 
-		public int provideSkips();
+		public Integer provideSkips();
 
 		public ComplexNumber provideSeedValue();
 
@@ -47,9 +47,9 @@ public class Session {
 	 * @author benjamin
 	 */
 	public interface Exporter {
-		public void addIterations(int i);
+		public void addIterations(Integer i);
 
-		public void addSkips(int s);
+		public void addSkips(Integer s);
 
 		public void addSeedValue(ComplexNumber s);
 
@@ -75,8 +75,8 @@ public class Session {
 	private static final String MODIFIED_TITLE = " *session modified*";
 
 	private PropertyChangeSupport support = new PropertyChangeSupport(this);
-	private int iterations;
-	private int skips;
+	private Integer iterations;
+	private Integer skips;
 	private ComplexNumber seed;
 	private List<InputFunction> inputFunctions;
 	private List<OutputSet> outputSets;
