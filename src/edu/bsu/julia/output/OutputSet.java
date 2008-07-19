@@ -459,7 +459,7 @@ public class OutputSet {
 		List<String> result = new ArrayList<String>();
 		result.add("class: " + this.getClass().getName());
 		result.add("type: " + functionType);
-		result.add("iterations: " + iterations);
+		result.add("min_points: " + iterations);
 		result.add("skips: " + skips);
 		result.add("seed: " + seed.exportString());
 		result.add("\r\n \n \n\r");
