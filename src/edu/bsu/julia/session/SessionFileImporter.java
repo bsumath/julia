@@ -269,7 +269,7 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 
 			if (lineParts[0].equalsIgnoreCase("class")) {
 				className = lineParts[1].trim();
-			} else if (lineParts[0].equalsIgnoreCase("iterations")) {
+			} else if (lineParts[0].equalsIgnoreCase("min_points")) {
 				iterations = Integer.parseInt(lineParts[1]);
 			} else if (lineParts[0].equalsIgnoreCase("skips")) {
 				skips = Integer.parseInt(lineParts[1]);

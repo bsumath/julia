@@ -36,7 +36,7 @@ public class LoadSessionAction extends AbstractAction {
 	private static final String LEGACY_EXTENSION = ".julia";
 
 	public LoadSessionAction(Julia f) {
-		super("Open Session", new ImageIcon(Thread.currentThread()
+		super("Load Session", new ImageIcon(Thread.currentThread()
 				.getContextClassLoader().getResource("loadSession.png")));
 		putValue("SHORT_DESCRIPTION", "Load a New Session");
 		putValue("LONG_DESCRIPTION",
