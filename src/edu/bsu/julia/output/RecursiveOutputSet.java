@@ -1,5 +1,6 @@
 package edu.bsu.julia.output;
 
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -12,15 +13,14 @@ import javax.swing.JScrollPane;
 
 import edu.bsu.julia.generators.OutputSetGenerator;
 import edu.bsu.julia.input.InputFunction;
-import edu.bsu.julia.session.Session;
 
 public class RecursiveOutputSet extends OutputSet {
 
 	private OutputSet[] outputSets = new OutputSet[] {};
 
-	public RecursiveOutputSet(Session s, InputFunction[] i, Type type,
-			OutputSetGenerator g, OutputSet[] o) {
-		super(s, i, type, g);
+	public RecursiveOutputSet(OutputSet.Info info, InputFunction[] i,
+			OutputSet[] o, Type type, OutputSetGenerator g, ActionListener l) {
+		super(info, i, type, g, l);
 		outputSets = o;
 	}
 
@@ -98,7 +98,8 @@ public class RecursiveOutputSet extends OutputSet {
 				int index = list.locationToIndex(ev.getPoint());
 				OutputSet set = (OutputSet) list.getModel().getElementAt(index);
 				JOptionPane.showMessageDialog(list, set.propertiesComponents(),
-						"Properties", JOptionPane.INFORMATION_MESSAGE);			}
+						"Properties", JOptionPane.INFORMATION_MESSAGE);
+			}
 		});
 
 		JScrollPane scroller = new JScrollPane(list);

@@ -1,6 +1,7 @@
 package edu.bsu.julia.gui.actions;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,7 +99,16 @@ public class CreateCompositeIndAction extends AbstractAction {
 
 	public void actionPerformed(ActionEvent arg0) {
 		parentFrame.getOutputSetList().clearSelection();
-		Session session = parentFrame.getCurrentSession();
+		final Session session = parentFrame.getCurrentSession();
+
+		// create a listener in case the output set creation is canceled
+		ActionListener listener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				OutputSet set = (OutputSet) e.getSource();
+				session.deleteOutputSet(set);
+			}
+		};
 
 		// build list of input functions
 		InputPanel inputPanel = parentFrame.getInputPanel();
@@ -113,75 +123,81 @@ public class CreateCompositeIndAction extends AbstractAction {
 
 		// create an OutputSet based on the OutputSet.Type
 		OutputSet.Type type = OutputSet.Type.valueOf(command);
+		OutputSet.Info info = OutputSet.Info.sessionToInfo(session);
 		switch (type) {
 		case RANDOM_JULIA:
 			if (mode == Mode.COMPOSITE || mode == Mode.BOTH)
-				newSets.add(new OutputSet(session, inFunc, type,
+				newSets.add(new OutputSet(info, inFunc, type,
 						new RandomBackwardsOutputSetGenerator(parentFrame,
 								session.getIterations(), session.getSkips(),
-								session.getSeedValue(), inFunc)));
+								session.getSeedValue(), inFunc), listener));
 			if (mode == Mode.INDIVIDUAL || mode == Mode.BOTH)
 				for (InputFunction function : inFunc) {
 					InputFunction[] inArray = new InputFunction[] { function };
-					newSets.add(new OutputSet(session, inArray, OutputSet.Type
+					newSets.add(new OutputSet(info, inArray, OutputSet.Type
 							.valueOf("IND_" + command),
 							new RandomBackwardsOutputSetGenerator(parentFrame,
 									session.getIterations(),
 									session.getSkips(), session.getSeedValue(),
-									inArray)));
+									inArray), listener));
 				}
 			break;
 		case FULL_JULIA:
 			if (mode == Mode.COMPOSITE || mode == Mode.BOTH)
-				newSets.add(new OutputSet(session, inFunc, type,
+				newSets.add(new OutputSet(info, inFunc, type,
 						new FullBackwardsOutputSetGenerator(parentFrame,
 								session.getIterations(),
-								session.getSeedValue(), inFunc)));
+								session.getSeedValue(), inFunc), listener));
 			if (mode == Mode.INDIVIDUAL || mode == Mode.BOTH)
 				for (InputFunction function : inFunc) {
 					InputFunction[] inArray = new InputFunction[] { function };
-					newSets.add(new OutputSet(session, inArray, OutputSet.Type
-							.valueOf("IND_" + command),
-							new FullBackwardsOutputSetGenerator(parentFrame,
-									session.getIterations(), session
-											.getSeedValue(), inArray)));
+					newSets
+							.add(new OutputSet(info, inArray, OutputSet.Type
+									.valueOf("IND_" + command),
+									new FullBackwardsOutputSetGenerator(
+											parentFrame, session
+													.getIterations(), session
+													.getSeedValue(), inArray),
+									listener));
 				}
 			break;
 		case RANDOM_ATTR:
 			if (mode == Mode.COMPOSITE || mode == Mode.BOTH)
-				newSets.add(new OutputSet(session, inFunc, type,
+				newSets.add(new OutputSet(info, inFunc, type,
 						new RandomForwardsOutputSetGenerator(parentFrame,
 								session.getIterations(), session.getSkips(),
-								session.getSeedValue(), inFunc)));
+								session.getSeedValue(), inFunc), listener));
 			if (mode == Mode.INDIVIDUAL || mode == Mode.BOTH)
 				for (InputFunction function : inFunc) {
 					InputFunction[] inArray = new InputFunction[] { function };
-					newSets.add(new OutputSet(session, inArray, OutputSet.Type
+					newSets.add(new OutputSet(info, inArray, OutputSet.Type
 							.valueOf("IND_" + command),
 							new RandomForwardsOutputSetGenerator(parentFrame,
 									session.getIterations(),
 									session.getSkips(), session.getSeedValue(),
-									inArray)));
+									inArray), listener));
 				}
 			break;
 		case FULL_ATTR:
 			ComplexNumber[] seedList = new ComplexNumber[] { session
 					.getSeedValue() };
 			if (mode == Mode.COMPOSITE || mode == Mode.BOTH)
-				newSets.add(new OutputSet(session, inFunc, type,
+				newSets.add(new OutputSet(info, inFunc, type,
 						new FullForwardsOutputSetGenerator(parentFrame, session
 								.getIterations(), seedList, inFunc,
-								FullForwardsOutputSetGenerator.Mode.DEFAULT)));
+								FullForwardsOutputSetGenerator.Mode.DEFAULT),
+						listener));
 			if (mode == Mode.INDIVIDUAL || mode == Mode.BOTH)
 				for (InputFunction function : inFunc) {
 					InputFunction[] inArray = new InputFunction[] { function };
 					OutputSet set = new OutputSet(
-							session,
+							info,
 							inArray,
 							OutputSet.Type.valueOf("IND_" + command),
 							new FullForwardsOutputSetGenerator(parentFrame,
 									session.getIterations(), seedList, inArray,
-									FullForwardsOutputSetGenerator.Mode.DEFAULT));
+									FullForwardsOutputSetGenerator.Mode.DEFAULT),
+							listener);
 					newSets.add(set);
 				}
 			break;

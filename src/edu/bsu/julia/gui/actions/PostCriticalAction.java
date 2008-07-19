@@ -111,7 +111,8 @@ public class PostCriticalAction extends AbstractAction {
 
 			int tValue;
 			try {
-				tValue = Integer.parseInt(GUIUtil.removeCommas(tField.getText()));
+				tValue = Integer.parseInt(GUIUtil
+						.removeCommas(tField.getText()));
 			} catch (NumberFormatException e) {
 				JuliaError.T_INTEGER_ERROR.showDialog(parentFrame);
 				return;
@@ -123,7 +124,34 @@ public class PostCriticalAction extends AbstractAction {
 			}
 
 			// get the current session
-			Session session = parentFrame.getCurrentSession();
+			final Session session = parentFrame.getCurrentSession();
+
+			// create a listener in case the output set creation is canceled
+			ActionListener listener = new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					OutputSet set = (OutputSet) e.getSource();
+					session.deleteOutputSet(set);
+				}
+			};
+
+			// create the data for the OutputSet
+			OutputSet.Info info = new OutputSet.Info() {
+				@Override
+				public Integer iterations() {
+					return null;
+				}
+
+				@Override
+				public ComplexNumber seed() {
+					return null;
+				}
+
+				@Override
+				public Integer skips() {
+					return null;
+				}
+			};
 
 			// build list of input functions
 			InputPanel inputPanel = parentFrame.getInputPanel();
@@ -157,11 +185,12 @@ public class PostCriticalAction extends AbstractAction {
 						"No critical Points exist");
 			} else {
 				// create the output function and add it to the session
-				session.addOutputSet(new PostCriticalOutputSet(session, inFunc,
-						OutputSet.Type.POST_CRITICAL, tValue,
-						new FullForwardsOutputSetGenerator(parentFrame, tValue-1, seedList
-								.toArray(new ComplexNumber[] {}), inFunc,
-								Mode.POST_CRITICAL)));
+				session.addOutputSet(new PostCriticalOutputSet(info,
+						inFunc, OutputSet.Type.POST_CRITICAL, tValue,
+						new FullForwardsOutputSetGenerator(parentFrame,
+								tValue - 1, seedList
+										.toArray(new ComplexNumber[] {}),
+								inFunc, Mode.POST_CRITICAL), listener));
 			}
 
 			// close the dialog window

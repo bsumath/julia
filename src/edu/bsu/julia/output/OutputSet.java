@@ -2,6 +2,8 @@ package edu.bsu.julia.output;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -70,9 +72,43 @@ public class OutputSet {
 		}
 	}
 
+	/**
+	 * this class is designed to abstract the iteration, skips, and seed values
+	 * out of the session so we don't have to create a dummy session every time
+	 * we want to create an OutputSet
+	 * 
+	 * @author Ben Dean
+	 */
+	public static abstract class Info {
+		abstract public Integer iterations();
+
+		abstract public Integer skips();
+
+		abstract public ComplexNumber seed();
+
+		public static Info sessionToInfo(final Session s) {
+			return new Info() {
+				@Override
+				public Integer iterations() {
+					return s.getIterations();
+				}
+
+				@Override
+				public ComplexNumber seed() {
+					return s.getSeedValue();
+				}
+
+				@Override
+				public Integer skips() {
+					return s.getSkips();
+				}
+			};
+		}
+	}
+
 	private int sub = 0;
-	protected int iterations;
-	protected final int skips;
+	protected final Integer iterations;
+	protected final Integer skips;
 	protected final ComplexNumber seed;
 	protected final Type functionType;
 	protected final InputFunction[] inputFunctions;
@@ -91,12 +127,12 @@ public class OutputSet {
 	private SwingWorker<ComplexNumber[], Void> tempFileReader;
 	protected final long creationTime;
 
-	public OutputSet(final Session session, InputFunction[] i, Type type,
-			OutputSetGenerator gen) {
-		iterations = session.getIterations();
+	public OutputSet(Info info, InputFunction[] i, Type type,
+			OutputSetGenerator gen, final ActionListener listener) {
+		iterations = info.iterations();
 		functionType = type;
-		skips = (functionType == Type.POST_CRITICAL) ? 0 : session.getSkips();
-		seed = session.getSeedValue();
+		skips = (functionType == Type.POST_CRITICAL) ? null : info.skips();
+		seed = info.seed();
 
 		inputFunctions = i;
 		generator = gen;
@@ -120,7 +156,8 @@ public class OutputSet {
 
 					// if the points are null then there was some sort of error
 					if (points == null) {
-						session.deleteOutputSet(OutputSet.this);
+						listener.actionPerformed(new ActionEvent(
+								OutputSet.this, 0, "delete output set"));
 					} else {
 						writePointsTempFile();
 						support.firePropertyChange("reselect", null, null);
@@ -141,18 +178,6 @@ public class OutputSet {
 
 	public void setSubscript(int subscript) {
 		sub = subscript;
-	}
-
-	public int getIterations() {
-		return iterations;
-	}
-
-	public int getSkips() {
-		return skips;
-	}
-
-	public ComplexNumber getSeedValue() {
-		return seed;
 	}
 
 	public int getNumOfPoints() {
@@ -251,7 +276,7 @@ public class OutputSet {
 		String s = "o" + getSubscript() + " = " + functionType.description();
 		if (functionType == Type.BASIC)
 			return s;
-		
+
 		s += " of ";
 		for (int x = 0; x < inputFunctions.length; x++) {
 			s = s + "f" + inputFunctions[x].getSubscript();
@@ -264,13 +289,54 @@ public class OutputSet {
 	public boolean equals(Object obj) {
 		try {
 			OutputSet other = (OutputSet) obj;
-			boolean result = iterations == other.iterations;
-			result = result && skips == other.skips;
-			result = result && seed.equals(other.seed);
-			result = result && functionType.equals(other.functionType);
-			result = result
-					&& inputFunctions.length == other.inputFunctions.length;
+			boolean result = true;
 
+			// check that iterations are equal
+			if (iterations == null || other.iterations == null) {
+				result = result && other.iterations == null
+						&& iterations == null;
+			} else {
+				result = iterations.equals(other.iterations);
+			}
+
+			// check that skips are equal
+			if (skips == null || other.skips == null) {
+				result = result && other.skips == null && skips == null;
+			} else {
+				result = result && skips.equals(other.skips);
+			}
+
+			// check that seed is equal
+			if (seed == null || other.seed == null) {
+				result = result && other.seed == null && seed == null;
+			} else {
+				result = result && seed.equals(other.seed);
+			}
+
+			// check that functionType is equal
+			if (functionType == null || other.functionType == null) {
+				result = result && other.functionType == null
+						&& functionType == null;
+			} else {
+				result = result && functionType.equals(other.functionType);
+			}
+
+			// check that inputFunctions are equal
+			if (inputFunctions == null || other.inputFunctions == null) {
+				result = result && other.inputFunctions == null
+						&& inputFunctions == null;
+			} else {
+				result = result
+						&& inputFunctions.length == other.inputFunctions.length;
+
+				for (int i = 0; result && i < inputFunctions.length; i++) {
+					result = result
+							&& inputFunctions[i]
+									.equals(other.inputFunctions[i]);
+				}
+			}
+
+			// check that points are equal
 			if (points == null || other.points == null) {
 				result = result && other.points == null && points == null;
 			} else {
@@ -278,11 +344,6 @@ public class OutputSet {
 				for (int i = 0; result && i < points.length; i++) {
 					result = result && points[i].equals(other.points[i]);
 				}
-			}
-
-			for (int i = 0; result && i < inputFunctions.length; i++) {
-				result = result
-						&& inputFunctions[i].equals(other.inputFunctions[i]);
 			}
 
 			return result;
@@ -459,9 +520,12 @@ public class OutputSet {
 		List<String> result = new ArrayList<String>();
 		result.add("class: " + this.getClass().getName());
 		result.add("type: " + functionType);
-		result.add("min_points: " + iterations);
-		result.add("skips: " + skips);
-		result.add("seed: " + seed.exportString());
+		if (iterations != null)
+			result.add("min_points: " + iterations);
+		if (skips != null)
+			result.add("skips: " + skips);
+		if (seed != null)
+			result.add("seed: " + seed.exportString());
 		result.add("\r\n \n \n\r");
 
 		for (InputFunction function : inputFunctions) {
@@ -478,9 +542,14 @@ public class OutputSet {
 	public JComponent[] propertiesComponents() {
 		Box panel = Box.createVerticalBox();
 		panel.add(new JLabel(this.toString()));
-		panel.add(new JLabel("Points to Plot:  " + iterations));
-		panel.add(new JLabel("Skips:  " + skips));
-		panel.add(new JLabel("Seed Value:  " + seed));
+
+		if (iterations != null)
+			panel.add(new JLabel("Points to Plot:  " + iterations));
+		if (skips != null)
+			panel.add(new JLabel("Skips:  " + skips));
+		if (seed != null)
+			panel.add(new JLabel("Seed Value:  " + seed));
+
 		if (points != null)
 			panel.add(new JLabel("Actual number of points in the set:   "
 					+ points.length));

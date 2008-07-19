@@ -1,6 +1,7 @@
 package edu.bsu.julia.gui.actions;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.AbstractAction;
 
@@ -35,8 +36,7 @@ public class ForwardImageAction extends AbstractAction {
 				.getSelectedFunctions();
 
 		// build list of output functions
-		Object[] objArray = parentFrame.getOutputSetList()
-				.getSelectedValues();
+		Object[] objArray = parentFrame.getOutputSetList().getSelectedValues();
 		if (objArray.length == 0)
 			return;
 		OutputSet[] outFunc = new OutputSet[objArray.length];
@@ -57,19 +57,44 @@ public class ForwardImageAction extends AbstractAction {
 		}
 
 		// create and add the OutputSets
-		Session session = parentFrame.getCurrentSession();
+		final Session session = parentFrame.getCurrentSession();
+
+		// create a listener in case the output set creation is canceled
+		ActionListener listener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				OutputSet set = (OutputSet) e.getSource();
+				session.deleteOutputSet(set);
+			}
+		};
+
+		// create data for the OutputSet
+		OutputSet.Info info = new OutputSet.Info() {
+			@Override
+			public Integer iterations() {
+				return null;
+			}
+
+			@Override
+			public ComplexNumber seed() {
+				return null;
+			}
+
+			@Override
+			public Integer skips() {
+				return null;
+			}
+		};
+
 		for (InputFunction function : inFunc) {
 			InputFunction[] inArray = new InputFunction[] { function };
 
 			OutputSetGenerator generator = new FullForwardsOutputSetGenerator(
-					parentFrame,
-					points.length,
-					points,
-					inArray,
+					parentFrame, points.length, points, inArray,
 					FullForwardsOutputSetGenerator.Mode.DEFAULT);
-			OutputSet outputSet = new RecursiveOutputSet(session,
-					inArray, OutputSet.Type.FORWARD_IMAGE, generator, outFunc);
-			
+			OutputSet outputSet = new RecursiveOutputSet(info, inArray,
+					outFunc, OutputSet.Type.FORWARD_IMAGE, generator, listener);
+
 			session.addOutputSet(outputSet);
 		}
 	}

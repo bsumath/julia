@@ -1,5 +1,6 @@
 package edu.bsu.julia.output;
 
+import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.Box;
@@ -33,9 +34,9 @@ public class PostCriticalOutputSet extends OutputSet {
 	 * @param t
 	 *            the t value for the post critical set
 	 */
-	public PostCriticalOutputSet(Session session, InputFunction[] i,
-			OutputSet.Type type, int t, OutputSetGenerator gen) {
-		super(session, i, type, gen);
+	public PostCriticalOutputSet(OutputSet.Info info, InputFunction[] i,
+			OutputSet.Type type, int t, OutputSetGenerator gen, ActionListener l) {
+		super(info, i, type, gen, l);
 
 		tValue = t;
 	}

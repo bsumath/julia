@@ -51,7 +51,7 @@ public class EmptySessionImporter implements Importer {
 		return inputFunctions;
 	}
 
-	public int provideIterations() {
+	public Integer provideIterations() {
 		return iterations;
 	}
 
@@ -63,7 +63,7 @@ public class EmptySessionImporter implements Importer {
 		return seed;
 	}
 
-	public int provideSkips() {
+	public Integer provideSkips() {
 		return skips;
 	}
 

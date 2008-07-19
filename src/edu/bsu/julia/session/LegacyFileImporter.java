@@ -112,7 +112,7 @@ public class LegacyFileImporter extends SwingWorker<Boolean, Void> implements
 		return inputFunctions.size();
 	}
 
-	public int provideIterations() {
+	public Integer provideIterations() {
 		return iterations;
 	}
 
@@ -128,7 +128,7 @@ public class LegacyFileImporter extends SwingWorker<Boolean, Void> implements
 		return seed;
 	}
 
-	public int provideSkips() {
+	public Integer provideSkips() {
 		return skips;
 	}
 }

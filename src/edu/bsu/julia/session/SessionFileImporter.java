@@ -1,5 +1,7 @@
 package edu.bsu.julia.session;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -19,7 +21,6 @@ import java.util.Scanner;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import javax.swing.JFrame;
 import javax.swing.SwingWorker;
 
 import edu.bsu.julia.ComplexNumber;
@@ -30,7 +31,6 @@ import edu.bsu.julia.output.OutputSet;
 import edu.bsu.julia.output.PostCriticalOutputSet;
 import edu.bsu.julia.output.RecursiveOutputSet;
 import edu.bsu.julia.session.Session.Importer;
-import edu.bsu.julia.session.Session.InvalidSessionParametersException;
 
 /**
  * this is a {@link Session.Importer} that reads *.julia.zip saved sessions. It
@@ -59,6 +59,12 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 	private final File sessionFile;
 	private float maxProgress = 0;
 	private float progress = 0;
+
+	private final ActionListener nullListener = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+		}
+	};;
 
 	public SessionFileImporter(File f) {
 		// maps to keep track of temp files associated with input and output
@@ -244,9 +250,9 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 		progress += 1;
 		setProgress((int) (progress / maxProgress * 100));
 
-		int iterations = 0;
-		int skips = 0;
-		ComplexNumber seed = new ComplexNumber();
+		Integer iterations = null;
+		Integer skips = null;
+		ComplexNumber seed = null;
 		List<InputFunction> inFunctions = new ArrayList<InputFunction>();
 		List<ComplexNumber> points = new ArrayList<ComplexNumber>();
 		List<OutputSet> outSets = new ArrayList<OutputSet>();
@@ -344,30 +350,43 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 			points.add(ComplexNumber.parseComplexNumber(data.nextLine()));
 		}
 
-		// create a dummy session with the iteration, skip, and seed values
-		Session tempSession;
-		try {
-			tempSession = new Session(new JFrame(), new DummyImporter(
-					iterations, skips, seed));
-		} catch (InvalidSessionParametersException e) {
-			e.printStackTrace();
-			return;
-		}
+		// create setData with the iteration, skip, and seed values
+		final Integer iter = iterations;
+		final Integer sk = skips;
+		final ComplexNumber sd = seed;
+		OutputSet.Info setInfo = new OutputSet.Info() {
+			@Override
+			public Integer iterations() {
+				return iter;
+			}
+
+			@Override
+			public ComplexNumber seed() {
+				return sd;
+			}
+
+			@Override
+			public Integer skips() {
+				return sk;
+			}
+		};
 
 		// create the output function
 		OutputSet set;
 		OutputSetGenerator generator = new DummyOutputSetGenerator(points
 				.toArray(new ComplexNumber[] {}));
 		if (className.endsWith("RecursiveOutputSet")) {
-			set = new RecursiveOutputSet(tempSession, inFunctions
-					.toArray(new InputFunction[] {}), type, generator, outSets
-					.toArray(new OutputSet[] {}));
-		} else if (className.endsWith("PostCriticalOutputSet")){
-			set = new PostCriticalOutputSet(tempSession, inFunctions
-					.toArray(new InputFunction[] {}), type, tValue, generator);			
-		}else {
-			set = new OutputSet(tempSession, inFunctions
-					.toArray(new InputFunction[] {}), type, generator);
+			set = new RecursiveOutputSet(setInfo, inFunctions
+					.toArray(new InputFunction[] {}), outSets
+					.toArray(new OutputSet[] {}), type, generator, nullListener);
+		} else if (className.endsWith("PostCriticalOutputSet")) {
+			set = new PostCriticalOutputSet(setInfo, inFunctions
+					.toArray(new InputFunction[] {}), type, tValue, generator,
+					nullListener);
+		} else {
+			set = new OutputSet(setInfo, inFunctions
+					.toArray(new InputFunction[] {}), type, generator,
+					nullListener);
 		}
 
 		// set created successfully, remove it from the maps
@@ -385,23 +404,31 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 			points.add(ComplexNumber.parseComplexNumber(data.nextLine()));
 		}
 
-		// create a dummy session with the iteration, skip, and seed values
-		Session tempSession;
-		try {
-			tempSession = new Session(new JFrame(), new DummyImporter(points.size(), 0,
-					new ComplexNumber()));
-		} catch (InvalidSessionParametersException e) {
-			e.printStackTrace();
-			return;
-		}
+		// create null data for the basic set
+		OutputSet.Info info = new OutputSet.Info() {
+			@Override
+			public Integer iterations() {
+				return null;
+			}
+
+			@Override
+			public ComplexNumber seed() {
+				return null;
+			}
+
+			@Override
+			public Integer skips() {
+				return null;
+			}
+		};
 
 		// create the output function
 		OutputSetGenerator generator = new DummyOutputSetGenerator(points
 				.toArray(new ComplexNumber[] {}));
-		OutputSet set = new OutputSet(tempSession, new InputFunction[] {},
-				OutputSet.Type.BASIC, generator);
-		
-		//add to list of basic sets
+		OutputSet set = new OutputSet(info, new InputFunction[] {},
+				OutputSet.Type.BASIC, generator, nullListener);
+
+		// add to list of basic sets
 		basicSets.add(set);
 	}
 
@@ -434,7 +461,7 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 		return result;
 	}
 
-	public int provideIterations() {
+	public Integer provideIterations() {
 		return iterations;
 	}
 
@@ -449,11 +476,11 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 			set.setSubscript(i + 1);
 			result.add(set);
 		}
-		
+
 		int size = keys.size();
-		for (int i = 0; i < basicSets.size(); i++){
+		for (int i = 0; i < basicSets.size(); i++) {
 			OutputSet set = basicSets.get(i);
-			set.setSubscript(i+1+size);
+			set.setSubscript(i + 1 + size);
 			result.add(set);
 		}
 
@@ -464,7 +491,7 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 		return seed;
 	}
 
-	public int provideSkips() {
+	public Integer provideSkips() {
 		return skips;
 	}
 
@@ -473,52 +500,6 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 	}
 
 	public int provideOutputSubscript() {
-		return outputSets.size()+basicSets.size();
+		return outputSets.size() + basicSets.size();
 	}
-
-	/**
-	 * a class to use to create dummy {@link Session} objects for constructing
-	 * {@link OutputSet}
-	 * 
-	 * @author Ben Dean
-	 */
-	private final class DummyImporter implements Session.Importer {
-		private final int iterations;
-		private final ComplexNumber seed;
-		private final int skips;
-
-		public DummyImporter(int iter, int sk, ComplexNumber sd) {
-			iterations = iter;
-			seed = sd;
-			skips = sk;
-		}
-
-		public Collection<InputFunction> provideInputFunctions() {
-			return new ArrayList<InputFunction>();
-		}
-
-		public int provideInputSubscript() {
-			return 0;
-		}
-
-		public int provideIterations() {
-			return iterations;
-		}
-
-		public Collection<OutputSet> provideOutputSets() {
-			return new ArrayList<OutputSet>();
-		}
-
-		public int provideOutputSubscript() {
-			return 0;
-		}
-
-		public ComplexNumber provideSeedValue() {
-			return seed;
-		}
-
-		public int provideSkips() {
-			return skips;
-		}
-	};
 }
