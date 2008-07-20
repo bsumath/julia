@@ -8,12 +8,12 @@ import javax.swing.ButtonGroup;
 
 import edu.bsu.julia.ComplexNumber;
 import edu.bsu.julia.Julia;
-import edu.bsu.julia.generators.RecursiveOutputSetGenerator;
 import edu.bsu.julia.generators.OutputSetGenerator;
+import edu.bsu.julia.generators.RecursiveOutputSetGenerator;
 import edu.bsu.julia.gui.InputPanel;
 import edu.bsu.julia.input.InputFunction;
-import edu.bsu.julia.output.RecursiveOutputSet;
 import edu.bsu.julia.output.OutputSet;
+import edu.bsu.julia.output.RecursiveOutputSet;
 import edu.bsu.julia.session.Session;
 
 public class InverseAction extends AbstractAction {

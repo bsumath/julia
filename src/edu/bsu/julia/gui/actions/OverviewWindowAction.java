@@ -10,16 +10,15 @@ import edu.bsu.julia.gui.OverviewListener;
 
 public class OverviewWindowAction extends AbstractAction {
 	Julia parentFrame;
-	//for serializable interface: do not use
+	// for serializable interface: do not use
 	public static final long serialVersionUID = 0;
-	
+
 	public OverviewWindowAction(Julia f) {
-		super("Open Overview Window", new ImageIcon
-				(Thread.currentThread().getContextClassLoader().getResource
-						("overview.png")));
+		super("Open Overview Window", new ImageIcon(Thread.currentThread()
+				.getContextClassLoader().getResource("overview.png")));
 		putValue("SHORT_DESCRIPTION", "Open an Overview Window");
-		putValue("LONG_DESCRIPTION", "Add a new window to show an overview " +
-				"of the current graph.");
+		putValue("LONG_DESCRIPTION", "Add a new window to show an overview "
+				+ "of the current graph.");
 		parentFrame = f;
 	}
 

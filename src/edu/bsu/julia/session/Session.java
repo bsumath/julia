@@ -97,8 +97,7 @@ public class Session {
 		seed = importer.provideSeedValue();
 		inputFunctions = new ArrayList<InputFunction>(importer
 				.provideInputFunctions());
-		outputSets = new ArrayList<OutputSet>(importer
-				.provideOutputSets());
+		outputSets = new ArrayList<OutputSet>(importer.provideOutputSets());
 		outputQueue = new LinkedList<OutputSet>(outputSets);
 		inputSubscript = importer.provideInputSubscript();
 		outputSubscript = importer.provideOutputSubscript();
@@ -233,7 +232,7 @@ public class Session {
 
 	public void markUnmodified() {
 		if (modified) {
-			((Julia)parentFrame).resetTitle();
+			((Julia) parentFrame).resetTitle();
 		}
 		modified = false;
 	}
@@ -246,7 +245,7 @@ public class Session {
 
 	public void setFile(File file) {
 		if (file != null) {
-			((Julia)parentFrame).resetTitle();
+			((Julia) parentFrame).resetTitle();
 			parentFrame.setTitle(parentFrame.getTitle() + " - "
 					+ file.getName());
 		}

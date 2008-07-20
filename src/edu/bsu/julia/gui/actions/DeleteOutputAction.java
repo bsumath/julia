@@ -10,33 +10,31 @@ import edu.bsu.julia.Julia;
 import edu.bsu.julia.output.OutputSet;
 import edu.bsu.julia.session.Session;
 
-public class DeleteOutputAction extends AbstractAction{
+public class DeleteOutputAction extends AbstractAction {
 
 	private Julia parentFrame;
 	private OutputSet set;
-	//for serializable interface: do not use
+	// for serializable interface: do not use
 	public static final long serialVersionUID = 0;
-	
+
 	public DeleteOutputAction(Julia f, OutputSet s) {
-		super("Delete", new ImageIcon
-				(Thread.currentThread().getContextClassLoader().getResource
-						("delete.png")));
+		super("Delete", new ImageIcon(Thread.currentThread()
+				.getContextClassLoader().getResource("delete.png")));
 		putValue("SHORT_DESCRIPTION", "Delete");
 		putValue("LONG_DESCRIPTION", "Delete the chosen function.");
 		parentFrame = f;
 		set = s;
 	}
-	
+
 	public void actionPerformed(ActionEvent arg0) {
 		Session s = parentFrame.getCurrentSession();
 		int choice;
-		
-		choice = JOptionPane.showConfirmDialog(parentFrame,
-				"Are you sure?",
-				"Delete?",JOptionPane.OK_CANCEL_OPTION);
-		if (choice == JOptionPane.OK_OPTION){
+
+		choice = JOptionPane.showConfirmDialog(parentFrame, "Are you sure?",
+				"Delete?", JOptionPane.OK_CANCEL_OPTION);
+		if (choice == JOptionPane.OK_OPTION) {
 			s.deleteOutputSet(set);
 		}
-		
+
 	}
 }

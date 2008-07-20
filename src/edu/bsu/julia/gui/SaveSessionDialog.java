@@ -9,14 +9,14 @@ public class SaveSessionDialog {
 	public static final int SESSION_SAVED = 0;
 	public static final int SESSION_DISCARDED = 1;
 	public static final int CANCELED = 2;
-	
+
 	private Julia parentFrame;
-	
+
 	public SaveSessionDialog(Julia f) {
 		parentFrame = f;
 	}
-	
-	public int showSaveDialog(){
+
+	public int showSaveDialog() {
 		Object[] options = { "Save", "Discard", "Cancel" };
 		int choice = JOptionPane.showOptionDialog(parentFrame,
 				"The current session has been modified.\n"
@@ -27,11 +27,11 @@ public class SaveSessionDialog {
 		switch (choice) {
 		case 0: // save
 			new SaveSessionAction(parentFrame, false).actionPerformed(null);
-			
-			//check to see if the session was actually saved
+
+			// check to see if the session was actually saved
 			if (parentFrame.getCurrentSession().isModified())
 				return CANCELED;
-			else 
+			else
 				return SESSION_SAVED;
 		case 1: // discard
 			return SESSION_DISCARDED;

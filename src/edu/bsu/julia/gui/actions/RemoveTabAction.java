@@ -10,24 +10,23 @@ import edu.bsu.julia.Julia;
 import edu.bsu.julia.gui.GraphTabbedPane;
 
 public class RemoveTabAction extends AbstractAction {
-	
+
 	private Julia parentFrame;
-	//for serializable interface: do not use
+	// for serializable interface: do not use
 	public static final long serialVersionUID = 0;
-	
+
 	public RemoveTabAction(Julia f) {
-		super("Remove Active Graph", new ImageIcon
-				(Thread.currentThread().getContextClassLoader().getResource
-						("removeTab.png")));
+		super("Remove Active Graph", new ImageIcon(Thread.currentThread()
+				.getContextClassLoader().getResource("removeTab.png")));
 		putValue("SHORT_DESCRIPTION", "Remove the active tab");
-		putValue("LONG_DESCRIPTION", "Remove the active tab from the " +
-				"center graph panel.");
+		putValue("LONG_DESCRIPTION", "Remove the active tab from the "
+				+ "center graph panel.");
 		parentFrame = f;
 	}
 
 	public void actionPerformed(ActionEvent event) {
 		GraphTabbedPane pane = parentFrame.getTabbedPane();
-		if(pane.getTabCount()>1) {
+		if (pane.getTabCount() > 1) {
 			pane.removeTabAt(pane.getSelectedIndex());
 			pane.stateChanged(new ChangeEvent(pane));
 		}

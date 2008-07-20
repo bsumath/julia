@@ -74,11 +74,11 @@ public class RealAffineLinearDialog extends JDialog implements ActionListener {
 	public static final long serialVersionUID = 0;
 
 	/**
-	 * Builds the dialog for a affine linear input function and makes it
-	 * visible on the screen. 'type' indicates whether the dialog will be used
-	 * for editing or cloning an existing function or creating a new function.
-	 * If editing or cloning an existing function, that function is passed to
-	 * the constructor as 'fn'. When creating a new function, 'fn' can be
+	 * Builds the dialog for a affine linear input function and makes it visible
+	 * on the screen. 'type' indicates whether the dialog will be used for
+	 * editing or cloning an existing function or creating a new function. If
+	 * editing or cloning an existing function, that function is passed to the
+	 * constructor as 'fn'. When creating a new function, 'fn' can be
 	 * <b>null</b>.
 	 * 
 	 * @param f

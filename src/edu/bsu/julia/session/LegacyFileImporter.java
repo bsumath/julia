@@ -33,8 +33,8 @@ public class LegacyFileImporter extends SwingWorker<Boolean, Void> implements
 	public LegacyFileImporter(File f) {
 		file = f;
 	}
-	
-	protected Boolean doInBackground() throws Exception{
+
+	protected Boolean doInBackground() throws Exception {
 		BufferedReader input = new BufferedReader(new FileReader(file));
 
 		iterations = Integer.parseInt(input.readLine());
@@ -45,7 +45,7 @@ public class LegacyFileImporter extends SwingWorker<Boolean, Void> implements
 
 		int size = Integer.parseInt(input.readLine());
 		for (int i = 0; i < size; i++) {
-			setProgress((int) ((float)i/size*100));
+			setProgress((int) ((float) i / size * 100));
 			String type = input.readLine();
 			if (type.equals("linear")) {
 				int m = Integer.parseInt(input.readLine());
@@ -73,8 +73,8 @@ public class LegacyFileImporter extends SwingWorker<Boolean, Void> implements
 					y = Double.parseDouble(input.readLine());
 					var[j] = new ComplexNumber(x, y);
 				}
-				inputFunctions.add(new RealAffineLinearInputFunction(m,
-						var[0], var[1], var[2], var[3], var[4], var[5]));
+				inputFunctions.add(new RealAffineLinearInputFunction(m, var[0],
+						var[1], var[2], var[3], var[4], var[5]));
 			} else if (type.equals("mobius")) {
 				int m = Integer.parseInt(input.readLine());
 				ComplexNumber[] var = new ComplexNumber[4];

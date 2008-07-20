@@ -10,8 +10,8 @@ import edu.bsu.julia.Julia;
 import edu.bsu.julia.generators.FullForwardsOutputSetGenerator;
 import edu.bsu.julia.generators.OutputSetGenerator;
 import edu.bsu.julia.input.InputFunction;
-import edu.bsu.julia.output.RecursiveOutputSet;
 import edu.bsu.julia.output.OutputSet;
+import edu.bsu.julia.output.RecursiveOutputSet;
 import edu.bsu.julia.session.Session;
 
 public class ForwardImageAction extends AbstractAction {

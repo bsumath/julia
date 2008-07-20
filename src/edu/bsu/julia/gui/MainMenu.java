@@ -25,11 +25,11 @@ import edu.bsu.julia.gui.actions.ZoomInAction;
 import edu.bsu.julia.gui.actions.ZoomOutAction;
 
 public class MainMenu extends JMenuBar {
-	
+
 	private Julia parentFrame;
-	//for serializable interface: do not use
+	// for serializable interface: do not use
 	public static final long serialVersionUID = 0;
-	
+
 	public MainMenu(Julia f) {
 		super();
 		parentFrame = f;
@@ -38,29 +38,33 @@ public class MainMenu extends JMenuBar {
 		add(createToolsMenu());
 		add(createHelpMenu());
 	}
-	
+
 	private JMenu createFileMenu() {
 		JMenu fileMenu = new JMenu("File");
-		fileMenu.setActionCommand("For Creating and Saving Sessions and Functions.");
+		fileMenu
+				.setActionCommand("For Creating and Saving Sessions and Functions.");
 		fileMenu.setMnemonic('F');
 		fileMenu.addMouseListener(parentFrame.getStatusBar());
-		JMenuItem newItem = new JMenuItem (new NewAction(parentFrame));
+		JMenuItem newItem = new JMenuItem(new NewAction(parentFrame));
 		newItem.setMnemonic('N');
 		newItem.addMouseListener(parentFrame.getStatusBar());
 		fileMenu.add(newItem);
-		JMenuItem editSessionItem = new JMenuItem
-			(new EditSessionAction(parentFrame));
+		JMenuItem editSessionItem = new JMenuItem(new EditSessionAction(
+				parentFrame));
 		editSessionItem.setMnemonic('d');
 		editSessionItem.addMouseListener(parentFrame.getStatusBar());
 		fileMenu.add(editSessionItem);
-		JMenuItem saveSessionItem = new JMenuItem (new SaveSessionAction(parentFrame,false));
+		JMenuItem saveSessionItem = new JMenuItem(new SaveSessionAction(
+				parentFrame, false));
 		saveSessionItem.setMnemonic('v');
 		saveSessionItem.addMouseListener(parentFrame.getStatusBar());
 		fileMenu.add(saveSessionItem);
-		JMenuItem saveSessionAsItem = new JMenuItem (new SaveSessionAction(parentFrame,true));
+		JMenuItem saveSessionAsItem = new JMenuItem(new SaveSessionAction(
+				parentFrame, true));
 		saveSessionAsItem.addMouseListener(parentFrame.getStatusBar());
 		fileMenu.add(saveSessionAsItem);
-		JMenuItem loadSessionItem = new JMenuItem(new LoadSessionAction(parentFrame));
+		JMenuItem loadSessionItem = new JMenuItem(new LoadSessionAction(
+				parentFrame));
 		loadSessionItem.setMnemonic('l');
 		loadSessionItem.addMouseListener(parentFrame.getStatusBar());
 		fileMenu.add(loadSessionItem);
@@ -79,13 +83,13 @@ public class MainMenu extends JMenuBar {
 		printGraph.addMouseListener(parentFrame.getStatusBar());
 		fileMenu.add(printGraph);
 		fileMenu.addSeparator();
-		JMenuItem exitItem = new JMenuItem (new ExitAction(parentFrame));
+		JMenuItem exitItem = new JMenuItem(new ExitAction(parentFrame));
 		exitItem.setMnemonic('x');
 		exitItem.addMouseListener(parentFrame.getStatusBar());
 		fileMenu.add(exitItem);
 		return fileMenu;
 	}
-	
+
 	private JMenu createViewMenu() {
 		JMenu viewMenu = new JMenu("View");
 		viewMenu.setActionCommand("For Adjusting the View.");
@@ -99,8 +103,8 @@ public class MainMenu extends JMenuBar {
 		zoomOutItem.setMnemonic('O');
 		zoomOutItem.addMouseListener(parentFrame.getStatusBar());
 		viewMenu.add(zoomOutItem);
-		JMenuItem resetZoomItem = 
-			new JMenuItem(new ResetZoomAction(parentFrame));
+		JMenuItem resetZoomItem = new JMenuItem(
+				new ResetZoomAction(parentFrame));
 		resetZoomItem.setMnemonic('R');
 		resetZoomItem.addMouseListener(parentFrame.getStatusBar());
 		viewMenu.add(resetZoomItem);
@@ -109,35 +113,37 @@ public class MainMenu extends JMenuBar {
 		addTabItem.setMnemonic('A');
 		addTabItem.addMouseListener(parentFrame.getStatusBar());
 		viewMenu.add(addTabItem);
-		JMenuItem removeTabItem = new JMenuItem(new RemoveTabAction(parentFrame));
+		JMenuItem removeTabItem = new JMenuItem(
+				new RemoveTabAction(parentFrame));
 		removeTabItem.setMnemonic('e');
 		removeTabItem.addMouseListener(parentFrame.getStatusBar());
 		viewMenu.add(removeTabItem);
 		viewMenu.addSeparator();
-		JMenuItem overviewItem = new JMenuItem(new OverviewWindowAction(parentFrame));
+		JMenuItem overviewItem = new JMenuItem(new OverviewWindowAction(
+				parentFrame));
 		overviewItem.setMnemonic('v');
 		overviewItem.addMouseListener(parentFrame.getStatusBar());
 		viewMenu.add(overviewItem);
 		return viewMenu;
 	}
-	
+
 	private JMenu createToolsMenu() {
 		JMenu toolsMenu = new JMenu("Tools");
 		toolsMenu.setActionCommand("Tools and Program Options.");
 		toolsMenu.setMnemonic('O');
 		toolsMenu.addMouseListener(parentFrame.getStatusBar());
-		JMenuItem calc = new JMenuItem (new ComplexCalculatorAction());
+		JMenuItem calc = new JMenuItem(new ComplexCalculatorAction());
 		calc.setMnemonic('L');
 		calc.addMouseListener(parentFrame.getStatusBar());
 		toolsMenu.add(calc);
 		toolsMenu.addSeparator();
-		JMenuItem options = new JMenuItem (new OptionsAction(parentFrame));
+		JMenuItem options = new JMenuItem(new OptionsAction(parentFrame));
 		options.setMnemonic('C');
 		options.addMouseListener(parentFrame.getStatusBar());
 		toolsMenu.add(options);
 		return toolsMenu;
 	}
-	
+
 	private JMenu createHelpMenu() {
 		JMenu helpMenu = new JMenu("Help");
 		helpMenu.setActionCommand("Program Help and Information.");

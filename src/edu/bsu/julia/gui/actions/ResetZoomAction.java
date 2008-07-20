@@ -9,16 +9,15 @@ import edu.bsu.julia.Julia;
 import edu.bsu.julia.gui.GraphTabbedPane;
 
 public class ResetZoomAction extends AbstractAction {
-	
+
 	private Julia parentFrame;
 	private GraphTabbedPane tabbedPane;
-	//for serializable interface: do not use
+	// for serializable interface: do not use
 	public static final long serialVersionUID = 0;
-	
+
 	public ResetZoomAction(Julia f) {
-		super("Reset Zoom", new ImageIcon
-				(Thread.currentThread().getContextClassLoader().getResource
-						("viewmag.png")));
+		super("Reset Zoom", new ImageIcon(Thread.currentThread()
+				.getContextClassLoader().getResource("viewmag.png")));
 		putValue("SHORT_DESCRIPTION", "Reset Zoom On Graph");
 		putValue("LONG_DESCRIPTION", "Reset the graph to its original size.");
 		parentFrame = f;

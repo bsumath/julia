@@ -185,8 +185,8 @@ public class PostCriticalAction extends AbstractAction {
 						"No critical Points exist");
 			} else {
 				// create the output function and add it to the session
-				session.addOutputSet(new PostCriticalOutputSet(info,
-						inFunc, OutputSet.Type.POST_CRITICAL, tValue,
+				session.addOutputSet(new PostCriticalOutputSet(info, inFunc,
+						OutputSet.Type.POST_CRITICAL, tValue,
 						new FullForwardsOutputSetGenerator(parentFrame,
 								tValue - 1, seedList
 										.toArray(new ComplexNumber[] {}),
