@@ -1,8 +1,10 @@
 package edu.bsu.julia.gui.actions;
 
 import java.awt.event.ActionEvent;
-import javax.swing.*;
+
+import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
+
 import edu.bsu.julia.ComplexCalculator;
 
 public class ComplexCalculatorAction extends AbstractAction {

@@ -1,18 +1,22 @@
 package edu.bsu.julia.gui;
 
-import java.awt.*;
-import javax.swing.*;
-import javax.swing.border.*;
+import java.awt.Component;
 
-public class InputListCellRenderer extends JPanel implements ListCellRenderer 
-{
-	
+import javax.swing.BorderFactory;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.ListCellRenderer;
+import javax.swing.border.Border;
+
+public class InputListCellRenderer extends JPanel implements ListCellRenderer {
+
 	private Border raised = BorderFactory.createRaisedBevelBorder();
 	private Border lowered = BorderFactory.createLoweredBevelBorder();
-	private JTextArea textArea = new JTextArea(4,16);
-	//for serializable interface: do not use
+	private JTextArea textArea = new JTextArea(4, 16);
+	// for serializable interface: do not use
 	public static final long serialVersionUID = 0;
-	
+
 	public InputListCellRenderer() {
 	}
 
@@ -23,9 +27,11 @@ public class InputListCellRenderer extends JPanel implements ListCellRenderer
 		textArea.setWrapStyleWord(true);
 		textArea.setBackground(getBackground());
 		this.add(textArea);
-		if(selected) setBorder(lowered);
-		else setBorder(raised);
-		
+		if (selected)
+			setBorder(lowered);
+		else
+			setBorder(raised);
+
 		return this;
 	}
 

@@ -1,10 +1,19 @@
 package edu.bsu.julia.gui;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
-import javax.media.opengl.*;
+import javax.media.opengl.GLJPanel;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JToggleButton;
 
 public class StatusBar extends JPanel implements MouseListener,
 		MouseMotionListener {
