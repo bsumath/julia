@@ -61,7 +61,7 @@ public class AboutAction extends AbstractAction {
 		}
 
 		Box box = Box.createVerticalBox();
-		box.add(new JLabel("Julia (Version 1.0)"));
+		box.add(new JLabel("Julia (Version 2.0)"));
 		box.add(new JLabel(buildString));
 		box.add(new JLabel(" "));
 		box.add(new JLabel("Developed by:"));
@@ -94,10 +94,11 @@ public class AboutAction extends AbstractAction {
 						}
 					}
 				});
+			} else {
+				link = new JLabel(licenseURL);
 			}
 		}
-		if (link != null)
-			box.add(link);
+		box.add(link);
 
 		box.add(new JLabel(" "));
 		box.add(new JLabel("\nAll icons by Everaldo, "
