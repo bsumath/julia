@@ -86,7 +86,8 @@ public class QuadraticDialog extends JDialog implements ActionListener {
 	 * the screen. 'type' indicates whether the dialog will be used for editing
 	 * or cloneing an existing function or creating a new function. If editing
 	 * or cloneing an existing function, that function is passed to the
-	 * constructor as 'fn'. When creating a new function, 'fn' can be <b>null</b>.
+	 * constructor as 'fn'. When creating a new function, 'fn' can be
+	 * <b>null</b>.
 	 * 
 	 * @param f
 	 *            reference to the main program and its frame

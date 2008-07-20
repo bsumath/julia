@@ -9,17 +9,15 @@ import edu.bsu.julia.Julia;
 import edu.bsu.julia.gui.GUIUtil;
 import edu.bsu.julia.gui.SessionDialog;
 
-
 public class EditSessionAction extends AbstractAction {
-	
+
 	private Julia parentFrame;
-	//for serializable interface: do not use
+	// for serializable interface: do not use
 	public static final long serialVersionUID = 0;
-	
+
 	public EditSessionAction(Julia f) {
-		super("Edit Session", new ImageIcon
-				(Thread.currentThread().getContextClassLoader().getResource
-						("sessionedit.png")));
+		super("Edit Session", new ImageIcon(Thread.currentThread()
+				.getContextClassLoader().getResource("sessionedit.png")));
 		putValue("SHORT_DESCRIPTION", "Edit Session");
 		putValue("LONG_DESCRIPTION", "Edit the current session variables.");
 		parentFrame = f;

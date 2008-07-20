@@ -60,8 +60,9 @@ public class OutputPanel extends JPanel implements PropertyChangeListener {
 				final int index = outputList.locationToIndex(e.getPoint());
 				List<OutputSet> sets = parentFrame.getCurrentSession()
 						.getOutputSets();
-				if(index >= sets.size()) return;
-				
+				if (index >= sets.size())
+					return;
+
 				OutputSet set = sets.get(index);
 
 				JPopupMenu popup = new JPopupMenu();

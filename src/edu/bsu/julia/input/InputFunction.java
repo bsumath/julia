@@ -15,19 +15,19 @@ import edu.bsu.julia.Julia;
  * 
  * <h3>Description</h3>
  * <p>
- * {@link InputFunction} is an abstract class providing a template for all the function
- * types used in the program. Any function type (linear, cubic, etc.) that the
- * program uses must be a subclass of this class, as the functions are processed
- * polymorphically within the program.
+ * {@link InputFunction} is an abstract class providing a template for all the
+ * function types used in the program. Any function type (linear, cubic, etc.)
+ * that the program uses must be a subclass of this class, as the functions are
+ * processed polymorphically within the program.
  * </p>
  * <p>
- * {@link InputFunction} also creates and handles the data holders that are common to
- * all function types: the m value and the array of coefficients.
+ * {@link InputFunction} also creates and handles the data holders that are
+ * common to all function types: the m value and the array of coefficients.
  * </p>
  * <p>
- * {@link InputFunction} objects are immutable. Subclasses have access to the array of
- * coefficients so that they may fill them in when the function is first
- * created, but no changes should be made to an input function after its
+ * {@link InputFunction} objects are immutable. Subclasses have access to the
+ * array of coefficients so that they may fill them in when the function is
+ * first created, but no changes should be made to an input function after its
  * creation is complete. Editing an input function in the program is actually
  * accomplished by creating a new function and replacing the old function with
  * the new one.

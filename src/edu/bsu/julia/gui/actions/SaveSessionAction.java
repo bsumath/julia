@@ -75,10 +75,10 @@ public class SaveSessionAction extends AbstractAction {
 			}
 			parentFrame.setFilePath(file.getAbsolutePath());
 		}
-		
+
 		// check for saving legacy files and rename
-		if (file.getName().endsWith("julia")){
-			file = new File(file.getAbsolutePath()+".zip");
+		if (file.getName().endsWith("julia")) {
+			file = new File(file.getAbsolutePath() + ".zip");
 		}
 
 		// create a dialog window and progress bar

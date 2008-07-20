@@ -12,16 +12,17 @@ import edu.bsu.julia.output.OutputSet;
 import edu.bsu.julia.session.Session;
 
 public class DeleteSelectedAction extends AbstractAction {
-	
+
 	private Julia parentFrame;
 	private int type;
-	//for serializable interface: do not use
+	// for serializable interface: do not use
 	public static final long serialVersionUID = 0;
-	
+
 	public DeleteSelectedAction(Julia f, int t) {
 		super("Delete Selected Items");
 		putValue("SHORT_DESCRIPTION", "Delete Selected Items");
-		putValue("LONG_DESCRIPTION", "Delete all the selected functions or sets.");
+		putValue("LONG_DESCRIPTION",
+				"Delete all the selected functions or sets.");
 		parentFrame = f;
 		type = t;
 	}
@@ -29,24 +30,24 @@ public class DeleteSelectedAction extends AbstractAction {
 	public void actionPerformed(ActionEvent arg0) {
 		Session s = parentFrame.getCurrentSession();
 		int choice;
-		
-		choice = JOptionPane.showConfirmDialog(parentFrame,
-				"Are you sure?",
-				"Delete All Selected?",JOptionPane.OK_CANCEL_OPTION);
-		if (choice == JOptionPane.OK_OPTION){
+
+		choice = JOptionPane.showConfirmDialog(parentFrame, "Are you sure?",
+				"Delete All Selected?", JOptionPane.OK_CANCEL_OPTION);
+		if (choice == JOptionPane.OK_OPTION) {
 			if (type == Julia.OUTPUTTYPE) {
-				Object[] outObjs = parentFrame.getOutputSetList().getSelectedValues();
+				Object[] outObjs = parentFrame.getOutputSetList()
+						.getSelectedValues();
 				OutputSet[] outSets = new OutputSet[outObjs.length];
-				for(int j = 0; j<outObjs.length; j++) {
-					outSets[j] = (OutputSet)outObjs[j];
+				for (int j = 0; j < outObjs.length; j++) {
+					outSets[j] = (OutputSet) outObjs[j];
 				}
-				for(OutputSet set : outSets){
+				for (OutputSet set : outSets) {
 					s.deleteOutputSet(set);
 				}
-			}
-			else {
-				InputFunction[] inFns = parentFrame.getInputPanel().getSelectedFunctions();
-				for(int i = 0; i<inFns.length; i++) {
+			} else {
+				InputFunction[] inFns = parentFrame.getInputPanel()
+						.getSelectedFunctions();
+				for (int i = 0; i < inFns.length; i++) {
 					List<InputFunction> inList = s.getInputFunctions();
 					int index = inList.indexOf(inFns[i]);
 					s.deleteInputFunction(index);

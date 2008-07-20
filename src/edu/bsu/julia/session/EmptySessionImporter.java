@@ -35,7 +35,7 @@ public class EmptySessionImporter implements Importer {
 		function = new LinearInputFunction(1, a, c);
 		function.setSubscript(2);
 		inputFunctions.add(function);
-		
+
 		function = new LinearInputFunction(1, a, d);
 		function.setSubscript(3);
 		inputFunctions.add(function);
