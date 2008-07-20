@@ -101,7 +101,7 @@ public class SessionFileExporter extends SwingWorker<Boolean, Void> implements
 		PrintStream out = new PrintStream(new BufferedOutputStream(
 				new FileOutputStream(info)));
 
-		out.println("iterations: " + iterations);
+		out.println("min_points: " + iterations);
 		out.println("skips: " + skips);
 		out.println("seed: " + seed.exportString());
 		out.println();

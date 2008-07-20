@@ -169,7 +169,7 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 			String[] lineParts = splitLine(line);
 
 			// do something based on what lineParts[0] is
-			if (lineParts[0].equalsIgnoreCase("iterations")) {
+			if (lineParts[0].equalsIgnoreCase("min_points")) {
 				iterations = Integer.parseInt(lineParts[1]);
 			} else if (lineParts[0].equalsIgnoreCase("skips")) {
 				skips = Integer.parseInt(lineParts[1]);
