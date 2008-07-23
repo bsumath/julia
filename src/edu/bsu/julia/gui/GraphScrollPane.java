@@ -21,6 +21,7 @@ public class GraphScrollPane extends GLJPanel {
 		setPreferredSize(new Dimension(1000, 1000));
 		addMouseListener(parentFrame.getStatusBar());
 		addMouseMotionListener(parentFrame.getStatusBar());
+		addMouseWheelListener(parentFrame.getStatusBar());
 		listener = new GLListener(parentFrame);
 		addMouseListener(listener);
 		addMouseMotionListener(listener);
