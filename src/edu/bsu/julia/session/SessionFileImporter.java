@@ -187,13 +187,13 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 				String[] parts = lineParts[1].split(" ");
 				inputIndices = new int[parts.length];
 				for (int i = 0; i < parts.length; i++) {
-					inputIndices[i] = Integer.parseInt(parts[i]);
+					inputIndices[i] = Integer.parseInt(parts[i]) - 1;
 				}
 			} else if (lineParts[0].equalsIgnoreCase("selected_output_indices")) {
 				String[] parts = lineParts[1].split(" ");
 				outputIndices = new int[parts.length];
 				for (int i = 0; i < parts.length; i++) {
-					outputIndices[i] = Integer.parseInt(parts[i]);
+					outputIndices[i] = Integer.parseInt(parts[i]) - 1;
 				}
 			}
 		}
