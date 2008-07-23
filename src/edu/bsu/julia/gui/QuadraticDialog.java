@@ -207,7 +207,7 @@ public class QuadraticDialog extends JDialog implements ActionListener {
 		add(functionPanel);
 
 		JLabel polarCheckboxLabel = new JLabel(
-				"                   Coefficient Value Use Polar Coordinates",
+				"                   Coefficient Values Use Polar Coordinates",
 				JLabel.LEFT);
 		add(polarCheckboxLabel);
 		polarCheckBox = new Checkbox("               ", false);
