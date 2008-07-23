@@ -73,9 +73,8 @@ public class RecursiveOutputSetGenerator extends OutputSetGenerator {
 	 * @see OutputSetGenerator#doInBackground()
 	 */
 	public ComplexNumber[] doInBackground() {
+		List<ComplexNumber> outputSet = new ArrayList<ComplexNumber>();
 		try {
-			List<ComplexNumber> outputSet = new ArrayList<ComplexNumber>();
-
 			// estimate the maximum progress
 			int progress = 0;
 			int maxProgress;
@@ -117,6 +116,7 @@ public class RecursiveOutputSetGenerator extends OutputSetGenerator {
 
 			return outputSet.toArray(new ComplexNumber[] {});
 		} catch (OutOfMemoryError e) {
+			outputSet = null;
 			JuliaError.OUT_OF_MEMORY.showDialog(parentFrame);
 			return null;
 		} catch (ArithmeticException e) {

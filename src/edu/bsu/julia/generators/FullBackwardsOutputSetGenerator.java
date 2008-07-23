@@ -46,6 +46,7 @@ public class FullBackwardsOutputSetGenerator extends OutputSetGenerator {
 	 * @see OutputSetGenerator#doInBackground()
 	 */
 	public ComplexNumber[] doInBackground() {
+		List<ComplexNumber> currentIteration = new ArrayList<ComplexNumber>();
 		try {
 			// check that there are input functions
 			if (inputFunctions.length == 0) {
@@ -58,7 +59,6 @@ public class FullBackwardsOutputSetGenerator extends OutputSetGenerator {
 			int iterationCounter = 0;
 			boolean isDone = false;
 
-			List<ComplexNumber> currentIteration = new ArrayList<ComplexNumber>();
 			currentIteration.add(seed);
 			List<ComplexNumber> tempList = new ArrayList<ComplexNumber>();
 			do {
@@ -97,6 +97,7 @@ public class FullBackwardsOutputSetGenerator extends OutputSetGenerator {
 			// iteration complete, the output set is the most recent iteration
 			return currentIteration.toArray(new ComplexNumber[] {});
 		} catch (OutOfMemoryError e) {
+			currentIteration = null;
 			JuliaError.OUT_OF_MEMORY.showDialog(parentFrame);
 			return null;
 		} catch (ArithmeticException e) {
