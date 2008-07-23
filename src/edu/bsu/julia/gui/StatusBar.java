@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 
 import javax.media.opengl.GLJPanel;
 import javax.swing.BorderFactory;
@@ -16,7 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
 public class StatusBar extends JPanel implements MouseListener,
-		MouseMotionListener {
+		MouseMotionListener, MouseWheelListener {
 
 	private JLabel helpLabel = new JLabel();
 	private String defaultString = "Hover over an object to see a description.";
@@ -107,4 +109,19 @@ public class StatusBar extends JPanel implements MouseListener,
 
 	}
 
+	public void mouseWheelMoved(MouseWheelEvent e) {
+		if (e.getSource() instanceof GraphScrollPane) {
+
+			GraphScrollPane panel = (GraphScrollPane) e.getSource();
+			GLListener list = panel.getGLListener();
+
+			double xd = (e.getX() * list.getWidth() / panel.getWidth())
+					+ list.getX();
+			double yd = ((panel.getHeight() - e.getY()) * list.getHeight() / panel
+					.getHeight())
+					+ list.getY();
+
+			coordinateLabel.setText("x: " + xd + ", y: " + yd);
+		}
+	}
 }
