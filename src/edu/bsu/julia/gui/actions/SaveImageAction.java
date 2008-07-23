@@ -13,6 +13,7 @@ import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileFilter;
 
 import edu.bsu.julia.Julia;
 
@@ -56,15 +57,21 @@ public class SaveImageAction extends AbstractAction {
 	}
 
 	public boolean saveFile() {
-		System.out.println("hello2");
 		file = null;
 		JFileChooser filechooser = new JFileChooser();
+		filechooser.setFileFilter(new ImageFileFilter());
 		filechooser.setSelectedFile(file);
 		int result = filechooser.showSaveDialog(null);
 		if (result == JFileChooser.CANCEL_OPTION) {
 			return false;
 		} else if (result == JFileChooser.APPROVE_OPTION) {
 			file = filechooser.getSelectedFile();
+
+			if (!(file.getName().endsWith(".gif") || file.getName().endsWith(
+					".jpg"))) {
+				file = new File(file.getAbsolutePath() + ".jpg");
+			}
+
 			if (file.exists()) {
 				int response = JOptionPane.showConfirmDialog(null,
 						"Overwrite existing file?", "Confirm overwrite",
@@ -76,4 +83,17 @@ public class SaveImageAction extends AbstractAction {
 		}
 		return true;
 	}
+
+	private final class ImageFileFilter extends FileFilter {
+		public boolean accept(File file) {
+			return file.getName().toLowerCase().endsWith(".jpg")
+					|| file.getName().toLowerCase().endsWith(".gif")
+					|| file.isDirectory();
+		}
+
+		public String getDescription() {
+			return "Image files (*.jpg, *.gif)";
+		}
+	}
+
 }
