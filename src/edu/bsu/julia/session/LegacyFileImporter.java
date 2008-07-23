@@ -133,7 +133,11 @@ public class LegacyFileImporter extends SwingWorker<Boolean, Void> implements
 	}
 
 	public int[] provideSelectedInputIndices() {
-		return new int[] {};
+		int[] selected = new int[inputFunctions.size()];
+		for (int i = 0; i < selected.length; i++) {
+			selected[i] = i;
+		}
+		return selected;
 	}
 
 	public String provideSelectedMethod() {
