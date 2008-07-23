@@ -131,4 +131,20 @@ public class LegacyFileImporter extends SwingWorker<Boolean, Void> implements
 	public Integer provideSkips() {
 		return skips;
 	}
+
+	public int[] provideSelectedInputIndices() {
+		return new int[] {};
+	}
+
+	public String provideSelectedMethod() {
+		return "";
+	}
+
+	public int[] provideSelectedOutputIndices() {
+		return new int[] {};
+	}
+
+	public String provideSelectedType() {
+		return "";
+	}
 }
