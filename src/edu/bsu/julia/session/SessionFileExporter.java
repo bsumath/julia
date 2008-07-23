@@ -129,13 +129,13 @@ public class SessionFileExporter extends SwingWorker<Boolean, Void> implements
 
 		String inStr = "";
 		for (int i : inputIndices)
-			inStr += i + " ";
+			inStr += (i+1) + " ";
 		inStr = inStr.trim();
 		out.println("selected_input_indices: " + inStr);
 
 		String outStr = "";
 		for (int i : outputIndices)
-			outStr += i + " ";
+			outStr += (i+1) + " ";
 		outStr = outStr.trim();
 		out.println("selected_output_indices: " + outStr);
 
