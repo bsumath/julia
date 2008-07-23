@@ -64,7 +64,7 @@ public class RecursiveOutputSetGenerator extends OutputSetGenerator {
 		// build a list of starting points from the output sets
 		seedList = new ArrayList<ComplexNumber>();
 		for (OutputSet set : outSets) {
-			for (ComplexNumber point : set.getPoints())
+			for (ComplexNumber point : set.getPoints(true))
 				seedList.add(point);
 		}
 	}
