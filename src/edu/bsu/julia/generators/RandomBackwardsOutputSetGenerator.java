@@ -50,6 +50,7 @@ public class RandomBackwardsOutputSetGenerator extends OutputSetGenerator {
 	 * @see OutputSetGenerator#doInBackground()
 	 */
 	public ComplexNumber[] doInBackground() {
+		ComplexNumber[] outputSet = new ComplexNumber[iterations];
 		try {
 			// check that there are input functions
 			if (inputFunctions.length == 0) {
@@ -57,7 +58,6 @@ public class RandomBackwardsOutputSetGenerator extends OutputSetGenerator {
 			}
 
 			ComplexNumber currentPoint = seed;
-			ComplexNumber[] outputSet = new ComplexNumber[iterations];
 			int progress = 0;
 			int maxProgress = iterations + skips;
 
@@ -83,6 +83,7 @@ public class RandomBackwardsOutputSetGenerator extends OutputSetGenerator {
 
 			return outputSet;
 		} catch (OutOfMemoryError e) {
+			outputSet = null;
 			JuliaError.OUT_OF_MEMORY.showDialog(parentFrame);
 			return null;
 		} catch (ArithmeticException e) {
