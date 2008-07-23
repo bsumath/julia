@@ -162,10 +162,11 @@ public class OutputPanel extends JPanel implements PropertyChangeListener {
 				forwardButton.setEnabled(true);
 				outputList.addMouseListener(mouseListener);
 			}
-			listModel.addElement(set);
+			listModel.addElement(set);			
 			set.addListener(this);
 			outputList.addSelectionInterval(listModel.size() - 1, listModel
 					.size() - 1);
+			outputList.ensureIndexIsVisible(listModel.size()-1);
 		} else if (name.equals("session")) {
 			s = (Session) event.getNewValue();
 			outputList.clearSelection();
