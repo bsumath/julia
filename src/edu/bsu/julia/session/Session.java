@@ -5,11 +5,14 @@ import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import javax.swing.JFrame;
+import javax.swing.AbstractButton;
+import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
 
 import edu.bsu.julia.ComplexNumber;
 import edu.bsu.julia.Julia;
@@ -38,6 +41,14 @@ public class Session {
 		public int provideInputSubscript();
 
 		public int provideOutputSubscript();
+
+		public String provideSelectedMethod();
+
+		public String provideSelectedType();
+
+		public int[] provideSelectedInputIndices();
+
+		public int[] provideSelectedOutputIndices();
 	}
 
 	/**
@@ -56,6 +67,14 @@ public class Session {
 		public void addInputFunctions(Collection<InputFunction> i);
 
 		public void addOutputSets(Collection<OutputSet> o);
+
+		public void addSelectedMethod(String method);
+
+		public void addSelectedType(String type);
+
+		public void addSelectedInputIndices(int[] indices);
+
+		public void addSelectedOutputIndices(int[] indices);
 	}
 
 	/**
@@ -84,11 +103,19 @@ public class Session {
 	private int inputSubscript;
 	private int outputSubscript;
 	private boolean modified = false;
-	private final JFrame parentFrame;
+	private final Julia parentFrame;
 
 	private File sessionFile;
 
-	public Session(JFrame frame, Importer importer)
+	private int[] importedInputIndices;
+
+	private int[] importedOutputIndices;
+
+	private String importedMethod;
+
+	private String importedType;
+
+	public Session(Julia frame, Importer importer)
 			throws InvalidSessionParametersException {
 		parentFrame = frame;
 
@@ -102,6 +129,11 @@ public class Session {
 		inputSubscript = importer.provideInputSubscript();
 		outputSubscript = importer.provideOutputSubscript();
 
+		importedInputIndices = importer.provideSelectedInputIndices();
+		importedOutputIndices = importer.provideSelectedOutputIndices();
+		importedMethod = importer.provideSelectedMethod();
+		importedType = importer.provideSelectedType();
+
 		if (iterations <= 0)
 			throw new InvalidSessionParametersException(
 					"Points to Plot must be\na positive number.");
@@ -113,6 +145,28 @@ public class Session {
 					"Skips must be less than Points to Plot.");
 
 		markUnmodified();
+	}
+
+	public void initializeSelections() {
+		parentFrame.getInputPanel().setSelectedIndices(importedInputIndices);
+		parentFrame.getOutputSetList()
+				.setSelectedIndices(importedOutputIndices);
+
+		ButtonGroup group = parentFrame.getInputPanel().getMethodGroup();
+		Enumeration<AbstractButton> buttons = group.getElements();
+		while (buttons.hasMoreElements()) {
+			ButtonModel model = buttons.nextElement().getModel();
+			if (importedMethod.equals(model.getActionCommand()))
+				group.setSelected(model, true);
+		}
+
+		group = parentFrame.getInputPanel().getTypeGroup();
+		buttons = group.getElements();
+		while (buttons.hasMoreElements()) {
+			ButtonModel model = buttons.nextElement().getModel();
+			if (importedType.equals(model.getActionCommand()))
+				group.setSelected(model, true);
+		}
 	}
 
 	public int getIterations() {
@@ -224,6 +278,14 @@ public class Session {
 		exporter.addSeedValue(seed);
 		exporter.addInputFunctions(inputFunctions);
 		exporter.addOutputSets(outputSets);
+		exporter.addSelectedInputIndices(parentFrame.getInputPanel()
+				.getSelectedIndices());
+		exporter.addSelectedOutputIndices(parentFrame.getOutputSetList()
+				.getSelectedIndices());
+		exporter.addSelectedMethod(parentFrame.getInputPanel().getMethodGroup()
+				.getSelection().getActionCommand());
+		exporter.addSelectedType(parentFrame.getInputPanel().getTypeGroup()
+				.getSelection().getActionCommand());
 	}
 
 	public boolean isModified() {

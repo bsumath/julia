@@ -46,6 +46,10 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 	private int iterations;
 	private int skips;
 	private ComplexNumber seed = new ComplexNumber();
+	private int[] inputIndices = new int[] {};
+	private String method = "";
+	private int[] outputIndices = new int[] {};
+	private String type = "";
 
 	private final Map<Long, InputFunction> inputFunctions = new HashMap<Long, InputFunction>();
 	private final Map<Long, OutputSet> outputSets = new HashMap<Long, OutputSet>();
@@ -64,7 +68,7 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 		@Override
 		public void actionPerformed(ActionEvent e) {
 		}
-	};;
+	};
 
 	public SessionFileImporter(File f) {
 		// maps to keep track of temp files associated with input and output
@@ -175,6 +179,22 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 				skips = Integer.parseInt(lineParts[1]);
 			} else if (lineParts[0].equalsIgnoreCase("seed")) {
 				seed = ComplexNumber.parseComplexNumber(lineParts[1]);
+			} else if (lineParts[0].equalsIgnoreCase("selected_method")) {
+				method = lineParts[1];
+			} else if (lineParts[0].equalsIgnoreCase("selected_type")) {
+				type = lineParts[1];
+			} else if (lineParts[0].equalsIgnoreCase("selected_input_indices")) {
+				String[] parts = lineParts[1].split(" ");
+				inputIndices = new int[parts.length];
+				for (int i = 0; i < parts.length; i++) {
+					inputIndices[i] = Integer.parseInt(parts[i]);
+				}
+			} else if (lineParts[0].equalsIgnoreCase("selected_output_indices")) {
+				String[] parts = lineParts[1].split(" ");
+				outputIndices = new int[parts.length];
+				for (int i = 0; i < parts.length; i++) {
+					outputIndices[i] = Integer.parseInt(parts[i]);
+				}
 			}
 		}
 	}
@@ -501,5 +521,25 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 
 	public int provideOutputSubscript() {
 		return outputSets.size() + basicSets.size();
+	}
+
+	@Override
+	public int[] provideSelectedInputIndices() {
+		return inputIndices;
+	}
+
+	@Override
+	public String provideSelectedMethod() {
+		return method;
+	}
+
+	@Override
+	public int[] provideSelectedOutputIndices() {
+		return outputIndices;
+	}
+
+	@Override
+	public String provideSelectedType() {
+		return type;
 	}
 }

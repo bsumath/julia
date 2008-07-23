@@ -75,4 +75,19 @@ public class EmptySessionImporter implements Importer {
 		return 0;
 	}
 
+	public int[] provideSelectedInputIndices() {
+		return new int[] {};
+	}
+
+	public String provideSelectedMethod() {
+		return "";
+	}
+
+	public int[] provideSelectedOutputIndices() {
+		return new int[] {};
+	}
+
+	public String provideSelectedType() {
+		return "";
+	}
 }

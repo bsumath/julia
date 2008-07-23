@@ -268,6 +268,14 @@ public class InputPanel extends JPanel implements PropertyChangeListener {
 		}
 		return functions;
 	}
+	
+	public void setSelectedIndices(int[] indices){
+		inputList.setSelectedIndices(indices);
+	}
+	
+	public int[] getSelectedIndices(){
+		return inputList.getSelectedIndices();
+	}
 
 	public ButtonGroup getTypeGroup() {
 		return typeGroup;

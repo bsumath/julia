@@ -60,11 +60,13 @@ public class Julia extends JFrame {
 			e.printStackTrace();
 		}
 
+		inputPanel = new InputPanel(this);
+		outputPanel = new OutputPanel(this);
+		currentSession.initializeSelections();
+
 		dotSize = 1;
 		axisTrigger = true;
 		grilTrigger = false;
-		inputPanel = new InputPanel(this);
-		outputPanel = new OutputPanel(this);
 	}
 
 	/**
@@ -107,6 +109,7 @@ public class Julia extends JFrame {
 	public void setCurrentSession(Session s) {
 		currentSession = s;
 		support.firePropertyChange("session", null, currentSession);
+		currentSession.initializeSelections();
 	}
 
 	public InputPanel getInputPanel() {

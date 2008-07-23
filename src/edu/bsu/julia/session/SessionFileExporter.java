@@ -30,6 +30,10 @@ public class SessionFileExporter extends SwingWorker<Boolean, Void> implements
 	private ComplexNumber seed;
 	private int skips;
 	private final File file;
+	private int[] inputIndices;
+	private String method;
+	private String type;
+	private int[] outputIndices;
 
 	public SessionFileExporter(File f) {
 		file = f;
@@ -53,6 +57,22 @@ public class SessionFileExporter extends SwingWorker<Boolean, Void> implements
 
 	public void addSkips(Integer s) {
 		skips = s;
+	}
+
+	public void addSelectedInputIndices(int[] indices) {
+		inputIndices = indices;
+	}
+
+	public void addSelectedMethod(String m) {
+		method = m;
+	}
+
+	public void addSelectedOutputIndices(int[] indices) {
+		outputIndices = indices;
+	}
+
+	public void addSelectedType(String t) {
+		type = t;
 	}
 
 	protected Boolean doInBackground() throws Exception {
@@ -104,6 +124,21 @@ public class SessionFileExporter extends SwingWorker<Boolean, Void> implements
 		out.println("min_points: " + iterations);
 		out.println("skips: " + skips);
 		out.println("seed: " + seed.exportString());
+		out.println("selected_method: " + method);
+		out.println("selected_type: " + type);
+
+		String inStr = "";
+		for (int i : inputIndices)
+			inStr += i + " ";
+		inStr = inStr.trim();
+		out.println("selected_input_indices: " + inStr);
+
+		String outStr = "";
+		for (int i : outputIndices)
+			outStr += i + " ";
+		outStr = outStr.trim();
+		out.println("selected_output_indices: " + outStr);
+
 		out.println();
 
 		out.close();
