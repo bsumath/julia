@@ -24,6 +24,7 @@ import edu.bsu.julia.gui.LinearDialog;
 import edu.bsu.julia.gui.MobiusDialog;
 import edu.bsu.julia.gui.QuadraticDialog;
 import edu.bsu.julia.gui.RealAffineLinearDialog;
+import edu.bsu.julia.gui.MonomialDialog;
 
 public class AddFunctionAction extends AbstractAction {
 
@@ -52,15 +53,16 @@ public class AddFunctionAction extends AbstractAction {
 
 		final JButton nextButton = new JButton("Next >>>");
 
-		String[] choices = new String[5];
+		String[] choices = new String[7];						/**Change the number here.*/
 		choices[0] = "<html><h2>az + b</h2></html>";
 		choices[1] = "<html><h2>(az + b) / (cz + d)</h2></html>";
 		choices[2] = "<html><h2>az<sup>2</sup> + bz + c</h2></html>";
 		choices[3] = "<html><h2>az<sup>3</sup> + b</h2></html>";
 		choices[4] = "<html><h2>[a, b ; c, d]z + [e ; f]</h2></html>";
+		choices[5] = "<html><h2>a/z<sup>n</sup></h2></html>";
 		final JList list = new JList(choices);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		list.setVisibleRowCount(6);
+		list.setVisibleRowCount(6);								/**Change the number here.*/
 		list.setSelectedIndex(0);
 		list.addMouseListener(new MouseAdapter() {
 			@Override
@@ -107,6 +109,10 @@ public class AddFunctionAction extends AbstractAction {
 				case 4:
 					new RealAffineLinearDialog(parentFrame, GUIUtil.NEW_DIALOG,
 							null);
+					break;
+				case 5:
+					new MonomialDialog(parentFrame, GUIUtil.NEW_DIALOG, null);
+					break;
 				}
 			}
 		});
