@@ -25,13 +25,6 @@ public final class ComplexNumber {
 	 * When multiplied by i, the imaginary part of a complex number.
 	 */
 	private final double y;
-	/**
-	 * The constant alpha is used in determining the three cube roots of a
-	 * number. The primary cube root does not use alpha, but the secondary is
-	 * alpha times the primary and the third is alpha squared times the primary.
-	 */
-	private static final ComplexNumber ALPHA = new ComplexNumber(Math
-			.cos(2 * Math.PI / 3), Math.sin(2 * Math.PI / 3));
 
 	/**
 	 * The default constructor creates a new complex number of the form: 0 + 0 *
@@ -162,18 +155,43 @@ public final class ComplexNumber {
 		double yResult = Math.pow(x * x + y * y, (1.0 / 6.0))
 				* Math.sin(arg() / 3);
 		ComplexNumber baseResult = new ComplexNumber(xResult, yResult);
+		ComplexNumber alpha = alpha(3);
 		result[0] = baseResult;
-		result[1] = ALPHA.multiply(baseResult);
-		result[2] = (ALPHA.multiply(ALPHA)).multiply(baseResult);
+		result[1] = alpha.multiply(baseResult);
+		result[2] = (alpha.multiply(alpha)).multiply(baseResult);
 		return result;
 	}
-
+	
+	/**
+	 * 
+	 * @param a
+	 * @return
+	 */
+	
+	public ComplexNumber[] root(int n) {												
+		ComplexNumber[] result = new ComplexNumber[n];							
+		double xResult = Math.pow(x * x + y * y, (1.0 / (2*n) ))
+				* Math.cos(arg() / n);
+		double yResult = Math.pow(x * x + y * y, (1.0 / (2*n)))
+				* Math.sin(arg() / n);
+		ComplexNumber baseResult = new ComplexNumber(xResult, yResult);
+		ComplexNumber Beta = alpha(n);
+		for(int i = 0; i < n; i++){
+			result[i] = (Beta.power(i)).multiply(baseResult);					/**The issue here is that i needs to be complex to use power.*/
+		}
+		return result;															/**Not sure why there is an error.*/
+	}
+	
+	private ComplexNumber alpha(int nx){
+		return new ComplexNumber(Math.cos(2 * Math.PI / nx), Math.sin(2 * Math.PI / nx));
+	}
+	
 	public ComplexNumber polarConvertion(ComplexNumber a) {
 		double r = a.getX();
 		double theta = a.getY();
 		double x = r * (Math.cos(theta));
 		double y = r * (Math.sin(theta));
-		x = (int) (x * 100000);
+		x = (int) (x * 100000);										/**ASK ABOUT!*/
 		x = x / 100000;
 		y = (int) (y * 100000);
 		y = y / 100000;
@@ -190,7 +208,7 @@ public final class ComplexNumber {
 	 * @return A double representing the mathematical argument of the complex
 	 *         number.
 	 */
-	private double arg() {
+	private double arg() {											/**ASK ABOUT!*/
 		if (x == 0 && y == 0)
 			return 0;
 
@@ -202,6 +220,19 @@ public final class ComplexNumber {
 			return Math.PI - base;
 		else
 			return -Math.PI - base;
+	}
+
+	/**
+	 * Trying to fix for TestInputFunction.
+	 */
+	
+	public ComplexNumber power(int n){
+		double r, j, k;
+		r = Math.sqrt(x*x + y*y);
+		r = Math.pow(r, n);
+		j = r*Math.cos(n*arg() );
+		k = r*Math.sin(n*arg() );
+		return new ComplexNumber(j,k);
 	}
 
 	/**
