@@ -14,7 +14,8 @@ import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
 
-import edu.bsu.julia.ComplexNumber;
+import org.apache.commons.math.complex.Complex;
+
 import edu.bsu.julia.Julia;
 import edu.bsu.julia.input.InputFunction;
 import edu.bsu.julia.output.OutputSet;
@@ -32,7 +33,7 @@ public class Session {
 
 		public Integer provideSkips();
 
-		public ComplexNumber provideSeedValue();
+		public Complex provideSeedValue();
 
 		public Collection<InputFunction> provideInputFunctions();
 
@@ -62,7 +63,7 @@ public class Session {
 
 		public void addSkips(Integer s);
 
-		public void addSeedValue(ComplexNumber s);
+		public void addSeedValue(Complex s);
 
 		public void addInputFunctions(Collection<InputFunction> i);
 
@@ -96,7 +97,7 @@ public class Session {
 	private PropertyChangeSupport support = new PropertyChangeSupport(this);
 	private Integer iterations;
 	private Integer skips;
-	private ComplexNumber seed;
+	private Complex seed;
 	private List<InputFunction> inputFunctions;
 	private List<OutputSet> outputSets;
 	private Queue<OutputSet> outputQueue;
@@ -195,11 +196,11 @@ public class Session {
 		support.firePropertyChange("skips", null, skips);
 	}
 
-	public ComplexNumber getSeedValue() {
+	public Complex getSeedValue() {
 		return seed;
 	}
 
-	public void setSeedValue(ComplexNumber seedValue) {
+	public void setSeedValue(Complex seedValue) {
 		markModified();
 		seed = seedValue;
 		support.firePropertyChange("seed", null, seed);

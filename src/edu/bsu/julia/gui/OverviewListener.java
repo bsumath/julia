@@ -16,7 +16,7 @@ import javax.media.opengl.glu.GLU;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
-import edu.bsu.julia.ComplexNumber;
+import org.apache.commons.math.complex.Complex;
 import edu.bsu.julia.Julia;
 import edu.bsu.julia.output.OutputSet;
 
@@ -100,10 +100,10 @@ public class OverviewListener implements GLEventListener,
 				float[] cArray = new float[3];
 				set.getColor().getColorComponents(cArray);
 				gl.glColor3f(cArray[0], cArray[1], cArray[2]);
-				ComplexNumber[] points = set.getPoints();
+				Complex[] points = set.getPoints();
 				gl.glBegin(GL.GL_POINTS);
 				for (int j = 0; j < points.length; j++)
-					gl.glVertex2d(points[j].getX(), points[j].getY());
+					gl.glVertex2d(points[j].getReal(), points[j].getImaginary());
 				gl.glEnd();
 			}
 		}

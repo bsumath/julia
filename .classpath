@@ -14,5 +14,6 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="JuliaBeta/lib"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/commons-math-2.0-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

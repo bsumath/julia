@@ -6,7 +6,8 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
-import edu.bsu.julia.ComplexNumber;
+import org.apache.commons.math.complex.Complex;
+
 import edu.bsu.julia.gui.JuliaError;
 import edu.bsu.julia.input.InputFunction;
 
@@ -19,7 +20,7 @@ import edu.bsu.julia.input.InputFunction;
 public class FullBackwardsOutputSetGenerator extends OutputSetGenerator {
 	private final JFrame parentFrame;
 	private final int iterations;
-	private final ComplexNumber seed;
+	private final Complex seed;
 	private final InputFunction[] inputFunctions;
 
 	/**
@@ -30,12 +31,12 @@ public class FullBackwardsOutputSetGenerator extends OutputSetGenerator {
 	 * @param iter
 	 *            the number of iterations as an int
 	 * @param sd
-	 *            the {@link ComplexNumber} seed
+	 *            the {@link Complex} seed
 	 * @param inFunc
 	 *            an array of {@link InputFunction}
 	 */
 	public FullBackwardsOutputSetGenerator(JFrame parent, int iter,
-			ComplexNumber sd, InputFunction[] inFunc) {
+			Complex sd, InputFunction[] inFunc) {
 		parentFrame = parent;
 		iterations = iter;
 		seed = sd;
@@ -45,7 +46,7 @@ public class FullBackwardsOutputSetGenerator extends OutputSetGenerator {
 	/**
 	 * @see OutputSetGenerator#doInBackground()
 	 */
-	public ComplexNumber[] doInBackground() {
+	public Complex[] doInBackground() {
 		try {
 			// check that there are input functions
 			if (inputFunctions.length == 0) {
@@ -58,16 +59,16 @@ public class FullBackwardsOutputSetGenerator extends OutputSetGenerator {
 			int iterationCounter = 0;
 			boolean isDone = false;
 
-			List<ComplexNumber> currentIteration = new ArrayList<ComplexNumber>();
+			List<Complex> currentIteration = new ArrayList<Complex>();
 			currentIteration.add(seed);
-			List<ComplexNumber> tempList = new ArrayList<ComplexNumber>();
+			List<Complex> tempList = new ArrayList<Complex>();
 			do {
 				// iterate each point by each of the input functions
 				tempList.clear();
-				for (ComplexNumber point : currentIteration) {
+				for (Complex point : currentIteration) {
 					for (InputFunction function : inputFunctions) {
 						// evaluate backwards with the current function
-						ComplexNumber[] temp = function
+						Complex[] temp = function
 								.evaluateBackwardsFull(point);
 						if (temp == null) {
 							JuliaError.ZERO_DETERMINANT.showDialog(parentFrame);
@@ -80,7 +81,7 @@ public class FullBackwardsOutputSetGenerator extends OutputSetGenerator {
 				}
 
 				// the current iteration is a copy of the temp list of points
-				currentIteration = new ArrayList<ComplexNumber>(tempList);
+				currentIteration = new ArrayList<Complex>(tempList);
 				iterationCounter += 1;
 
 				// update the progress and isDone condition
@@ -95,7 +96,7 @@ public class FullBackwardsOutputSetGenerator extends OutputSetGenerator {
 			} while (!isDone);
 
 			// iteration complete, the output set is the most recent iteration
-			return currentIteration.toArray(new ComplexNumber[] {});
+			return currentIteration.toArray(new Complex[] {});
 		} catch (OutOfMemoryError e) {
 			JuliaError.OUT_OF_MEMORY.showDialog(parentFrame);
 			return null;

@@ -6,7 +6,8 @@ import java.awt.event.ActionListener;
 import javax.swing.AbstractAction;
 import javax.swing.ButtonGroup;
 
-import edu.bsu.julia.ComplexNumber;
+import org.apache.commons.math.complex.Complex;
+
 import edu.bsu.julia.Julia;
 import edu.bsu.julia.generators.OutputSetGenerator;
 import edu.bsu.julia.generators.RecursiveOutputSetGenerator;
@@ -69,7 +70,7 @@ public class InverseAction extends AbstractAction {
 			}
 
 			@Override
-			public ComplexNumber seed() {
+			public Complex seed() {
 				return null;
 			}
 

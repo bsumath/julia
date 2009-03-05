@@ -27,7 +27,9 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingWorker;
 import javax.swing.SwingWorker.StateValue;
 
-import edu.bsu.julia.ComplexNumber;
+import org.apache.commons.math.complex.Complex;
+
+import edu.bsu.julia.ComplexNumberUtils;
 import edu.bsu.julia.Julia;
 import edu.bsu.julia.generators.OutputSetGenerator;
 import edu.bsu.julia.input.InputFunction;
@@ -84,7 +86,7 @@ public class OutputSet {
 
 		abstract public Integer skips();
 
-		abstract public ComplexNumber seed();
+		abstract public Complex seed();
 
 		public static Info sessionToInfo(final Session s) {
 			return new Info() {
@@ -94,7 +96,7 @@ public class OutputSet {
 				}
 
 				@Override
-				public ComplexNumber seed() {
+				public Complex seed() {
 					return s.getSeedValue();
 				}
 
@@ -109,10 +111,10 @@ public class OutputSet {
 	private int sub = 0;
 	protected final Integer iterations;
 	protected final Integer skips;
-	protected final ComplexNumber seed;
+	protected final Complex seed;
 	protected final Type functionType;
 	protected final InputFunction[] inputFunctions;
-	private ComplexNumber[] points;
+	private Complex[] points;
 	private OutputSetGenerator generator;
 	protected File pointsFile;
 
@@ -124,7 +126,7 @@ public class OutputSet {
 	private PropertyChangeSupport support = new PropertyChangeSupport(this);
 	private final JProgressBar bar = new JProgressBar(0, 100);
 	private SwingWorker<File, Void> tempFileWriter;
-	private SwingWorker<ComplexNumber[], Void> tempFileReader;
+	private SwingWorker<Complex[], Void> tempFileReader;
 	protected final long creationTime;
 
 	public OutputSet(Info info, InputFunction[] i, Type type,
@@ -210,10 +212,10 @@ public class OutputSet {
 	}
 
 	/**
-	 * @return an array of {@link ComplexNumber}. will be empty if points ==
+	 * @return an array of {@link Complex}. will be empty if points ==
 	 *         null
 	 */
-	public ComplexNumber[] getPoints() {
+	public Complex[] getPoints() {
 		return getPoints(false);
 	}
 
@@ -224,10 +226,10 @@ public class OutputSet {
 	 * @param shouldWait
 	 *            boolean for whether or not to wait for points to be generated
 	 *            or read from file
-	 * @return an array of {@link ComplexNumber}. will be empty if points ==
+	 * @return an array of {@link Complex}. will be empty if points ==
 	 *         null
 	 */
-	public ComplexNumber[] getPoints(boolean shouldWait) {
+	public Complex[] getPoints(boolean shouldWait) {
 		// if we have the points, return them
 		if (points != null)
 			return points;
@@ -237,7 +239,7 @@ public class OutputSet {
 			// if the generator isn't done, wait on it to finish
 			if (!generator.isDone()) {
 				try {
-					ComplexNumber[] results = generator.get();
+					Complex[] results = generator.get();
 					if (results != null)
 						return results;
 				} catch (Exception e) {
@@ -247,7 +249,7 @@ public class OutputSet {
 				// file and wait for them to finish reading
 				readPointsTempFile();
 				try {
-					ComplexNumber[] results = tempFileReader.get();
+					Complex[] results = tempFileReader.get();
 					if (results != null)
 						return results;
 				} catch (Exception e) {
@@ -261,7 +263,7 @@ public class OutputSet {
 
 		// if it gets this far either points null and we might be waiting for it
 		// to be read. for now, return an empty array
-		return new ComplexNumber[] {};
+		return new Complex[] {};
 	}
 
 	public void addListener(PropertyChangeListener list) {
@@ -381,8 +383,8 @@ public class OutputSet {
 					PrintStream out = new PrintStream(
 							new FileOutputStream(file));
 
-					for (ComplexNumber p : points)
-						out.println(p.exportString());
+					for (Complex p : points)
+						out.println(ComplexNumberUtils.exportString(p));
 
 					out.close();
 					return file;
@@ -413,10 +415,10 @@ public class OutputSet {
 		if (tempFileReader != null || points != null || pointsFile == null)
 			return;
 
-		tempFileReader = new SwingWorker<ComplexNumber[], Void>() {
+		tempFileReader = new SwingWorker<Complex[], Void>() {
 			@Override
-			protected ComplexNumber[] doInBackground() throws Exception {
-				List<ComplexNumber> tempPoints = new ArrayList<ComplexNumber>();
+			protected Complex[] doInBackground() throws Exception {
+				List<Complex> tempPoints = new ArrayList<Complex>();
 
 				try {
 					// open the temp file
@@ -425,12 +427,12 @@ public class OutputSet {
 					// try to read all the points
 					while (in.hasNextLine()) {
 						String line = in.nextLine();
-						tempPoints.add(ComplexNumber.parseComplexNumber(line));
+						tempPoints.add(ComplexNumberUtils.parseComplexNumber(line));
 					}
 					in.close();
 
 					// create an array
-					return tempPoints.toArray(new ComplexNumber[] {});
+					return tempPoints.toArray(new Complex[] {});
 				} catch (IOException e) {
 					return null;
 				}
@@ -525,7 +527,7 @@ public class OutputSet {
 		if (skips != null)
 			result.add("skips: " + skips);
 		if (seed != null)
-			result.add("seed: " + seed.exportString());
+			result.add("seed: " + ComplexNumberUtils.exportString(seed));
 		result.add("\r\n \n \n\r");
 
 		for (InputFunction function : inputFunctions) {

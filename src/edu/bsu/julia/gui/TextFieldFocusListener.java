@@ -6,7 +6,8 @@ import java.awt.event.FocusListener;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-import edu.bsu.julia.ComplexNumber;
+import org.apache.commons.math.complex.Complex;
+
 import edu.bsu.julia.Julia;
 import edu.bsu.julia.session.Session;
 
@@ -33,7 +34,7 @@ public class TextFieldFocusListener implements FocusListener {
 		f.setSelectionEnd(0);
 		int oldIter = s.getIterations();
 		int oldSkip = s.getSkips();
-		ComplexNumber oldSeed = s.getSeedValue();
+		Complex oldSeed = s.getSeedValue();
 		JTextField textField = (JTextField) e.getComponent();
 		if (textField.getName() == "iterationsField") {
 			long iterLong = 0;
@@ -102,8 +103,8 @@ public class TextFieldFocusListener implements FocusListener {
 			}
 
 			try {
-				double seed2 = oldSeed.getY();
-				ComplexNumber seed = new ComplexNumber(seed1, seed2);
+				double seed2 = oldSeed.getImaginary();
+				Complex seed = new Complex(seed1, seed2);
 				s.setSeedValue(seed);
 			} catch (IllegalArgumentException b) {
 				JOptionPane.showMessageDialog(parentFrame, b.getMessage(),
@@ -126,8 +127,8 @@ public class TextFieldFocusListener implements FocusListener {
 			}
 
 			try {
-				double seed1 = oldSeed.getX();
-				ComplexNumber seed = new ComplexNumber(seed1, seed2);
+				double seed1 = oldSeed.getReal();
+				Complex seed = new Complex(seed1, seed2);
 				s.setSeedValue(seed);
 			} catch (IllegalArgumentException b) {
 				JOptionPane.showMessageDialog(parentFrame, b.getMessage(),

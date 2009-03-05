@@ -2,7 +2,9 @@ package edu.bsu.julia.input;
 
 import java.util.Vector;
 
-import edu.bsu.julia.ComplexNumber;
+import org.apache.commons.math.complex.Complex;
+
+import edu.bsu.julia.ComplexNumberUtils;
 
 /**
  * 
@@ -15,6 +17,7 @@ import edu.bsu.julia.ComplexNumber;
  * 
  */
 public class CubicInputFunction extends InputFunction {
+
 	/**
 	 * Calls the superclass constructor to set up the m value and coefficient
 	 * array and then fills that array with the coefficient parameters, a and b.
@@ -26,24 +29,24 @@ public class CubicInputFunction extends InputFunction {
 	 *             if a is zero.
 	 * @see InputFunction#InputFunction(int, int)
 	 */
-	public CubicInputFunction(int mValue, ComplexNumber a, ComplexNumber b)
+	public CubicInputFunction(int mValue, Complex a, Complex b)
 			throws IllegalArgumentException {
 		super(2, mValue);
-		if (a.isZero())
+		if (a.equals(Complex.ZERO))
 			throw new IllegalArgumentException("a zero");
 		coefficientArray[0] = a;
 		coefficientArray[1] = b;
 	}
 
-	public ComplexNumber evaluateBackwardsRandom(ComplexNumber seed) {
-		ComplexNumber a = coefficientArray[0];
-		ComplexNumber b = coefficientArray[1];
-		ComplexNumber w = seed;
+	public Complex evaluateBackwardsRandom(Complex seed) {
+		Complex a = coefficientArray[0];
+		Complex b = coefficientArray[1];
+		Complex w = seed;
 		for (int i = 0; i < getM(); i++) {
 			double randomNumber = Math.random();
 			// potential ArithmeticExceptions should be handled at thread level
 			w = (w.subtract(b)).divide(a);
-			ComplexNumber[] cbrt = w.cubeRoot();
+			Complex[] cbrt = w.nthRoot(3).toArray(new Complex[] {});
 			if (randomNumber <= (1.0 / 3.0))
 				w = cbrt[0];
 			else {
@@ -56,13 +59,13 @@ public class CubicInputFunction extends InputFunction {
 		return w;
 	}
 
-	public ComplexNumber evaluateForwards(ComplexNumber seed) {
-		ComplexNumber a = coefficientArray[0];
-		ComplexNumber b = coefficientArray[1];
-		ComplexNumber result = seed;
+	public Complex evaluateForwards(Complex seed) {
+		Complex a = coefficientArray[0];
+		Complex b = coefficientArray[1];
+		Complex result = seed;
 		for (int i = 0; i < getM(); i++) {
 			// the variable z represents z^3 in the equation
-			ComplexNumber z = (result.multiply(result)).multiply(result);
+			Complex z = (result.multiply(result)).multiply(result);
 			result = (a.multiply(z)).add(b);
 		}
 		return result;
@@ -73,49 +76,50 @@ public class CubicInputFunction extends InputFunction {
 	 * method description for a more general account.
 	 */
 
-	public ComplexNumber evaluateFunction(ComplexNumber seed) {
-		ComplexNumber a = coefficientArray[0];
-		ComplexNumber b = coefficientArray[1];
-		ComplexNumber result = seed;
+	public Complex evaluateFunction(Complex seed) {
+		Complex a = coefficientArray[0];
+		Complex b = coefficientArray[1];
+		Complex result = seed;
 		// the variable z represents z^3 in the equation
-		ComplexNumber z = (result.multiply(result)).multiply(result);
+		Complex z = (result.multiply(result)).multiply(result);
 		result = (a.multiply(z)).add(b);
 
 		return result;
 	}
 
-	public ComplexNumber[] evaluateBackwardsFull(ComplexNumber seed) {
-		ComplexNumber a = coefficientArray[0];
-		ComplexNumber b = coefficientArray[1];
-		ComplexNumber w = seed;
-		Vector<ComplexNumber> results = new Vector<ComplexNumber>();
+	public Complex[] evaluateBackwardsFull(Complex seed) {
+		Complex a = coefficientArray[0];
+		Complex b = coefficientArray[1];
+		Complex w = seed;
+		Vector<Complex> results = new Vector<Complex>();
 		results.add(w);
-		ComplexNumber[] cbrt = new ComplexNumber[3];
+		Complex[] cbrt = new Complex[3];
 		for (int i = 0; i < getM(); i++) {
 			for (int j = 0; j < Math.pow(3, i); j++) {
-				w = (ComplexNumber) results.firstElement();
+				w = (Complex) results.firstElement();
 				results.remove(0);
 				// potential ArithmeticExceptions should be handled at thread
 				// level
 				w = (w.subtract(b)).divide(a);
-				cbrt = w.cubeRoot();
+				cbrt = w.nthRoot(3).toArray(new Complex[] {});
 				results.add(cbrt[0]);
 				results.add(cbrt[1]);
 				results.add(cbrt[2]);
 			}
 		}
 		results.trimToSize();
-		ComplexNumber[] finalResults = new ComplexNumber[results.size()];
+		Complex[] finalResults = new Complex[results.size()];
 		results.toArray(finalResults);
 		return finalResults;
 	}
 
 	public String toString() {
-		ComplexNumber a = coefficientArray[0];
-		ComplexNumber b = coefficientArray[1];
+		Complex a = coefficientArray[0];
+		Complex b = coefficientArray[1];
 
-		return new String("f" + getSubscript() + "(z) = " + a + "z^3 + " + b
-				+ ", m = " + getM());
+		return new String("f" + getSubscript() + "(z) = "
+				+ ComplexNumberUtils.complexToString(a) + "z^3 + "
+				+ ComplexNumberUtils.complexToString(b) + ", m = " + getM());
 	}
 
 }

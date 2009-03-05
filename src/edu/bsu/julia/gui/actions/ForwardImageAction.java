@@ -5,7 +5,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.AbstractAction;
 
-import edu.bsu.julia.ComplexNumber;
+import org.apache.commons.math.complex.Complex;
+
 import edu.bsu.julia.Julia;
 import edu.bsu.julia.generators.FullForwardsOutputSetGenerator;
 import edu.bsu.julia.generators.OutputSetGenerator;
@@ -49,10 +50,10 @@ public class ForwardImageAction extends AbstractAction {
 		for (OutputSet out : outFunc) {
 			size += out.getNumOfPoints();
 		}
-		ComplexNumber[] points = new ComplexNumber[size];
+		Complex[] points = new Complex[size];
 		int index = 0;
 		for (OutputSet out : outFunc) {
-			for (ComplexNumber p : out.getPoints())
+			for (Complex p : out.getPoints())
 				points[index++] = p;
 		}
 
@@ -76,7 +77,7 @@ public class ForwardImageAction extends AbstractAction {
 			}
 
 			@Override
-			public ComplexNumber seed() {
+			public Complex seed() {
 				return null;
 			}
 

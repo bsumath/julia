@@ -13,12 +13,14 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import org.apache.commons.math.complex.Complex;
+
 public class ComplexCalculator extends JFrame {
 	// member
 	JTextField firstfield, secondfield;
 	JLabel labelI, labelS, labelX, labelY, labelZ, labelA;
 	String first, second, third, forth;
-	ComplexNumber seed1, seed2, seedMem;
+	Complex seed1, seed2, seedMem;
 	String Operator;
 	boolean ClearAll;
 	int tab = 0;
@@ -104,12 +106,12 @@ public class ComplexCalculator extends JFrame {
 		add("Center", CalculatorFrame);
 		setBackground(Color.darkGray);
 		// initialize the textfield
-		seed1 = new ComplexNumber(0.0d, 0.0d);
-		seed2 = new ComplexNumber(0.0d, 0.0d);
-		seedMem = new ComplexNumber(0.0d, 0.0d);
+		seed1 = new Complex(0.0d, 0.0d);
+		seed2 = new Complex(0.0d, 0.0d);
+		seedMem = new Complex(0.0d, 0.0d);
 		Operator = "";
-		firstfield.setText("" + seed1.getX());
-		secondfield.setText("" + seed1.getY());
+		firstfield.setText("" + seed1.getReal());
+		secondfield.setText("" + seed1.getImaginary());
 		ClearAll = true;
 		setSize(400, 420);
 		setVisible(true);
@@ -120,12 +122,12 @@ public class ComplexCalculator extends JFrame {
 		try {
 			// clear all
 			if ("C".equals(arg)) {
-				seed1 = new ComplexNumber(0.0d, 0.0d);
-				seed2 = new ComplexNumber(0.0d, 0.0d);
-				seedMem = new ComplexNumber(0.0d, 0.0d);
+				seed1 = new Complex(0.0d, 0.0d);
+				seed2 = new Complex(0.0d, 0.0d);
+				seedMem = new Complex(0.0d, 0.0d);
 				Operator = "";
-				firstfield.setText("" + seed1.getX());
-				secondfield.setText("" + seed1.getY());
+				firstfield.setText("" + seed1.getReal());
+				secondfield.setText("" + seed1.getImaginary());
 				ClearAll = true;
 				tab = 0;
 			}
@@ -167,13 +169,13 @@ public class ComplexCalculator extends JFrame {
 					| ("z^2".equals(arg)) | ("z^3".equals(arg))) {
 				first = firstfield.getText();
 				second = secondfield.getText();
-				seed2 = new ComplexNumber(
+				seed2 = new Complex(
 						(Double.valueOf(first)).doubleValue(), (Double
 								.valueOf(second)).doubleValue());
 				seed1 = Calculation(Operator, seed1, seed2);
-				ComplexNumber dTemp = seed1;
-				third = "" + dTemp.getX();
-				forth = "" + dTemp.getY();
+				Complex dTemp = seed1;
+				third = "" + dTemp.getReal();
+				forth = "" + dTemp.getImaginary();
 				firstfield.setText(third);
 				secondfield.setText(forth);
 				Operator = (String) arg;
@@ -181,9 +183,9 @@ public class ComplexCalculator extends JFrame {
 			}
 			// memory read operation
 			else if ("MR".equals(arg)) {
-				ComplexNumber dTemp = seedMem;
-				third = "" + dTemp.getX();
-				forth = "" + dTemp.getY();
+				Complex dTemp = seedMem;
+				third = "" + dTemp.getReal();
+				forth = "" + dTemp.getImaginary();
 				firstfield.setText(third);
 				secondfield.setText(forth);
 				Operator = "";
@@ -193,13 +195,13 @@ public class ComplexCalculator extends JFrame {
 			else if ("M+".equals(arg)) {
 				first = firstfield.getText();
 				second = secondfield.getText();
-				seed2 = new ComplexNumber(
+				seed2 = new Complex(
 						(Double.valueOf(first)).doubleValue(), (Double
 								.valueOf(second)).doubleValue());
 				seed1 = Calculation(Operator, seed1, seed2);
-				ComplexNumber dTemp = seed1;
-				third = "" + dTemp.getX();
-				forth = "" + dTemp.getY();
+				Complex dTemp = seed1;
+				third = "" + dTemp.getReal();
+				forth = "" + dTemp.getImaginary();
 				firstfield.setText(third);
 				secondfield.setText(forth);
 				seedMem = seedMem.add(seed1);
@@ -210,13 +212,13 @@ public class ComplexCalculator extends JFrame {
 			else if ("M-".equals(arg)) {
 				first = firstfield.getText();
 				second = secondfield.getText();
-				seed2 = new ComplexNumber(
+				seed2 = new Complex(
 						(Double.valueOf(first)).doubleValue(), (Double
 								.valueOf(second)).doubleValue());
 				seed1 = Calculation(Operator, seed1, seed2);
-				ComplexNumber dTemp = seed1;
-				third = "" + dTemp.getX();
-				forth = "" + dTemp.getY();
+				Complex dTemp = seed1;
+				third = "" + dTemp.getReal();
+				forth = "" + dTemp.getImaginary();
 				firstfield.setText(third);
 				secondfield.setText(forth);
 				seedMem = seedMem.subtract(seed1);
@@ -232,29 +234,25 @@ public class ComplexCalculator extends JFrame {
 	}
 
 	// Calculation
-	private ComplexNumber Calculation(String sOperator, ComplexNumber dReg1,
-			ComplexNumber dReg2) {
-		ComplexNumber[] result = new ComplexNumber[3];
+	private Complex Calculation(String sOperator, Complex dReg1,
+			Complex dReg2) {
 		if ("+".equals(sOperator))
-			dReg1 = dReg1.add(dReg2);
+			return dReg1.add(dReg2);
 		else if ("-".equals(sOperator))
-			dReg1 = dReg1.subtract(dReg2);
+			return dReg1.subtract(dReg2);
 		else if ("*".equals(sOperator))
-			dReg1 = dReg1.multiply(dReg2);
+			return dReg1.multiply(dReg2);
 		else if ("/".equals(sOperator))
-			dReg1 = dReg1.divide(dReg2);
+			return dReg1.divide(dReg2);
 		else if ("Sqrt".equals(sOperator)) {
-			result = dReg1.squareRoot();
-			dReg1 = result[0];
+			return dReg1.sqrt();			
 		} else if ("Curt".equals(sOperator)) {
-			result = dReg1.cubeRoot();
-			dReg1 = result[0];
+			return dReg1.nthRoot(3).get(0);
 		} else if ("z^2".equals(sOperator))
-			dReg1 = dReg1.multiply(dReg1);
+			return dReg1.multiply(dReg1);
 		else if ("z^3".equals(sOperator))
-			dReg1 = dReg1.multiply(dReg1.multiply(dReg1));
+			return dReg1.pow(new Complex(3,0));
 		else
-			dReg1 = dReg2;
-		return dReg1;
+			return dReg2;
 	}
 }

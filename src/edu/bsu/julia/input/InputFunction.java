@@ -8,7 +8,9 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.bsu.julia.ComplexNumber;
+import org.apache.commons.math.complex.Complex;
+
+import edu.bsu.julia.ComplexNumberUtils;
 import edu.bsu.julia.Julia;
 
 /**
@@ -35,6 +37,7 @@ import edu.bsu.julia.Julia;
  * 
  */
 public abstract class InputFunction {
+
 	/**
 	 * m represents the number of times the function is composed with itself.
 	 */
@@ -45,7 +48,7 @@ public abstract class InputFunction {
 	 * beginning of the function, left to right. It is protected so that
 	 * subclasses can access it without a function call.
 	 */
-	protected ComplexNumber[] coefficientArray;
+	protected Complex[] coefficientArray;
 
 	/**
 	 * The subscript number identifying this function within the session.
@@ -70,7 +73,7 @@ public abstract class InputFunction {
 		if (mValue < 0)
 			throw new IllegalArgumentException("m neg");
 		m = mValue;
-		coefficientArray = new ComplexNumber[coefficients];
+		coefficientArray = new Complex[coefficients];
 
 		creationTime = Julia.nextTimestamp();
 	}
@@ -86,7 +89,7 @@ public abstract class InputFunction {
 	 * @return An array listing the coefficients of the function in order from
 	 *         left to right as the function is written.
 	 */
-	public ComplexNumber[] getCoefficients() {
+	public Complex[] getCoefficients() {
 		return coefficientArray;
 	}
 
@@ -121,7 +124,7 @@ public abstract class InputFunction {
 	 * @throws ArithmeticException
 	 *             if division by zero occurs.
 	 */
-	public abstract ComplexNumber evaluateBackwardsRandom(ComplexNumber seed);
+	public abstract Complex evaluateBackwardsRandom(Complex seed);
 
 	/**
 	 * Given an starting value, evaluates the function composed with itself m
@@ -134,7 +137,7 @@ public abstract class InputFunction {
 	 * @throws ArithmeticException
 	 *             if division by zero occurs.
 	 */
-	public abstract ComplexNumber evaluateForwards(ComplexNumber seed);
+	public abstract Complex evaluateForwards(Complex seed);
 
 	/**
 	 * Given a starting value, evaluates the inverse of the function composed
@@ -148,9 +151,9 @@ public abstract class InputFunction {
 	 * @throws ArithmeticException
 	 *             if division by zero occurs.
 	 */
-	public abstract ComplexNumber[] evaluateBackwardsFull(ComplexNumber seed);
+	public abstract Complex[] evaluateBackwardsFull(Complex seed);
 
-	public abstract ComplexNumber evaluateFunction(ComplexNumber seed);
+	public abstract Complex evaluateFunction(Complex seed);
 
 	/**
 	 * @return A string representation of the function as it should appear in
@@ -227,8 +230,9 @@ public abstract class InputFunction {
 		List<String> result = new ArrayList<String>();
 		result.add("class: " + this.getClass().getName());
 		result.add("m: " + m);
-		for (ComplexNumber coefficient : coefficientArray) {
-			result.add("coefficient: " + coefficient.exportString());
+		for (Complex coefficient : coefficientArray) {
+			result.add("coefficient: "
+					+ ComplexNumberUtils.exportString(coefficient));
 		}
 		return result;
 	}

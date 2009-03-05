@@ -8,7 +8,8 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.ButtonGroup;
 
-import edu.bsu.julia.ComplexNumber;
+import org.apache.commons.math.complex.Complex;
+
 import edu.bsu.julia.Julia;
 import edu.bsu.julia.generators.FullBackwardsOutputSetGenerator;
 import edu.bsu.julia.generators.FullForwardsOutputSetGenerator;
@@ -179,7 +180,7 @@ public class CreateCompositeIndAction extends AbstractAction {
 				}
 			break;
 		case FULL_ATTR:
-			ComplexNumber[] seedList = new ComplexNumber[] { session
+			Complex[] seedList = new Complex[] { session
 					.getSeedValue() };
 			if (mode == Mode.COMPOSITE || mode == Mode.BOTH)
 				newSets.add(new OutputSet(info, inFunc, type,

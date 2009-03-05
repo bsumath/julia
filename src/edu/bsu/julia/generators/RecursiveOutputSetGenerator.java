@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
-import edu.bsu.julia.ComplexNumber;
+import org.apache.commons.math.complex.Complex;
 import edu.bsu.julia.gui.JuliaError;
 import edu.bsu.julia.input.InputFunction;
 import edu.bsu.julia.output.OutputSet;
@@ -38,7 +38,7 @@ public class RecursiveOutputSetGenerator extends OutputSetGenerator {
 	}
 
 	private final JFrame parentFrame;
-	private final List<ComplexNumber> seedList;
+	private final List<Complex> seedList;
 	private final InputFunction inputFunction;
 	private final Type type;
 
@@ -62,9 +62,9 @@ public class RecursiveOutputSetGenerator extends OutputSetGenerator {
 		type = t;
 
 		// build a list of starting points from the output sets
-		seedList = new ArrayList<ComplexNumber>();
+		seedList = new ArrayList<Complex>();
 		for (OutputSet set : outSets) {
-			for (ComplexNumber point : set.getPoints(true))
+			for (Complex point : set.getPoints(true))
 				seedList.add(point);
 		}
 	}
@@ -72,23 +72,23 @@ public class RecursiveOutputSetGenerator extends OutputSetGenerator {
 	/**
 	 * @see OutputSetGenerator#doInBackground()
 	 */
-	public ComplexNumber[] doInBackground() {
+	public Complex[] doInBackground() {
 		try {
-			List<ComplexNumber> outputSet = new ArrayList<ComplexNumber>();
+			List<Complex> outputSet = new ArrayList<Complex>();
 
 			// estimate the maximum progress
 			int progress = 0;
 			int maxProgress;
-			ComplexNumber[] arr = inputFunction
-					.evaluateBackwardsFull(new ComplexNumber());
+			Complex[] arr = inputFunction
+					.evaluateBackwardsFull(Complex.ZERO);
 			if (arr != null)
 				maxProgress = seedList.size() * arr.length;
 			else
 				maxProgress = seedList.size();
 
 			// apply the function to each point in the seedList
-			for (ComplexNumber point : seedList) {
-				ComplexNumber[] tempResult;
+			for (Complex point : seedList) {
+				Complex[] tempResult;
 				// create a temp array using full or random method
 				if (type == Type.FULL) {
 					tempResult = inputFunction.evaluateBackwardsFull(point);
@@ -97,17 +97,17 @@ public class RecursiveOutputSetGenerator extends OutputSetGenerator {
 						return null;
 					}
 				} else {
-					ComplexNumber temp = inputFunction
+					Complex temp = inputFunction
 							.evaluateBackwardsRandom(point);
 					if (temp == null) {
 						JuliaError.ZERO_DETERMINANT.showDialog(parentFrame);
 						return null;
 					}
-					tempResult = new ComplexNumber[] { temp };
+					tempResult = new Complex[] { temp };
 				}
 
 				// add all the points from the temp list to the output set
-				for (ComplexNumber pt : tempResult) {
+				for (Complex pt : tempResult) {
 					outputSet.add(pt);
 				}
 				progress = outputSet.size();
@@ -115,7 +115,7 @@ public class RecursiveOutputSetGenerator extends OutputSetGenerator {
 						100));
 			}
 
-			return outputSet.toArray(new ComplexNumber[] {});
+			return outputSet.toArray(new Complex[] {});
 		} catch (OutOfMemoryError e) {
 			JuliaError.OUT_OF_MEMORY.showDialog(parentFrame);
 			return null;

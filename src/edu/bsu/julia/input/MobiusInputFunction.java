@@ -1,6 +1,8 @@
 package edu.bsu.julia.input;
 
-import edu.bsu.julia.ComplexNumber;
+import org.apache.commons.math.complex.Complex;
+
+import edu.bsu.julia.ComplexNumberUtils;
 
 /**
  * 
@@ -13,6 +15,7 @@ import edu.bsu.julia.ComplexNumber;
  * 
  */
 public class MobiusInputFunction extends InputFunction {
+
 	/**
 	 * Calls the superclass constructor to set up the m value and coefficient
 	 * array, then fills that array with the coefficient parameters, a through
@@ -25,8 +28,8 @@ public class MobiusInputFunction extends InputFunction {
 	 * @param d
 	 * @see InputFunction#InputFunction(int, int)
 	 */
-	public MobiusInputFunction(int mValue, ComplexNumber a, ComplexNumber b,
-			ComplexNumber c, ComplexNumber d) {
+	public MobiusInputFunction(int mValue, Complex a, Complex b, Complex c,
+			Complex d) {
 		super(4, mValue);
 		coefficientArray[0] = a;
 		coefficientArray[1] = b;
@@ -39,14 +42,14 @@ public class MobiusInputFunction extends InputFunction {
 	 * a single value. See the superclass method description for a more general
 	 * account.
 	 */
-	public ComplexNumber evaluateBackwardsRandom(ComplexNumber seed) {
-		ComplexNumber a = coefficientArray[0];
-		ComplexNumber b = coefficientArray[1];
-		ComplexNumber c = coefficientArray[2];
-		ComplexNumber d = coefficientArray[3];
-		ComplexNumber w = seed;
-		ComplexNumber x;
-		ComplexNumber y;
+	public Complex evaluateBackwardsRandom(Complex seed) {
+		Complex a = coefficientArray[0];
+		Complex b = coefficientArray[1];
+		Complex c = coefficientArray[2];
+		Complex d = coefficientArray[3];
+		Complex w = seed;
+		Complex x;
+		Complex y;
 
 		for (int i = 0; i < getM(); i++) {
 			x = b.subtract(w.multiply(d));
@@ -57,14 +60,14 @@ public class MobiusInputFunction extends InputFunction {
 		return w;
 	}
 
-	public ComplexNumber evaluateForwards(ComplexNumber seed) {
-		ComplexNumber a = coefficientArray[0];
-		ComplexNumber b = coefficientArray[1];
-		ComplexNumber c = coefficientArray[2];
-		ComplexNumber d = coefficientArray[3];
-		ComplexNumber w = seed;
-		ComplexNumber x;
-		ComplexNumber y;
+	public Complex evaluateForwards(Complex seed) {
+		Complex a = coefficientArray[0];
+		Complex b = coefficientArray[1];
+		Complex c = coefficientArray[2];
+		Complex d = coefficientArray[3];
+		Complex w = seed;
+		Complex x;
+		Complex y;
 
 		for (int i = 0; i < getM(); i++) {
 			x = a.multiply(w).add(b);
@@ -75,14 +78,14 @@ public class MobiusInputFunction extends InputFunction {
 		return w;
 	}
 
-	public ComplexNumber evaluateFunction(ComplexNumber seed) {
-		ComplexNumber a = coefficientArray[0];
-		ComplexNumber b = coefficientArray[1];
-		ComplexNumber c = coefficientArray[2];
-		ComplexNumber d = coefficientArray[3];
-		ComplexNumber w = seed;
-		ComplexNumber x;
-		ComplexNumber y;
+	public Complex evaluateFunction(Complex seed) {
+		Complex a = coefficientArray[0];
+		Complex b = coefficientArray[1];
+		Complex c = coefficientArray[2];
+		Complex d = coefficientArray[3];
+		Complex w = seed;
+		Complex x;
+		Complex y;
 
 		x = a.multiply(w).add(b);
 		y = c.multiply(w).add(d);
@@ -96,21 +99,24 @@ public class MobiusInputFunction extends InputFunction {
 	 * This method returns an array of a single value. See the superclass method
 	 * description for a more general account.
 	 */
-	public ComplexNumber[] evaluateBackwardsFull(ComplexNumber seed) {
+	public Complex[] evaluateBackwardsFull(Complex seed) {
 		// for a mobius function, there is no difference between the random
 		// and full methods
-		ComplexNumber[] result = { evaluateBackwardsRandom(seed) };
+		Complex[] result = { evaluateBackwardsRandom(seed) };
 		return result;
 	}
 
 	public String toString() {
-		ComplexNumber a = coefficientArray[0];
-		ComplexNumber b = coefficientArray[1];
-		ComplexNumber c = coefficientArray[2];
-		ComplexNumber d = coefficientArray[3];
+		Complex a = coefficientArray[0];
+		Complex b = coefficientArray[1];
+		Complex c = coefficientArray[2];
+		Complex d = coefficientArray[3];
 
-		return new String("f" + getSubscript() + "(z) = " + a + "z + " + b
-				+ " / " + c + "z + " + d + ", m = " + getM());
+		return new String("f" + getSubscript() + "(z) = "
+				+ ComplexNumberUtils.complexToString(a) + "z + "
+				+ ComplexNumberUtils.complexToString(b) + " / "
+				+ ComplexNumberUtils.complexToString(c) + "z + "
+				+ ComplexNumberUtils.complexToString(d) + ", m = " + getM());
 	}
 
 }

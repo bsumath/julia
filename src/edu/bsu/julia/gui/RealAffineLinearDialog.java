@@ -10,7 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import edu.bsu.julia.ComplexNumber;
+import org.apache.commons.math.complex.Complex;
 import edu.bsu.julia.Julia;
 import edu.bsu.julia.input.RealAffineLinearInputFunction;
 import edu.bsu.julia.session.Session;
@@ -96,7 +96,7 @@ public class RealAffineLinearDialog extends JDialog implements ActionListener {
 		function = fn;
 		parentFrame = f;
 
-		ComplexNumber[] coefficients = new ComplexNumber[6];
+		Complex[] coefficients = new Complex[6];
 		if (dialogType == GUIUtil.EDIT_DIALOG
 				|| dialogType == GUIUtil.CLONE_DIALOG)
 			coefficients = function.getCoefficients();
@@ -121,7 +121,7 @@ public class RealAffineLinearDialog extends JDialog implements ActionListener {
 		functionPanel.add(new JLabel("<html>[a=</html>"));
 		if (dialogType == GUIUtil.EDIT_DIALOG
 				|| dialogType == GUIUtil.CLONE_DIALOG)
-			aField.setText("" + coefficients[0].getX());
+			aField.setText("" + coefficients[0].getReal());
 		else
 			aField.setText("1");
 		aField
@@ -131,7 +131,7 @@ public class RealAffineLinearDialog extends JDialog implements ActionListener {
 		functionPanel.add(new JLabel("<html> ,b=</html>"));
 		if (dialogType == GUIUtil.EDIT_DIALOG
 				|| dialogType == GUIUtil.CLONE_DIALOG)
-			bField.setText("" + coefficients[1].getX());
+			bField.setText("" + coefficients[1].getReal());
 		else
 			bField.setText("0");
 		bField
@@ -141,7 +141,7 @@ public class RealAffineLinearDialog extends JDialog implements ActionListener {
 		functionPanel.add(new JLabel("<html> ;c=</html>"));
 		if (dialogType == GUIUtil.EDIT_DIALOG
 				|| dialogType == GUIUtil.CLONE_DIALOG)
-			cField.setText("" + coefficients[2].getX());
+			cField.setText("" + coefficients[2].getReal());
 		else
 			cField.setText("0");
 		cField
@@ -151,7 +151,7 @@ public class RealAffineLinearDialog extends JDialog implements ActionListener {
 		functionPanel.add(new JLabel("<html> ,d=</html>"));
 		if (dialogType == GUIUtil.EDIT_DIALOG
 				|| dialogType == GUIUtil.CLONE_DIALOG)
-			dField.setText("" + coefficients[3].getX());
+			dField.setText("" + coefficients[3].getReal());
 		else
 			dField.setText("1");
 		dField
@@ -161,7 +161,7 @@ public class RealAffineLinearDialog extends JDialog implements ActionListener {
 		functionPanel.add(new JLabel("<html>]z + [e=</html>"));
 		if (dialogType == GUIUtil.EDIT_DIALOG
 				|| dialogType == GUIUtil.CLONE_DIALOG)
-			eField.setText("" + coefficients[4].getX());
+			eField.setText("" + coefficients[4].getReal());
 		else
 			eField.setText("0");
 		eField
@@ -171,7 +171,7 @@ public class RealAffineLinearDialog extends JDialog implements ActionListener {
 		functionPanel.add(new JLabel("<html> ;f=</html>"));
 		if (dialogType == GUIUtil.EDIT_DIALOG
 				|| dialogType == GUIUtil.CLONE_DIALOG)
-			fField.setText("" + coefficients[5].getX());
+			fField.setText("" + coefficients[5].getReal());
 		else
 			fField.setText("0");
 		fField
@@ -242,12 +242,12 @@ public class RealAffineLinearDialog extends JDialog implements ActionListener {
 			return;
 		}
 
-		ComplexNumber aComp = new ComplexNumber(a, 0);
-		ComplexNumber bComp = new ComplexNumber(b, 0);
-		ComplexNumber cComp = new ComplexNumber(c, 0);
-		ComplexNumber dComp = new ComplexNumber(d, 0);
-		ComplexNumber eComp = new ComplexNumber(e, 0);
-		ComplexNumber fComp = new ComplexNumber(f, 0);
+		Complex aComp = new Complex(a, 0);
+		Complex bComp = new Complex(b, 0);
+		Complex cComp = new Complex(c, 0);
+		Complex dComp = new Complex(d, 0);
+		Complex eComp = new Complex(e, 0);
+		Complex fComp = new Complex(f, 0);
 		RealAffineLinearInputFunction newFunction;
 		try {
 			newFunction = new RealAffineLinearInputFunction(m, aComp, bComp,

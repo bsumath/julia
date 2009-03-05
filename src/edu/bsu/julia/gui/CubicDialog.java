@@ -11,7 +11,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import edu.bsu.julia.ComplexNumber;
+import org.apache.commons.math.complex.Complex;
+import org.apache.commons.math.complex.ComplexUtils;
+
 import edu.bsu.julia.Julia;
 import edu.bsu.julia.input.CubicInputFunction;
 import edu.bsu.julia.session.Session;
@@ -93,7 +95,7 @@ public class CubicDialog extends JDialog implements ActionListener {
 		dialogType = type;
 		function = fn;
 
-		ComplexNumber[] coefficients = new ComplexNumber[2];
+		Complex[] coefficients = new Complex[2];
 		if (dialogType == GUIUtil.EDIT_DIALOG
 				|| dialogType == GUIUtil.CLONE_DIALOG)
 			coefficients = function.getCoefficients();
@@ -118,7 +120,7 @@ public class CubicDialog extends JDialog implements ActionListener {
 		functionPanel.add(new JLabel("<html>(</html>"));
 		if (dialogType == GUIUtil.EDIT_DIALOG
 				|| dialogType == GUIUtil.CLONE_DIALOG) {
-			String show = String.valueOf(coefficients[0].getX());
+			String show = String.valueOf(coefficients[0].getReal());
 			String showShort = show;
 			if (show.length() > 5)
 				showShort = show.substring(0, 5);
@@ -131,7 +133,7 @@ public class CubicDialog extends JDialog implements ActionListener {
 		functionPanel.add(new JLabel(", "));
 		if (dialogType == GUIUtil.EDIT_DIALOG
 				|| dialogType == GUIUtil.CLONE_DIALOG) {
-			String show = String.valueOf(coefficients[0].getY());
+			String show = String.valueOf(coefficients[0].getImaginary());
 			String showShort = show;
 			if (show.length() > 5)
 				showShort = show.substring(0, 5);
@@ -144,7 +146,7 @@ public class CubicDialog extends JDialog implements ActionListener {
 		functionPanel.add(new JLabel("<html>) z<sup>3</sup> + (</html>"));
 		if (dialogType == GUIUtil.EDIT_DIALOG
 				|| dialogType == GUIUtil.CLONE_DIALOG) {
-			String show = String.valueOf(coefficients[1].getX());
+			String show = String.valueOf(coefficients[1].getReal());
 			String showShort = show;
 			if (show.length() > 5)
 				showShort = show.substring(0, 5);
@@ -157,7 +159,7 @@ public class CubicDialog extends JDialog implements ActionListener {
 		functionPanel.add(new JLabel(", "));
 		if (dialogType == GUIUtil.EDIT_DIALOG
 				|| dialogType == GUIUtil.CLONE_DIALOG) {
-			String show = String.valueOf(coefficients[1].getY());
+			String show = String.valueOf(coefficients[1].getImaginary());
 			String showShort = show;
 			if (show.length() > 5)
 				showShort = show.substring(0, 5);
@@ -240,11 +242,11 @@ public class CubicDialog extends JDialog implements ActionListener {
 			return;
 		}
 
-		ComplexNumber a = new ComplexNumber(ax, ay);
-		ComplexNumber b = new ComplexNumber(bx, by);
+		Complex a = new Complex(ax, ay);
+		Complex b = new Complex(bx, by);
 		if (polarCheckBox.getState()) {
-			a = a.polarConvertion(a);
-			b = b.polarConvertion(b);
+			a = ComplexUtils.polar2Complex(ax, ay);
+			b = ComplexUtils.polar2Complex(bx, by);
 		}
 		CubicInputFunction newFunction;
 		try {

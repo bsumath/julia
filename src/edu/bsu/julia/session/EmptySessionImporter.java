@@ -2,7 +2,8 @@ package edu.bsu.julia.session;
 
 import java.util.Vector;
 
-import edu.bsu.julia.ComplexNumber;
+import org.apache.commons.math.complex.Complex;
+
 import edu.bsu.julia.input.InputFunction;
 import edu.bsu.julia.input.LinearInputFunction;
 import edu.bsu.julia.output.OutputSet;
@@ -10,12 +11,12 @@ import edu.bsu.julia.session.Session.Importer;
 
 public class EmptySessionImporter implements Importer {
 	private static final int DEFAULT_ITERATIONS = 50000;
-	private static final ComplexNumber DEFAULT_SEED = new ComplexNumber(1, 0);
+	private static final Complex DEFAULT_SEED = new Complex(1, 0);
 	private static final int DEFAULT_SKIPS = 20;
 
 	private final int iterations;
 	private final int skips;
-	private final ComplexNumber seed;
+	private final Complex seed;
 	private final Vector<InputFunction> inputFunctions = new Vector<InputFunction>();
 
 	public EmptySessionImporter() {
@@ -23,10 +24,10 @@ public class EmptySessionImporter implements Importer {
 		skips = DEFAULT_SKIPS;
 		seed = DEFAULT_SEED;
 
-		ComplexNumber a = new ComplexNumber(2, 0);
-		ComplexNumber b = new ComplexNumber(0, 0);
-		ComplexNumber c = new ComplexNumber(-1, 0);
-		ComplexNumber d = new ComplexNumber(-.5, -0.866);
+		Complex a = new Complex(2, 0);
+		Complex b = new Complex(0, 0);
+		Complex c = new Complex(-1, 0);
+		Complex d = new Complex(-.5, -0.866);
 
 		InputFunction function = new LinearInputFunction(1, a, b);
 		function.setSubscript(1);
@@ -41,7 +42,7 @@ public class EmptySessionImporter implements Importer {
 		inputFunctions.add(function);
 	}
 
-	public EmptySessionImporter(int iter, int sk, ComplexNumber sd) {
+	public EmptySessionImporter(int iter, int sk, Complex sd) {
 		iterations = iter;
 		skips = sk;
 		seed = sd;
@@ -59,7 +60,7 @@ public class EmptySessionImporter implements Importer {
 		return new Vector<OutputSet>();
 	}
 
-	public ComplexNumber provideSeedValue() {
+	public Complex provideSeedValue() {
 		return seed;
 	}
 

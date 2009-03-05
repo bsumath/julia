@@ -29,7 +29,8 @@ import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.ListSelectionModel;
 
-import edu.bsu.julia.ComplexNumber;
+import org.apache.commons.math.complex.Complex;
+
 import edu.bsu.julia.Julia;
 import edu.bsu.julia.gui.actions.CopyFunctionAction;
 import edu.bsu.julia.gui.actions.CreateCompositeIndAction;
@@ -150,7 +151,7 @@ public class InputPanel extends JPanel implements PropertyChangeListener {
 		panel2.add(seedLabel);
 		seedField1 = new JTextField(6);
 		seedField1.setName("seedField1");
-		String show = String.valueOf(s.getSeedValue().getX());
+		String show = String.valueOf(s.getSeedValue().getReal());
 		String showShort = show;
 		if (show.length() > 10)
 			showShort = show.substring(0, 10);
@@ -162,7 +163,7 @@ public class InputPanel extends JPanel implements PropertyChangeListener {
 
 		seedField2 = new JTextField(6);
 		seedField2.setName("seedField2");
-		show = String.valueOf(s.getSeedValue().getY());
+		show = String.valueOf(s.getSeedValue().getImaginary());
 		showShort = show;
 		if (show.length() > 10)
 			showShort = show.substring(0, 10);
@@ -292,13 +293,13 @@ public class InputPanel extends JPanel implements PropertyChangeListener {
 		else if (name.equals("skips"))
 			skipsField.setText("" + e.getNewValue());
 		else if (name.equals("seed")) {
-			String show = String.valueOf(((ComplexNumber) e.getNewValue())
-					.getX());
+			String show = String.valueOf(((Complex) e.getNewValue())
+					.getReal());
 			String showShort = show;
 			if (show.length() > 10)
 				showShort = show.substring(0, 10);
 			seedField1.setText(showShort);
-			show = String.valueOf(((ComplexNumber) e.getNewValue()).getY());
+			show = String.valueOf(((Complex) e.getNewValue()).getImaginary());
 			showShort = show;
 			if (show.length() > 10)
 				showShort = show.substring(0, 10);
@@ -320,8 +321,8 @@ public class InputPanel extends JPanel implements PropertyChangeListener {
 			s = (Session) e.getNewValue();
 			iterationsField.setText("" + s.getIterations());
 			skipsField.setText("" + s.getSkips());
-			seedField1.setText("" + ((ComplexNumber) s.getSeedValue()).getX());
-			seedField2.setText("" + ((ComplexNumber) s.getSeedValue()).getY());
+			seedField1.setText("" + ((Complex) s.getSeedValue()).getReal());
+			seedField2.setText("" + ((Complex) s.getSeedValue()).getImaginary());
 
 			// turn things off and clear the listModel
 			if (!listModel.isEmpty()) {
