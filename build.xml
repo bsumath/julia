@@ -6,7 +6,7 @@
 
 	
 	<!-- Make all the jars and upload -->
-	<target name="all" depends="init,julia.jar,resources.jar" />
+	<target name="all" depends="init,julia.jar,resources.jar,commons-math.jar" />
 	
 	<!-- Initialize the build process. -->
 	<target name="init">
@@ -34,6 +34,13 @@
 			basedir="${basedir}/resources" />
 		<signjar alias="${keystore.alias}" storepass="${keystore.password}" 
 			keystore="${keystore}" jar="${out.dir}/resources.jar" />  
+	</target>
+
+	<!-- copy the commons-math jar -->
+	<target name="commons-math.jar">
+		<copy file="${basedir}/lib/commons-math-2.0-SNAPSHOT.jar" tofile="${out.dir}/commons-math.jar"/>
+		<signjar alias="${keystore.alias}" storepass="${keystore.password}"
+			keystore="${keystore}" jar="${out.dir}/commons-math.jar" />
 	</target>
 </project>
 
