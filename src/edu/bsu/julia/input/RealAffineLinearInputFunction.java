@@ -1,6 +1,6 @@
 package edu.bsu.julia.input;
 
-import edu.bsu.julia.ComplexNumber;
+import org.apache.commons.math.complex.Complex;
 
 /**
  * 
@@ -30,9 +30,9 @@ public class RealAffineLinearInputFunction extends InputFunction {
 	 * @param f
 	 * @see InputFunction#InputFunction(int, int)
 	 */
-	public RealAffineLinearInputFunction(int mValue, ComplexNumber a,
-			ComplexNumber b, ComplexNumber c, ComplexNumber d, ComplexNumber e,
-			ComplexNumber f) {
+	public RealAffineLinearInputFunction(int mValue, Complex a,
+			Complex b, Complex c, Complex d, Complex e,
+			Complex f) {
 		super(6, mValue);
 		coefficientArray[0] = a;
 		coefficientArray[1] = b;
@@ -49,15 +49,15 @@ public class RealAffineLinearInputFunction extends InputFunction {
 	 * the 2x2 matrix is zero. Calling methods must check the return value for
 	 * <b>null</b> and report the error to the user.
 	 */
-	public ComplexNumber evaluateBackwardsRandom(ComplexNumber seed) {
-		double x = seed.getX();
-		double y = seed.getY();
-		double a = coefficientArray[0].getX();
-		double b = coefficientArray[1].getX();
-		double c = coefficientArray[2].getX();
-		double d = coefficientArray[3].getX();
-		double e = coefficientArray[4].getX();
-		double f = coefficientArray[5].getX();
+	public Complex evaluateBackwardsRandom(Complex seed) {
+		double x = seed.getReal();
+		double y = seed.getImaginary();
+		double a = coefficientArray[0].getReal();
+		double b = coefficientArray[1].getReal();
+		double c = coefficientArray[2].getReal();
+		double d = coefficientArray[3].getReal();
+		double e = coefficientArray[4].getReal();
+		double f = coefficientArray[5].getReal();
 
 		double det = a * d - b * c;
 		if (det < 0.000000001 && det > -0.000000001)
@@ -69,18 +69,18 @@ public class RealAffineLinearInputFunction extends InputFunction {
 			x = real;
 			y = im;
 		}
-		return new ComplexNumber(x, y);
+		return new Complex(x, y);
 	}
 
-	public ComplexNumber evaluateForwards(ComplexNumber seed) {
-		double x = seed.getX();
-		double y = seed.getY();
-		double a = coefficientArray[0].getX();
-		double b = coefficientArray[1].getX();
-		double c = coefficientArray[2].getX();
-		double d = coefficientArray[3].getX();
-		double e = coefficientArray[4].getX();
-		double f = coefficientArray[5].getX();
+	public Complex evaluateForwards(Complex seed) {
+		double x = seed.getReal();
+		double y = seed.getImaginary();
+		double a = coefficientArray[0].getReal();
+		double b = coefficientArray[1].getReal();
+		double c = coefficientArray[2].getReal();
+		double d = coefficientArray[3].getReal();
+		double e = coefficientArray[4].getReal();
+		double f = coefficientArray[5].getReal();
 
 		for (int i = 0; i < getM(); i++) {
 			double real = a * x + b * y + e;
@@ -88,7 +88,7 @@ public class RealAffineLinearInputFunction extends InputFunction {
 			x = real;
 			y = im;
 		}
-		return new ComplexNumber(x, y);
+		return new Complex(x, y);
 	}
 
 	/**
@@ -98,41 +98,41 @@ public class RealAffineLinearInputFunction extends InputFunction {
 	 * the return value for <b>null</b> and report the error to the user.
 	 */
 
-	public ComplexNumber evaluateFunction(ComplexNumber seed) {
-		double x = seed.getX();
-		double y = seed.getY();
-		double a = coefficientArray[0].getX();
-		double b = coefficientArray[1].getX();
-		double c = coefficientArray[2].getX();
-		double d = coefficientArray[3].getX();
-		double e = coefficientArray[4].getX();
-		double f = coefficientArray[5].getX();
+	public Complex evaluateFunction(Complex seed) {
+		double x = seed.getReal();
+		double y = seed.getImaginary();
+		double a = coefficientArray[0].getReal();
+		double b = coefficientArray[1].getReal();
+		double c = coefficientArray[2].getReal();
+		double d = coefficientArray[3].getReal();
+		double e = coefficientArray[4].getReal();
+		double f = coefficientArray[5].getReal();
 
 		double real = a * x + b * y + e;
 		double im = c * x + d * y + f;
 		x = real;
 		y = im;
 
-		return new ComplexNumber(x, y);
+		return new Complex(x, y);
 	}
 
-	public ComplexNumber[] evaluateBackwardsFull(ComplexNumber seed) {
+	public Complex[] evaluateBackwardsFull(Complex seed) {
 		// for a real affine linear map, there is no difference between
 		// the random and full methods.
-		ComplexNumber x = evaluateBackwardsRandom(seed);
+		Complex x = evaluateBackwardsRandom(seed);
 		if (x == null)
 			return null;
-		ComplexNumber[] result = { x };
+		Complex[] result = { x };
 		return result;
 	}
 
 	public String toString() {
-		double a = coefficientArray[0].getX();
-		double b = coefficientArray[1].getX();
-		double c = coefficientArray[2].getX();
-		double d = coefficientArray[3].getX();
-		double e = coefficientArray[4].getX();
-		double f = coefficientArray[5].getX();
+		double a = coefficientArray[0].getReal();
+		double b = coefficientArray[1].getReal();
+		double c = coefficientArray[2].getReal();
+		double d = coefficientArray[3].getReal();
+		double e = coefficientArray[4].getReal();
+		double f = coefficientArray[5].getReal();
 
 		return new String("f" + getSubscript() + "(z) = [" + a + ", " + b
 				+ "; " + c + ", " + d + "]z + [" + e + "; " + f + "], m = "

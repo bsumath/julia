@@ -20,7 +20,7 @@ import javax.swing.JList;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import edu.bsu.julia.ComplexNumber;
+import org.apache.commons.math.complex.Complex;
 import edu.bsu.julia.Julia;
 import edu.bsu.julia.output.OutputSet;
 
@@ -196,9 +196,9 @@ public class GLListener implements GLEventListener, ListSelectionListener,
 				gl.glColor3f(colorArray[0], colorArray[1], colorArray[2]);
 
 				gl.glBegin(GL.GL_POINTS);
-				for (ComplexNumber point : set.getPoints())
+				for (Complex point : set.getPoints())
 					if (point != null)
-						gl.glVertex2d(point.getX(), point.getY());
+						gl.glVertex2d(point.getReal(), point.getImaginary());
 				gl.glEnd();
 			}
 		}

@@ -2,7 +2,9 @@ package edu.bsu.julia.input;
 
 import java.util.Vector;
 
-import edu.bsu.julia.ComplexNumber;
+import org.apache.commons.math.complex.Complex;
+
+import edu.bsu.julia.ComplexNumberUtils;
 
 /**
  * 
@@ -18,15 +20,17 @@ public class QuadraticInputFunction extends InputFunction {
 	/**
 	 * A convenience constant representing the real number, -1.
 	 */
-	private static final ComplexNumber NEG_ONE = new ComplexNumber(-1, 0);
+	private static final Complex NEG_ONE = new Complex(-1, 0);
+
 	/**
 	 * A convenience constant representing the real number, 4.
 	 */
-	private static final ComplexNumber FOUR = new ComplexNumber(4, 0);
+	private static final Complex FOUR = new Complex(4, 0);
+
 	/**
 	 * A convenience constant representing the real number, 2.
 	 */
-	private static final ComplexNumber TWO = new ComplexNumber(2, 0);
+	private static final Complex TWO = new Complex(2, 0);
 
 	/**
 	 * Calls the superclass constructor to set up the m value and coefficient
@@ -41,28 +45,28 @@ public class QuadraticInputFunction extends InputFunction {
 	 *             if a is zero
 	 * @see InputFunction#InputFunction(int, int)
 	 */
-	public QuadraticInputFunction(int mValue, ComplexNumber a, ComplexNumber b,
-			ComplexNumber c) throws IllegalArgumentException {
+	public QuadraticInputFunction(int mValue, Complex a, Complex b, Complex c)
+			throws IllegalArgumentException {
 		super(3, mValue);
-		if (a.isZero())
+		if (a.equals(Complex.ZERO))
 			throw new IllegalArgumentException("a zero");
 		coefficientArray[0] = a;
 		coefficientArray[1] = b;
 		coefficientArray[2] = c;
 	}
 
-	public ComplexNumber evaluateBackwardsRandom(ComplexNumber seed) {
-		ComplexNumber a = coefficientArray[0];
-		ComplexNumber b = coefficientArray[1];
-		ComplexNumber c = coefficientArray[2];
-		ComplexNumber w = seed;
-		ComplexNumber temp;
-		ComplexNumber negB = b.multiply(NEG_ONE);
-		ComplexNumber sqrB = b.multiply(b);
+	public Complex evaluateBackwardsRandom(Complex seed) {
+		Complex a = coefficientArray[0];
+		Complex b = coefficientArray[1];
+		Complex c = coefficientArray[2];
+		Complex w = seed;
+		Complex temp;
+		Complex negB = b.multiply(NEG_ONE);
+		Complex sqrB = b.multiply(b);
 
 		for (int i = 0; i < getM(); i++) {
 			temp = sqrB.subtract((a.multiply(c.subtract(w))).multiply(FOUR));
-			ComplexNumber[] sqrt = temp.squareRoot();
+			Complex[] sqrt = temp.nthRoot(2).toArray(new Complex[] {});
 			double randomNumber = Math.random();
 			// potential ArithmeticExceptions should be caught at thread level
 			if (randomNumber < .5)
@@ -73,12 +77,12 @@ public class QuadraticInputFunction extends InputFunction {
 		return w;
 	}
 
-	public ComplexNumber evaluateForwards(ComplexNumber seed) {
-		ComplexNumber a = coefficientArray[0];
-		ComplexNumber b = coefficientArray[1];
-		ComplexNumber c = coefficientArray[2];
-		ComplexNumber result = new ComplexNumber();
-		ComplexNumber w = seed;
+	public Complex evaluateForwards(Complex seed) {
+		Complex a = coefficientArray[0];
+		Complex b = coefficientArray[1];
+		Complex c = coefficientArray[2];
+		Complex result = Complex.ZERO;
+		Complex w = seed;
 
 		for (int i = 0; i < getM(); i++) {
 			result = a.multiply(w.multiply(w));
@@ -88,12 +92,12 @@ public class QuadraticInputFunction extends InputFunction {
 		return result;
 	}
 
-	public ComplexNumber evaluateFunction(ComplexNumber seed) {
-		ComplexNumber a = coefficientArray[0];
-		ComplexNumber b = coefficientArray[1];
-		ComplexNumber c = coefficientArray[2];
-		ComplexNumber result = new ComplexNumber();
-		ComplexNumber w = seed;
+	public Complex evaluateFunction(Complex seed) {
+		Complex a = coefficientArray[0];
+		Complex b = coefficientArray[1];
+		Complex c = coefficientArray[2];
+		Complex result = Complex.ZERO;
+		Complex w = seed;
 
 		result = a.multiply(w.multiply(w));
 		result = (result.add(b.multiply(w))).add(c);
@@ -106,25 +110,25 @@ public class QuadraticInputFunction extends InputFunction {
 	 * This method returns 2^m complex numbers for each seed. See the superclass
 	 * method for a more general account.
 	 */
-	public ComplexNumber[] evaluateBackwardsFull(ComplexNumber seed) {
-		ComplexNumber a = coefficientArray[0];
-		ComplexNumber b = coefficientArray[1];
-		ComplexNumber c = coefficientArray[2];
-		ComplexNumber w = seed;
-		ComplexNumber temp;
-		ComplexNumber negB = b.multiply(NEG_ONE);
-		ComplexNumber sqrB = b.multiply(b);
-		Vector<ComplexNumber> results = new Vector<ComplexNumber>();
+	public Complex[] evaluateBackwardsFull(Complex seed) {
+		Complex a = coefficientArray[0];
+		Complex b = coefficientArray[1];
+		Complex c = coefficientArray[2];
+		Complex w = seed;
+		Complex temp;
+		Complex negB = b.multiply(NEG_ONE);
+		Complex sqrB = b.multiply(b);
+		Vector<Complex> results = new Vector<Complex>();
 		results.add(w);
-		ComplexNumber[] sqrt = new ComplexNumber[2];
+		Complex[] sqrt = new Complex[2];
 
 		for (int i = 0; i < getM(); i++) {
 			for (int j = 0; j < Math.pow(2, i); j++) {
-				w = (ComplexNumber) results.firstElement();
+				w = (Complex) results.firstElement();
 				results.remove(0);
 				temp = sqrB
 						.subtract((a.multiply(c.subtract(w))).multiply(FOUR));
-				sqrt = temp.squareRoot();
+				sqrt = temp.nthRoot(2).toArray(new Complex[] {});
 				// potential ArithmeticExceptions should be caught at thread
 				// level
 				results.add(negB.add(sqrt[0]).divide(a.multiply(TWO)));
@@ -132,18 +136,20 @@ public class QuadraticInputFunction extends InputFunction {
 			}
 		}
 		results.trimToSize();
-		ComplexNumber[] finalResults = new ComplexNumber[results.size()];
+		Complex[] finalResults = new Complex[results.size()];
 		results.toArray(finalResults);
 		return finalResults;
 	}
 
 	public String toString() {
-		ComplexNumber a = coefficientArray[0];
-		ComplexNumber b = coefficientArray[1];
-		ComplexNumber c = coefficientArray[2];
+		Complex a = coefficientArray[0];
+		Complex b = coefficientArray[1];
+		Complex c = coefficientArray[2];
 
-		return new String("f" + getSubscript() + "(z) = " + a + "z^2 + " + b
-				+ "z + " + c + ", m = " + getM());
+		return new String("f" + getSubscript() + "(z) = "
+				+ ComplexNumberUtils.complexToString(a) + "z^2 + "
+				+ ComplexNumberUtils.complexToString(b) + "z + "
+				+ ComplexNumberUtils.complexToString(c) + ", m = " + getM());
 	}
 
 }

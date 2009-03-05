@@ -11,7 +11,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import edu.bsu.julia.ComplexNumber;
+import org.apache.commons.math.complex.Complex;
+import org.apache.commons.math.complex.ComplexUtils;
+
 import edu.bsu.julia.Julia;
 import edu.bsu.julia.input.MonomialInputFunction;
 import edu.bsu.julia.session.Session;
@@ -85,7 +87,7 @@ public class MonomialDialog extends JDialog implements ActionListener {
 		dialogType = type;
 		function = fn;
 
-		ComplexNumber[] coefficients = new ComplexNumber[1];				/**Changed the 2 here to a 1.*/
+		Complex[] coefficients = new Complex[1];				/**Changed the 2 here to a 1.*/
 		if (dialogType == GUIUtil.EDIT_DIALOG
 				|| dialogType == GUIUtil.CLONE_DIALOG)
 			coefficients = function.getCoefficients();
@@ -110,7 +112,7 @@ public class MonomialDialog extends JDialog implements ActionListener {
 		functionPanel.add(new JLabel("<html>(</html>"));
 		if (dialogType == GUIUtil.EDIT_DIALOG						/**Taking the value axField which is the real part of a.*/
 				|| dialogType == GUIUtil.CLONE_DIALOG) {
-			String show = String.valueOf(coefficients[0].getX());
+			String show = String.valueOf(coefficients[0].getReal());
 			String showShort = show;
 			if (show.length() > 5)
 				showShort = show.substring(0, 5);
@@ -123,7 +125,7 @@ public class MonomialDialog extends JDialog implements ActionListener {
 		functionPanel.add(new JLabel(", "));
 		if (dialogType == GUIUtil.EDIT_DIALOG						/**Taking the value ayField which is the imaginary part of a.*/
 				|| dialogType == GUIUtil.CLONE_DIALOG) {
-			String show = String.valueOf(coefficients[0].getY());
+			String show = String.valueOf(coefficients[0].getImaginary());
 			String showShort = show;
 			if (show.length() > 5)
 				showShort = show.substring(0, 5);
@@ -138,7 +140,7 @@ public class MonomialDialog extends JDialog implements ActionListener {
 	
 		if (dialogType == GUIUtil.EDIT_DIALOG						/**Taking the value axField which is the real part of b.*/			
 				|| dialogType == GUIUtil.CLONE_DIALOG) {
-			String show = String.valueOf(coefficients[1].getX());
+			String show = String.valueOf(coefficients[1].getReal());
 			String showShort = show;
 			if (show.length() > 5)
 				showShort = show.substring(0, 5);
@@ -217,11 +219,10 @@ public class MonomialDialog extends JDialog implements ActionListener {
 			return;
 		}
 
-		ComplexNumber a = new ComplexNumber(ax, ay);
+		Complex a = new Complex(ax, ay);
 
 		if (polarCheckBox.getState()) {
-			a = a.polarConvertion(a);
-			/**b = b.polarConvertion(b);*/
+			a = ComplexUtils.polar2Complex(ax, ay);
 		}
 
 		MonomialInputFunction newFunction;

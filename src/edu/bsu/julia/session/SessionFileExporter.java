@@ -16,7 +16,9 @@ import java.util.zip.ZipOutputStream;
 
 import javax.swing.SwingWorker;
 
-import edu.bsu.julia.ComplexNumber;
+import org.apache.commons.math.complex.Complex;
+
+import edu.bsu.julia.ComplexNumberUtils;
 import edu.bsu.julia.input.InputFunction;
 import edu.bsu.julia.output.OutputSet;
 import edu.bsu.julia.session.Session.Exporter;
@@ -27,7 +29,7 @@ public class SessionFileExporter extends SwingWorker<Boolean, Void> implements
 	private List<InputFunction> inputFunctions;
 	private int iterations;
 	private List<OutputSet> outputSets;
-	private ComplexNumber seed;
+	private Complex seed;
 	private int skips;
 	private final File file;
 	private int[] inputIndices;
@@ -51,7 +53,7 @@ public class SessionFileExporter extends SwingWorker<Boolean, Void> implements
 		outputSets = new ArrayList<OutputSet>(o);
 	}
 
-	public void addSeedValue(ComplexNumber s) {
+	public void addSeedValue(Complex s) {
 		seed = s;
 	}
 
@@ -123,7 +125,7 @@ public class SessionFileExporter extends SwingWorker<Boolean, Void> implements
 
 		out.println("min_points: " + iterations);
 		out.println("skips: " + skips);
-		out.println("seed: " + seed.exportString());
+		out.println("seed: " + ComplexNumberUtils.exportString(seed));
 		out.println("selected_method: " + method);
 		out.println("selected_type: " + type);
 

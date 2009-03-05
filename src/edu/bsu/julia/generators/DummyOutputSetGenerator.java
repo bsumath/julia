@@ -1,21 +1,21 @@
 package edu.bsu.julia.generators;
 
-import edu.bsu.julia.ComplexNumber;
+import org.apache.commons.math.complex.Complex;
 
 /**
  * An {@link OutputSetGenerator} that is a wrapper around an array of
- * {@link ComplexNumber}
+ * {@link Complex}
  * 
  * @author Ben Dean
  */
 public class DummyOutputSetGenerator extends OutputSetGenerator {
-	private final ComplexNumber[] points;
+	private final Complex[] points;
 
-	public DummyOutputSetGenerator(ComplexNumber[] p) {
+	public DummyOutputSetGenerator(Complex[] p) {
 		points = (p.length > 0) ? p : null;
 	}
 
-	public ComplexNumber[] doInBackground() {
+	public Complex[] doInBackground() {
 		return points;
 	}
 }

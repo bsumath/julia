@@ -4,7 +4,8 @@ import java.util.Random;
 
 import javax.swing.JFrame;
 
-import edu.bsu.julia.ComplexNumber;
+import org.apache.commons.math.complex.Complex;
+
 import edu.bsu.julia.gui.JuliaError;
 import edu.bsu.julia.input.InputFunction;
 
@@ -21,7 +22,7 @@ public class RandomForwardsOutputSetGenerator extends OutputSetGenerator {
 	private final JFrame parentFrame;
 	private final int iterations;
 	private final int skips;
-	private final ComplexNumber seed;
+	private final Complex seed;
 	private final InputFunction[] inputFunctions;
 
 	/**
@@ -34,12 +35,12 @@ public class RandomForwardsOutputSetGenerator extends OutputSetGenerator {
 	 * @param sk
 	 *            the number of skips as an int
 	 * @param sd
-	 *            the {@link ComplexNumber} seed
+	 *            the {@link Complex} seed
 	 * @param inFunc
 	 *            an array of {@link InputFunction}
 	 */
 	public RandomForwardsOutputSetGenerator(JFrame parent, int iter, int sk,
-			ComplexNumber sd, InputFunction[] inFunc) {
+			Complex sd, InputFunction[] inFunc) {
 		parentFrame = parent;
 		iterations = iter;
 		skips = sk;
@@ -50,15 +51,15 @@ public class RandomForwardsOutputSetGenerator extends OutputSetGenerator {
 	/**
 	 * @see OutputSetGenerator#doInBackground()
 	 */
-	public ComplexNumber[] doInBackground() {
+	public Complex[] doInBackground() {
 		try {
 			// check that there are input functions
 			if (inputFunctions.length == 0) {
 				return null;
 			}
 
-			ComplexNumber currentPoint = seed;
-			ComplexNumber[] outputSet = new ComplexNumber[iterations];
+			Complex currentPoint = seed;
+			Complex[] outputSet = new Complex[iterations];
 			int progress = 0;
 			int maxProgress = iterations + skips;
 

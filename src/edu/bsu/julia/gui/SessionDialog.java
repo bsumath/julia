@@ -13,7 +13,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-import edu.bsu.julia.ComplexNumber;
+import org.apache.commons.math.complex.Complex;
+
 import edu.bsu.julia.Julia;
 import edu.bsu.julia.session.EmptySessionImporter;
 import edu.bsu.julia.session.Session;
@@ -60,7 +61,7 @@ public class SessionDialog extends JDialog implements ActionListener {
 		add(new JLabel("Seed Value:  ("));
 		seedField1 = new JTextField(6);
 		if (sessionType == GUIUtil.EDIT_DIALOG) {
-			String show = String.valueOf(s.getSeedValue().getX());
+			String show = String.valueOf(s.getSeedValue().getReal());
 			String showShort = show;
 			if (show.length() > 10)
 				showShort = show.substring(0, 10);
@@ -70,7 +71,7 @@ public class SessionDialog extends JDialog implements ActionListener {
 		add(new JLabel(","));
 		seedField2 = new JTextField(6);
 		if (sessionType == GUIUtil.EDIT_DIALOG) {
-			String show = String.valueOf(s.getSeedValue().getY());
+			String show = String.valueOf(s.getSeedValue().getImaginary());
 			String showShort = show;
 			if (show.length() > 10)
 				showShort = show.substring(0, 10);
@@ -177,7 +178,7 @@ public class SessionDialog extends JDialog implements ActionListener {
 				seed2 = seed2 / 100000;
 			}
 		}
-		ComplexNumber seedValue = new ComplexNumber(seed1, seed2);
+		Complex seedValue = new Complex(seed1, seed2);
 		try {
 			if (sessionType == GUIUtil.NEW_DIALOG) {
 				parentFrame.setCurrentSession(new Session(parentFrame,

@@ -23,7 +23,9 @@ import java.util.zip.ZipInputStream;
 
 import javax.swing.SwingWorker;
 
-import edu.bsu.julia.ComplexNumber;
+import org.apache.commons.math.complex.Complex;
+
+import edu.bsu.julia.ComplexNumberUtils;
 import edu.bsu.julia.generators.DummyOutputSetGenerator;
 import edu.bsu.julia.generators.OutputSetGenerator;
 import edu.bsu.julia.input.InputFunction;
@@ -45,7 +47,7 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 	private static final int BUFFER_SIZE = 2048;
 	private int iterations;
 	private int skips;
-	private ComplexNumber seed = new ComplexNumber();
+	private Complex seed = Complex.ZERO;
 	private int[] inputIndices = new int[] {};
 	private String method = "";
 	private int[] outputIndices = new int[] {};
@@ -178,7 +180,7 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 			} else if (lineParts[0].equalsIgnoreCase("skips")) {
 				skips = Integer.parseInt(lineParts[1]);
 			} else if (lineParts[0].equalsIgnoreCase("seed")) {
-				seed = ComplexNumber.parseComplexNumber(lineParts[1]);
+				seed = ComplexNumberUtils.parseComplexNumber(lineParts[1]);
 			} else if (lineParts[0].equalsIgnoreCase("selected_method")) {
 				method = lineParts[1];
 			} else if (lineParts[0].equalsIgnoreCase("selected_type")) {
@@ -223,7 +225,7 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 			IllegalArgumentException, InstantiationException,
 			IllegalAccessException, InvocationTargetException {
 		int m = 1;
-		List<ComplexNumber> coefficients = new ArrayList<ComplexNumber>();
+		List<Complex> coefficients = new ArrayList<Complex>();
 		String className = "";
 
 		while (in.hasNextLine()) {
@@ -244,7 +246,7 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 				m = Integer.parseInt(lineParts[1]);
 			} else if (lineParts[0].equalsIgnoreCase("coefficient")) {
 				coefficients
-						.add(ComplexNumber.parseComplexNumber(lineParts[1]));
+						.add(ComplexNumberUtils.parseComplexNumber(lineParts[1]));
 			}
 		}
 
@@ -272,9 +274,9 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 
 		Integer iterations = null;
 		Integer skips = null;
-		ComplexNumber seed = null;
+		Complex seed = null;
 		List<InputFunction> inFunctions = new ArrayList<InputFunction>();
-		List<ComplexNumber> points = new ArrayList<ComplexNumber>();
+		List<Complex> points = new ArrayList<Complex>();
 		List<OutputSet> outSets = new ArrayList<OutputSet>();
 		OutputSet.Type type = OutputSet.Type.BASIC;
 		int tValue = 0;
@@ -302,7 +304,7 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 			} else if (lineParts[0].equalsIgnoreCase("tvalue")) {
 				tValue = Integer.parseInt(lineParts[1]);
 			} else if (lineParts[0].equalsIgnoreCase("seed")) {
-				seed = ComplexNumber.parseComplexNumber(lineParts[1]);
+				seed = ComplexNumberUtils.parseComplexNumber(lineParts[1]);
 			} else if (lineParts[0].equalsIgnoreCase("begin_input_function")) {
 				// if the key exists, use that input function
 				long key = Long.parseLong(lineParts[1]);
@@ -367,13 +369,13 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 
 		// read the points from the data file
 		while (data.hasNextLine()) {
-			points.add(ComplexNumber.parseComplexNumber(data.nextLine()));
+			points.add(ComplexNumberUtils.parseComplexNumber(data.nextLine()));
 		}
 
 		// create setData with the iteration, skip, and seed values
 		final Integer iter = iterations;
 		final Integer sk = skips;
-		final ComplexNumber sd = seed;
+		final Complex sd = seed;
 		OutputSet.Info setInfo = new OutputSet.Info() {
 			@Override
 			public Integer iterations() {
@@ -381,7 +383,7 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 			}
 
 			@Override
-			public ComplexNumber seed() {
+			public Complex seed() {
 				return sd;
 			}
 
@@ -394,7 +396,7 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 		// create the output function
 		OutputSet set;
 		OutputSetGenerator generator = new DummyOutputSetGenerator(points
-				.toArray(new ComplexNumber[] {}));
+				.toArray(new Complex[] {}));
 		if (className.endsWith("RecursiveOutputSet")) {
 			set = new RecursiveOutputSet(setInfo, inFunctions
 					.toArray(new InputFunction[] {}), outSets
@@ -419,9 +421,9 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 
 	private void readBasicOutputSet(Scanner data) {
 		// read the points from the data file
-		List<ComplexNumber> points = new ArrayList<ComplexNumber>();
+		List<Complex> points = new ArrayList<Complex>();
 		while (data.hasNextLine()) {
-			points.add(ComplexNumber.parseComplexNumber(data.nextLine()));
+			points.add(ComplexNumberUtils.parseComplexNumber(data.nextLine()));
 		}
 
 		// create null data for the basic set
@@ -432,7 +434,7 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 			}
 
 			@Override
-			public ComplexNumber seed() {
+			public Complex seed() {
 				return null;
 			}
 
@@ -444,7 +446,7 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 
 		// create the output function
 		OutputSetGenerator generator = new DummyOutputSetGenerator(points
-				.toArray(new ComplexNumber[] {}));
+				.toArray(new Complex[] {}));
 		OutputSet set = new OutputSet(info, new InputFunction[] {},
 				OutputSet.Type.BASIC, generator, nullListener);
 
@@ -507,7 +509,7 @@ public class SessionFileImporter extends SwingWorker<Boolean, Void> implements
 		return result;
 	}
 
-	public ComplexNumber provideSeedValue() {
+	public Complex provideSeedValue() {
 		return seed;
 	}
 

@@ -6,7 +6,8 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
-import edu.bsu.julia.ComplexNumber;
+import org.apache.commons.math.complex.Complex;
+
 import edu.bsu.julia.gui.JuliaError;
 import edu.bsu.julia.input.InputFunction;
 
@@ -29,7 +30,7 @@ public class FullForwardsOutputSetGenerator extends OutputSetGenerator {
 	}
 
 	private final int iterations;
-	private final ComplexNumber[] seedList;
+	private final Complex[] seedList;
 	private final InputFunction[] inputFunctions;
 	private final Mode mode;
 	private final JFrame parentFrame;
@@ -42,7 +43,7 @@ public class FullForwardsOutputSetGenerator extends OutputSetGenerator {
 	 * @param iter
 	 *            the number of iterations
 	 * @param seed
-	 *            a {@link List} of {@link ComplexNumber} to use as the seed
+	 *            a {@link List} of {@link Complex} to use as the seed
 	 * @param inFunc
 	 *            an array of {@link InputFunction}
 	 * @param opt
@@ -50,7 +51,7 @@ public class FullForwardsOutputSetGenerator extends OutputSetGenerator {
 	 *            intermediate points at each iteration
 	 */
 	public FullForwardsOutputSetGenerator(JFrame parent, int iter,
-			ComplexNumber[] seed, InputFunction[] inFunc, Mode opt) {
+			Complex[] seed, InputFunction[] inFunc, Mode opt) {
 		parentFrame = parent;
 		iterations = iter;
 		seedList = seed;
@@ -61,7 +62,7 @@ public class FullForwardsOutputSetGenerator extends OutputSetGenerator {
 	/**
 	 * @see OutputSetGenerator#doInBackground()
 	 */
-	public ComplexNumber[] doInBackground() {
+	public Complex[] doInBackground() {
 		try {
 			// check that there are input functions
 			if (inputFunctions.length == 0) {
@@ -74,16 +75,16 @@ public class FullForwardsOutputSetGenerator extends OutputSetGenerator {
 			int iterationCounter = 0;
 			boolean isDone = false;
 
-			List<ComplexNumber> outputSet = new ArrayList<ComplexNumber>();
+			List<Complex> outputSet = new ArrayList<Complex>();
 			;
-			List<ComplexNumber> currentIteration = new ArrayList<ComplexNumber>(
+			List<Complex> currentIteration = new ArrayList<Complex>(
 					Arrays.asList(seedList));
-			List<ComplexNumber> tempList;
+			List<Complex> tempList;
 
 			// check for case where the iterations are done before starting this
 			// is rare. namely a post critical set with t = 1
 			if (mode == Mode.POST_CRITICAL && iterations == 0) {
-				return currentIteration.toArray(new ComplexNumber[] {});
+				return currentIteration.toArray(new Complex[] {});
 			}
 
 			do {
@@ -91,9 +92,9 @@ public class FullForwardsOutputSetGenerator extends OutputSetGenerator {
 					outputSet.addAll(currentIteration);
 
 				// iterate each point by each function
-				tempList = new ArrayList<ComplexNumber>(currentIteration.size()
+				tempList = new ArrayList<Complex>(currentIteration.size()
 						* inputFunctions.length);
-				for (ComplexNumber point : currentIteration) {
+				for (Complex point : currentIteration) {
 					for (InputFunction function : inputFunctions) {
 						tempList.add(function.evaluateForwards(point));
 					}
@@ -121,7 +122,7 @@ public class FullForwardsOutputSetGenerator extends OutputSetGenerator {
 			} while (!isDone);
 
 			outputSet.addAll(currentIteration);
-			return outputSet.toArray(new ComplexNumber[] {});
+			return outputSet.toArray(new Complex[] {});
 		} catch (OutOfMemoryError e) {
 			JuliaError.OUT_OF_MEMORY.showDialog(parentFrame);
 			return null;

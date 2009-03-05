@@ -13,7 +13,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-import edu.bsu.julia.ComplexNumber;
+import org.apache.commons.math.complex.Complex;
+
 import edu.bsu.julia.Julia;
 import edu.bsu.julia.generators.FullForwardsOutputSetGenerator;
 import edu.bsu.julia.generators.FullForwardsOutputSetGenerator.Mode;
@@ -143,7 +144,7 @@ public class PostCriticalAction extends AbstractAction {
 				}
 
 				@Override
-				public ComplexNumber seed() {
+				public Complex seed() {
 					return null;
 				}
 
@@ -158,16 +159,16 @@ public class PostCriticalAction extends AbstractAction {
 			InputFunction[] inFunc = inputPanel.getSelectedFunctions();
 
 			// find the critical points to use as seeds
-			List<ComplexNumber> seedList = new ArrayList<ComplexNumber>();
-			ComplexNumber negOne = new ComplexNumber(-1, 0);
-			ComplexNumber two = new ComplexNumber(2, 0);
-			ComplexNumber zero = new ComplexNumber(0, 0);
+			List<Complex> seedList = new ArrayList<Complex>();
+			Complex negOne = new Complex(-1, 0);
+			Complex two = new Complex(2, 0);
+			Complex zero = new Complex(0, 0);
 			for (InputFunction function : inFunc) {
-				ComplexNumber seed;
+				Complex seed;
 				if (function instanceof CubicInputFunction) {
 					seed = zero;
 				} else if (function instanceof QuadraticInputFunction) {
-					ComplexNumber[] coefficients = function.getCoefficients();
+					Complex[] coefficients = function.getCoefficients();
 					seed = (coefficients[1].multiply(negOne))
 							.divide(coefficients[0].multiply(two));
 				} else
@@ -189,7 +190,7 @@ public class PostCriticalAction extends AbstractAction {
 						OutputSet.Type.POST_CRITICAL, tValue,
 						new FullForwardsOutputSetGenerator(parentFrame,
 								tValue - 1, seedList
-										.toArray(new ComplexNumber[] {}),
+										.toArray(new Complex[] {}),
 								inFunc, Mode.POST_CRITICAL), listener));
 			}
 
