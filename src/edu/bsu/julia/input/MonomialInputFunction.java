@@ -1,5 +1,7 @@
 package edu.bsu.julia.input;
 
+import java.util.Vector;
+
 import org.apache.commons.math.complex.Complex;
 
 import edu.bsu.julia.ComplexNumberUtils;
@@ -39,32 +41,25 @@ public class MonomialInputFunction extends InputFunction {
 		/**
 		 * if (n.isZero()) throw new IllegalArgumentException("n zero");
 		 */
-		// coefficientArray[0] = a;
 		aValue = a;
 		nValue = n;
 	}
-
+	
 	/**
-	 * !!!!CHANGE!!!! This method has no random element as the inverse of a
-	 * monomial function is always a single value. See the superclass method
-	 * description for a more general account.
+	 * This method has a random element.
 	 */
 	public Complex evaluateBackwardsRandom(Complex seed) {
-		// ComplexNumber a = coefficientArray[0];
-		// double n = coefficientArray[1].getX();
 		Complex w = seed;
 		for (int i = 0; i < getM(); i++) {
-
-			/**
-			 * w = Math.pow((ComplexNumber)w, n); w =
-			 * Math.pow((ComplexNumber)w,(ComplexNumber)n); w = a.divide(w);
-			 */
+			int randomInt = (int) Math.floor( nValue*(Math.random()) );
+			w = aValue.divide(w);
+			Complex[] nrt = w.nthRoot(nValue).toArray(new Complex[] {});
+			w = nrt[randomInt];
 		}
 		return w;
 	}
 
 	public Complex evaluateForwards(Complex seed) {
-		/** Check but I think it's good. */
 		Complex w = seed;
 		for (int i = 0; i < getM(); i++) {
 			w = w.pow(new Complex(nValue, 0));
@@ -75,27 +70,43 @@ public class MonomialInputFunction extends InputFunction {
 
 	public Complex evaluateFunction(Complex seed) {
 		Complex w = seed;
+		w = w.pow(new Complex(nValue, 0));
 		w = aValue.divide(w);
-
 		return w;
 	}
 
 	/**
-	 * This method returns an array of a single value. See the superclass method
+	 * This method returns an array with n number of values. See the superclass method
 	 * description for a more general account.
 	 */
 	public Complex[] evaluateBackwardsFull(Complex seed) {
-		// for a linear function, there is no difference between the
-		// random and full methods.
-		Complex[] result = { evaluateBackwardsRandom(seed) };
-		return result;
+		// In this case there is a difference between the random & full backwards evaluations.
+		Complex w = seed;
+		Vector<Complex> results = new Vector<Complex>();
+		results.add(w);
+		Complex[] nrt = new Complex[nValue];
+		for (int i = 0; i < getM(); i++) {
+			for (int j = 0; j < Math.pow(nValue, i); j++) {
+				w = (Complex) results.firstElement();
+				results.remove(0);
+				w = aValue.divide(w);
+				nrt = w.nthRoot(nValue).toArray(new Complex[] {});
+				for (int k = 0; k < nValue; k++) {
+					results.add(nrt[k]);
+				}
+			}
+		}
+		results.trimToSize();
+		Complex[] finalResults = new Complex[results.size()];
+		results.toArray(finalResults);
+		return finalResults;
 	}
 
 	public String toString() {
-		Complex a = coefficientArray[0];
-
+		Complex n = new Complex(nValue,0);
 		return new String("f" + getSubscript() + "(z) = "
-				+ ComplexNumberUtils.complexToString(a) + "/z " + ", m = "
+				+ ComplexNumberUtils.complexToString(aValue) + "/z^ " 
+				+ ComplexNumberUtils.complexToString(n) + ", m = "
 				+ getM());
 	}
 
