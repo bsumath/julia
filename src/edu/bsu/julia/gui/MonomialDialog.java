@@ -199,7 +199,7 @@ public class MonomialDialog extends JDialog implements ActionListener {
 		double ay = 0;
 		int nx = 0;												
 		if (axField.getText().equals("") || ayField.getText().equals("")
-				/**|| bxField.getText().equals("") || byField.getText().equals("")*/) {			/**Commented out*/
+				|| nxField.getText().equals("") ) {	
 			JuliaError.EMPTY_FIELD.showDialog(parentFrame);
 			return;
 		}
