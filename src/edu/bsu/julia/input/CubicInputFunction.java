@@ -98,8 +98,7 @@ public class CubicInputFunction extends InputFunction {
 			for (int j = 0; j < Math.pow(3, i); j++) {
 				w = (Complex) results.firstElement();
 				results.remove(0);
-				// potential ArithmeticExceptions should be handled at thread
-				// level
+				// potential ArithmeticExceptions should be handled at thread level
 				w = (w.subtract(b)).divide(a);
 				cbrt = w.nthRoot(3).toArray(new Complex[] {});
 				results.add(cbrt[0]);
@@ -119,7 +118,7 @@ public class CubicInputFunction extends InputFunction {
 
 		return new String("f" + getSubscript() + "(z) = "
 				+ ComplexNumberUtils.complexToString(a) + "z^3 + "
-				+ ComplexNumberUtils.complexToString(b) + ", m = " + getM());
+				+ ComplexNumberUtils.complexToString(b) + ", m =  " + getM());
 	}
 
 }

@@ -50,8 +50,9 @@ public class MonomialInputFunction extends InputFunction {
 	 */
 	public Complex evaluateBackwardsRandom(Complex seed) {
 		Complex w = seed;
+		int n = (nValue - 1);
 		for (int i = 0; i < getM(); i++) {
-			int randomInt = (int) Math.floor( nValue*(Math.random()) );
+			int randomInt = (int) Math.floor( n*(Math.random()) );
 			w = aValue.divide(w);
 			Complex[] nrt = w.nthRoot(nValue).toArray(new Complex[] {});
 			w = nrt[randomInt];
