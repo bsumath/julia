@@ -6,7 +6,8 @@
 
 	
 	<!-- Make all the jars and upload -->
-	<target name="all" depends="init,julia.jar,resources.jar,commons-math.jar" />
+	<target name="all" 
+		depends="init,julia.jar,resources.jar,commons-math.jar,sign-jars" />
 	
 	<!-- Initialize the build process. -->
 	<target name="init">
@@ -23,24 +24,37 @@
 	<target name="julia.jar">
 		<jar destfile="${out.dir}/julia.jar">
 			<fileset dir="${basedir}/bin" includes="**/*.class" />
-		</jar>
-		<signjar alias="${keystore.alias}" storepass="${keystore.password}"
-			keystore="${keystore}" jar="${out.dir}/julia.jar" />
+			<fileset dir="${basedir}/resources" includes="build.properties" />
+		</jar>		
 	</target>
 	
-	<!-- make the resources jar -->
+	<!-- make the resources jar (if modified)-->
 	<target name="resources.jar">  
-		<jar destfile="${out.dir}/resources.jar" 
-			basedir="${basedir}/resources" />
-		<signjar alias="${keystore.alias}" storepass="${keystore.password}" 
-			keystore="${keystore}" jar="${out.dir}/resources.jar" />  
+		<jar whenempty="skip" destfile="${out.dir}/resources.jar"> 
+			<fileset dir="${basedir}/resources">
+				<include name="**/*" /> 
+				<exclude name="build.properties" />
+				<modified />
+			</fileset>
+		</jar>		
 	</target>
 
-	<!-- copy the commons-math jar -->
+	<!-- copy commons-math jar (if modified) -->
 	<target name="commons-math.jar">
-		<copy file="${basedir}/lib/commons-math-2.0-SNAPSHOT.jar" tofile="${out.dir}/commons-math.jar"/>
+		<copy todir="${out.dir}">
+			<fileset file="${basedir}/lib/commons-math-2.0-SNAPSHOT.jar">
+				<modified />
+			</fileset>
+			<globmapper from="*-2.0-SNAPSHOT.jar" to="*.jar"/>
+		</copy>
+	</target>
+	
+	<!-- sign all the jars that are not yet signed -->
+	<target name="sign-jars">
 		<signjar alias="${keystore.alias}" storepass="${keystore.password}"
-			keystore="${keystore}" jar="${out.dir}/commons-math.jar" />
+			keystore="${keystore}" lazy="true">
+			<fileset dir="${out.dir}" includes="**/*.jar" />
+		</signjar>
 	</target>
 </project>
 

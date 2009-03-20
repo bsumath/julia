@@ -78,7 +78,7 @@ public class AboutAction extends AbstractAction {
 		for (String line : license) {
 			box.add(new JLabel(line));
 		}
-		JLabel link = null;
+		JLabel link = new JLabel(licenseURL);
 		if (Desktop.isDesktopSupported()) {
 			final Desktop desktop = Desktop.getDesktop();
 			if (desktop.isSupported(Desktop.Action.BROWSE)) {
@@ -94,8 +94,6 @@ public class AboutAction extends AbstractAction {
 						}
 					}
 				});
-			} else {
-				link = new JLabel(licenseURL);
 			}
 		}
 		box.add(link);
