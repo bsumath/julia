@@ -24,10 +24,6 @@ public class RecursiveOutputSet extends OutputSet {
 		outputSets = o;
 	}
 
-	public OutputSet[] getOutputSets() {
-		return outputSets;
-	}
-
 	public String toString() {
 		String s = "o" + getSubscript() + " = " + functionType.description()
 				+ " of ";
