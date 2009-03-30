@@ -138,7 +138,7 @@ public class MonomialDialog extends JDialog implements ActionListener {
 		functionPanel.add(new JLabel("<html>) /z^</html>"));
 
 	
-		if (dialogType == GUIUtil.EDIT_DIALOG						/**Taking the value axField which is the real part of b.*/			
+		if (dialogType == GUIUtil.EDIT_DIALOG						/**Taking the value axField which is the real part of n.*/			
 				|| dialogType == GUIUtil.CLONE_DIALOG) {
 			String show = String.valueOf(coefficients[1].getReal());
 			String showShort = show;
@@ -146,11 +146,11 @@ public class MonomialDialog extends JDialog implements ActionListener {
 				showShort = show.substring(0, 5);
 			nxField.setText(showShort);
 		} else
-			nxField.setText("0");
+			nxField.setText("1");
 		nxField.addFocusListener(new TextFieldFocusListener(nxField,
 				parentFrame));
 		functionPanel.add(nxField);
-		add(functionPanel);											/**Not sure if I should keep this line.  Wait & see I guess*/
+		add(functionPanel);
 
 		JLabel polarCheckboxLabel = new JLabel(
 				"Coefficient Values Use Polar Coordinates", JLabel.LEFT);

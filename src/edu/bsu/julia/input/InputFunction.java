@@ -177,7 +177,7 @@ public abstract class InputFunction {
 
 			for (int i = 0; result && i < coefficientArray.length; i++) {
 				result = result
-						&& f.coefficientArray[i].equals(coefficientArray[i]);
+						&& f.coefficientArray[i].equals(coefficientArray[i]);				/*Line 180!*/
 			}
 
 			return result;

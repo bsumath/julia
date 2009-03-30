@@ -6,16 +6,18 @@ import javax.swing.AbstractAction;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 
-import edu.bsu.julia.Julia;
+import edu.bsu.julia.Julia;								/* Import the new Input Function here! */
 import edu.bsu.julia.gui.CubicDialog;
 import edu.bsu.julia.gui.GUIUtil;
 import edu.bsu.julia.gui.LinearDialog;
 import edu.bsu.julia.gui.MobiusDialog;
+import edu.bsu.julia.gui.MonomialDialog;
 import edu.bsu.julia.gui.QuadraticDialog;
 import edu.bsu.julia.gui.RealAffineLinearDialog;
 import edu.bsu.julia.input.CubicInputFunction;
 import edu.bsu.julia.input.InputFunction;
 import edu.bsu.julia.input.LinearInputFunction;
+import edu.bsu.julia.input.MonomialInputFunction;
 import edu.bsu.julia.input.MobiusInputFunction;
 import edu.bsu.julia.input.QuadraticInputFunction;
 import edu.bsu.julia.input.RealAffineLinearInputFunction;
@@ -38,7 +40,7 @@ public class EditFunctionAction extends AbstractAction {
 		putValue("LONG_DESCRIPTION", "Edit the chosen function.");
 	}
 
-	public void actionPerformed(ActionEvent arg0) {
+	public void actionPerformed(ActionEvent arg0) {			/* Add an additional 'else if' statement below! */
 		InputFunction fn;
 		if (index < inputList.size())
 			fn = (InputFunction) inputList.get(index);
@@ -60,6 +62,9 @@ public class EditFunctionAction extends AbstractAction {
 		} else if (fn instanceof RealAffineLinearInputFunction) {
 			RealAffineLinearInputFunction mFn = (RealAffineLinearInputFunction) fn;
 			new RealAffineLinearDialog(parentFrame, GUIUtil.EDIT_DIALOG, mFn);
+		} else if (fn instanceof MonomialInputFunction) {
+			MonomialInputFunction mFn = (MonomialInputFunction) fn;
+			new MonomialDialog(parentFrame, GUIUtil.EDIT_DIALOG, mFn);
 		}
 	}
 

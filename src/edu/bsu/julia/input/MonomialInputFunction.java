@@ -1,3 +1,14 @@
+/*
+ * ISSUES:
+ * 		1. Still can't get the inverse image to work for n > 1.
+ * 		2. When editing a function an error will show saying "Coefficient values must be real values."  
+ * 		This error shows even if a real value is inputed.  Oddly things will work if you retype the n value.
+ * 
+ * Fixes To Go:
+ * 		1. Check for if n is negative.
+ */
+
+
 package edu.bsu.julia.input;
 
 import java.util.Vector;
@@ -11,8 +22,7 @@ import edu.bsu.julia.ComplexNumberUtils;
  * <h3>Description</h3>
  * <p>
  * MonomialInputFunction is a subclass of InputFunction representing a function
- * of the form: a/z^n, where a & n is a coefficient and both are complex
- * numbers.
+ * of the form: a/z^n, where a is a complex coefficient and n is an integer coefficient.
  * </p>
  * 
  */
@@ -36,13 +46,18 @@ public class MonomialInputFunction extends InputFunction {
 	public MonomialInputFunction(int mValue, Complex a, int n)
 			throws IllegalArgumentException {
 		super(2, mValue);
-		if (a.equals(Complex.ZERO))
-			throw new IllegalArgumentException("a zero");
-		/**
-		 * if (n.isZero()) throw new IllegalArgumentException("n zero");
-		 */
+		if (a.equals(Complex.ZERO)) throw new IllegalArgumentException("a zero");
+		/*if (nValue < 1) throw new IllegalArgumentException("n negative");*/
 		aValue = a;
 		nValue = n;
+		/*
+		 * The following 3 lines are required to do Editing and Cloning on a function.
+		 * This is needed to be done because nValue & aValue were created above for 
+		 * convenience when writing code.
+		 */
+		coefficientArray[0] = a;
+		Complex temp = new Complex(n,0);
+		coefficientArray[1] = temp;
 	}
 	
 	/**
@@ -50,11 +65,11 @@ public class MonomialInputFunction extends InputFunction {
 	 */
 	public Complex evaluateBackwardsRandom(Complex seed) {
 		Complex w = seed;
-		int n = (nValue - 1);
+		Complex[] nrt = new Complex[nValue];
 		for (int i = 0; i < getM(); i++) {
-			int randomInt = (int) Math.floor( n*(Math.random()) );
+			int randomInt = (int) Math.floor( nValue*(Math.random()) );
 			w = aValue.divide(w);
-			Complex[] nrt = w.nthRoot(nValue).toArray(new Complex[] {});
+			/*Complex[]*/ nrt = w.nthRoot(nValue).toArray(new Complex[] {});
 			w = nrt[randomInt];
 		}
 		return w;
@@ -103,11 +118,9 @@ public class MonomialInputFunction extends InputFunction {
 		return finalResults;
 	}
 
-	public String toString() {
-		Complex n = new Complex(nValue,0);
-		return new String("f" + getSubscript() + "(z) = "
+	public String toString() {return new String("f" + getSubscript() + "(z) = "
 				+ ComplexNumberUtils.complexToString(aValue) + "/z^ " 
-				+ ComplexNumberUtils.complexToString(n) + ", m = "
+				+ nValue + ", m = "
 				+ getM());
 	}
 
