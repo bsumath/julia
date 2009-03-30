@@ -1,5 +1,8 @@
 This file is devoted to giving helping hints if you are trying to add additional input functions to Julia.
 
+The following website gives descriptions on the implementations of arithmetic operations for complex numbers:
+http://commons.apache.org/math/apidocs/org/apache/commons/math/complex/Complex.html
+
 The first step in creating a new input function is to create a new file called <New>InputFunction.java.
 Note that the name of the function should be in place of <New>.  When creating this file it's helpful to look 
 at the other input files.  
@@ -7,11 +10,18 @@ at the other input files.
 Secondly, go into the file AddFunctionAction which is located in edu.bsu.julia.gui.actions.
 From here several things will need to be edited/added.  There will be comments to the right of the code that
 will give directions in what should be done.  It is very helpful to note that when another case is added it will
-be necessary to import the <New>Dialog file.  This is done in ecilpse by hovering over <New>Dialog then choosing 
+be necessary to import the <New>Dialog file.  This is done in eclipse by hovering over <New>Dialog then choosing 
 the option to import <New>Dialog.
 
 The third step will be to create a <New>Dialog.java file in edu.bsu.julia.gui.  Again, looking at other dialog 
 files for an input function will be extremely helpful.  Copying & pasting is wonderful. If you do not have much
 experience in programming it is good to know that comments for lines will either be above or to the right.
 
-This file has be created by tlledgerwood@bsu.edu.  Edited:  1/30/09
+The fourth step will be to edit the EditFunctionAction.java file.  This file allows a user to edit the values of 
+the input function.  Again, comments will be to the right with directions.  Here <New>Dailog at the end of the 
+file will need to be imported.
+
+The fifth step will be to edit the CopyFunctionAction.java file.  Again, comments will be to the right with directions.  
+Here <New>Dailog at the end of the file will need to be imported.
+
+**More to come**
