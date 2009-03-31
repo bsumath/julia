@@ -30,11 +30,10 @@
 	
 	<!-- make the resources jar (if modified)-->
 	<target name="resources.jar">  
-		<jar whenempty="skip" destfile="${out.dir}/resources.jar"> 
+		<jar update="true" whenempty="skip" destfile="${out.dir}/resources.jar"> 
 			<fileset dir="${basedir}/resources">
 				<include name="**/*" /> 
 				<exclude name="build.properties" />
-				<modified />
 			</fileset>
 		</jar>		
 	</target>
