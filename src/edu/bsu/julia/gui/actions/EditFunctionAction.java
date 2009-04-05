@@ -40,7 +40,7 @@ public class EditFunctionAction extends AbstractAction {
 		putValue("LONG_DESCRIPTION", "Edit the chosen function.");
 	}
 
-	public void actionPerformed(ActionEvent arg0) {			/* Add an additional 'else if' statement below! */
+	public void actionPerformed(ActionEvent arg0) {						/* Add an additional 'else if' statement below! */
 		InputFunction fn;
 		if (index < inputList.size())
 			fn = (InputFunction) inputList.get(index);

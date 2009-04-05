@@ -24,10 +24,12 @@ import edu.bsu.julia.gui.JuliaError;
 import edu.bsu.julia.gui.TextFieldFocusListener;
 import edu.bsu.julia.input.CubicInputFunction;
 import edu.bsu.julia.input.InputFunction;
+import edu.bsu.julia.input.MonomialInputFunction;
 import edu.bsu.julia.input.QuadraticInputFunction;
 import edu.bsu.julia.output.OutputSet;
 import edu.bsu.julia.output.PostCriticalOutputSet;
 import edu.bsu.julia.session.Session;
+
 
 public class PostCriticalAction extends AbstractAction {
 	private static final long serialVersionUID = -2696427897141258816L;

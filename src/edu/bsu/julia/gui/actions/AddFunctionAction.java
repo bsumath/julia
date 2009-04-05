@@ -59,7 +59,7 @@ public class AddFunctionAction extends AbstractAction {
 		choices[2] = "<html><h2>az<sup>2</sup> + bz + c</h2></html>";
 		choices[3] = "<html><h2>az<sup>3</sup> + b</h2></html>";
 		choices[4] = "<html><h2>[a, b ; c, d]z + [e ; f]</h2></html>";
-		choices[5] = "<html><h2>a/z<sup>n</sup></h2></html>";
+		choices[5] = "<html><h2>az<sup>n</sup> + k</h2></html>";
 		final JList list = new JList(choices);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list.setVisibleRowCount(6);								/**Change the number here.*/
