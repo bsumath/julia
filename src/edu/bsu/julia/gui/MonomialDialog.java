@@ -22,7 +22,7 @@ import edu.bsu.julia.session.Session;
  * 
  * <h3>Description</h3>
  * <p>
- * Creates a dialog box for the function type: a/z^n. This dialog is used when
+ * Creates a dialog box for the function type: a/z^b + c. This dialog is used when
  * creating a new linear function, editing an existing function, or cloneing an
  * existing function.
  * 
@@ -60,7 +60,17 @@ public class MonomialDialog extends JDialog implements ActionListener {
 	 */
 	private JTextField ayField = new JTextField(3);
 	
-	private JTextField nxField = new JTextField(3);
+	private JTextField bxField = new JTextField(3);
+	/**
+	 * The text field in which the user enters the real portion of the
+	 * function's 'k' coefficient.
+	 */
+	private JTextField cxField = new JTextField(3);
+	/**
+	 * The text field in which the user enters the number which, multiplied by
+	 * i, is the imaginary portion of the function's 'k' coefficient.
+	 */
+	private JTextField cyField = new JTextField(3);
 	
 	public static final long serialVersionUID = 0;
 	// for serializable interface: do not use
@@ -86,8 +96,9 @@ public class MonomialDialog extends JDialog implements ActionListener {
 		parentFrame = f;
 		dialogType = type;
 		function = fn;
-
-		Complex[] coefficients = new Complex[1];				/**Changed the 2 here to a 1.*/
+		
+		/*Change the number below to the number of coefficients - 1 there are for the function.*/
+		Complex[] coefficients = new Complex[2];
 		if (dialogType == GUIUtil.EDIT_DIALOG
 				|| dialogType == GUIUtil.CLONE_DIALOG)
 			coefficients = function.getCoefficients();
@@ -135,23 +146,54 @@ public class MonomialDialog extends JDialog implements ActionListener {
 		ayField.addFocusListener(new TextFieldFocusListener(ayField,
 				parentFrame));
 		functionPanel.add(ayField);
-		functionPanel.add(new JLabel("<html>) /z^</html>"));
+		functionPanel.add(new JLabel("<html>) z^</html>"));
 
 	
-		if (dialogType == GUIUtil.EDIT_DIALOG						/**Taking the value axField which is the real part of n.*/			
+		if (dialogType == GUIUtil.EDIT_DIALOG						/**Taking the value nxField which is the real part of n.*/			
 				|| dialogType == GUIUtil.CLONE_DIALOG) {
 			String show = String.valueOf(coefficients[1].getReal());
 			String showShort = show;
 			if (show.length() > 5)
 				showShort = show.substring(0, 5);
-			nxField.setText(showShort);
+			bxField().setText(showShort);
 		} else
-			nxField.setText("1");
-		nxField.addFocusListener(new TextFieldFocusListener(nxField,
+			bxField().setText("1");
+		bxField().addFocusListener(new TextFieldFocusListener(bxField(),
 				parentFrame));
-		functionPanel.add(nxField);
+		functionPanel.add(bxField());
+		
+		/*NEW PART FOR b*/
+		functionPanel.add(new JLabel("<html> + (</html>"));
+		if (dialogType == GUIUtil.EDIT_DIALOG						/**Taking the value bxField which is the real part of b.*/
+				|| dialogType == GUIUtil.CLONE_DIALOG) {
+			String show = String.valueOf(coefficients[2].getReal());
+			String showShort = show;
+			if (show.length() > 5)
+				showShort = show.substring(0, 5);
+			cxField.setText(showShort);
+		} else
+			cxField.setText("0");
+		cxField.addFocusListener(new TextFieldFocusListener(cxField,
+				parentFrame));
+		functionPanel.add(cxField);
+		functionPanel.add(new JLabel(", "));
+		if (dialogType == GUIUtil.EDIT_DIALOG						/**Taking the value byField which is the imaginary part of b.*/
+				|| dialogType == GUIUtil.CLONE_DIALOG) {
+			String show = String.valueOf(coefficients[2].getImaginary());
+			String showShort = show;
+			if (show.length() > 5)
+				showShort = show.substring(0, 5);
+			cyField.setText(showShort);
+		} else
+			cyField.setText("0");
+		cyField.addFocusListener(new TextFieldFocusListener(cyField,
+				parentFrame));
+		functionPanel.add(cyField);
+		functionPanel.add(new JLabel("<html>)</html>"));
+		/*END OF NEW PART FOR b*/
 		add(functionPanel);
 
+		
 		JLabel polarCheckboxLabel = new JLabel(
 				"Coefficient Values Use Polar Coordinates", JLabel.LEFT);
 		add(polarCheckboxLabel);
@@ -171,7 +213,7 @@ public class MonomialDialog extends JDialog implements ActionListener {
 		});
 		add(cancelButton);
 
-		setSize(280, 200);
+		setSize(325, 200);
 		setLocationRelativeTo(parentFrame);
 		setVisible(true);
 	}
@@ -197,9 +239,11 @@ public class MonomialDialog extends JDialog implements ActionListener {
 		}
 		double ax = 0;
 		double ay = 0;
-		int nx = 0;												
+		int bx = 0;
+		double cx = 0;
+		double cy = 0;
 		if (axField.getText().equals("") || ayField.getText().equals("")
-				|| nxField.getText().equals("") ) {	
+				|| bxField().getText().equals("") ) {	
 			JuliaError.EMPTY_FIELD.showDialog(parentFrame);
 			return;
 		}
@@ -207,27 +251,35 @@ public class MonomialDialog extends JDialog implements ActionListener {
 		axString = GUIUtil.parsePI(axString);
 		String ayString = GUIUtil.removeCommas(ayField.getText());
 		ayString = GUIUtil.parsePI(ayString);
-		String nxString = GUIUtil.removeCommas(nxField.getText());
+		String nxString = GUIUtil.removeCommas(bxField().getText());
 		nxString = GUIUtil.parsePI(nxString);
-
+		String bxString = GUIUtil.removeCommas(cxField.getText());
+		bxString = GUIUtil.parsePI(bxString);
+		String byString = GUIUtil.removeCommas(cyField.getText());
+		byString = GUIUtil.parsePI(byString);
+		
 		try {
 			ax = Double.parseDouble(axString);
 			ay = Double.parseDouble(ayString);
-			nx = Integer.parseInt(nxString);
+			bx = Integer.parseInt(nxString);
+			cx = Double.parseDouble(bxString);
+			cy = Double.parseDouble(byString);
 		} catch (NumberFormatException e) {
 			JuliaError.COEFFICIENT_FORMAT_ERROR.showDialog(parentFrame);
 			return;
 		}
 
 		Complex a = new Complex(ax, ay);
+		Complex c = new Complex(cx, cy);
 
 		if (polarCheckBox.getState()) {
 			a = ComplexUtils.polar2Complex(ax, ay);
+			c = ComplexUtils.polar2Complex(cx, cy);
 		}
 
 		MonomialInputFunction newFunction;
 		try {
-			newFunction = new MonomialInputFunction(m, a, nx);
+			newFunction = new MonomialInputFunction(m, a, bx, c);
 		} catch (IllegalArgumentException e) {
 			if (e.getMessage().equals("a zero"))
 				JuliaError.LINEAR_ILLEGAL_ARGUMENT.showDialog(parentFrame);
@@ -245,6 +297,14 @@ public class MonomialDialog extends JDialog implements ActionListener {
 
 		setVisible(false);
 		dispose();
+	}
+
+	public void setCxField(JTextField nxField) {
+		this.bxField = nxField;
+	}
+
+	public JTextField bxField() {
+		return bxField;
 	}
 
 }

@@ -1,6 +1,7 @@
 package edu.bsu.julia.generators;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JFrame;

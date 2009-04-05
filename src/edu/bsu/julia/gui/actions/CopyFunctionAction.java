@@ -40,7 +40,7 @@ public class CopyFunctionAction extends AbstractAction {
 		putValue("LONG_DESCRIPTION", "Copy the chosen function.");
 	}
 
-	public void actionPerformed(ActionEvent arg0) {
+	public void actionPerformed(ActionEvent arg0) {							/*ADD ANOTHER ELSE IF HERE!*/
 		InputFunction fn = (InputFunction) inputList.get(index);
 		if (fn instanceof LinearInputFunction) {
 			LinearInputFunction lFn = (LinearInputFunction) fn;
@@ -59,7 +59,7 @@ public class CopyFunctionAction extends AbstractAction {
 			new RealAffineLinearDialog(parentFrame, GUIUtil.CLONE_DIALOG, mFn);
 		} else if (fn instanceof MonomialInputFunction) {
 			MonomialInputFunction mFn = (MonomialInputFunction) fn;
-			new MonomialDialog(parentFrame, GUIUtil.EDIT_DIALOG, mFn);
+			new MonomialDialog(parentFrame, GUIUtil.CLONE_DIALOG, mFn);
 		}
 
 	}

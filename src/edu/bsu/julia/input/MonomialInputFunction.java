@@ -1,11 +1,11 @@
 /*
  * ISSUES:
- * 		1. Still can't get the inverse image to work for n > 1.
- * 		2. When editing a function an error will show saying "Coefficient values must be real values."  
- * 		This error shows even if a real value is inputed.  Oddly things will work if you retype the n value.
+ * 		1. When editing a function an error will show saying "Coefficient values must be real values."  
+ * 		This error shows even if a real value is inputed.  Oddly things will work if you retype the b value.
+ * 		I think what is going on is b is supposed to be an integer and it's getting angry at b.0 and then
+ * 		showing an error that's not correct for what's really going on.  Need to change the default of b
+ * 		somehow so that it doesn't show up at b.0 .
  * 
- * Fixes To Go:
- * 		1. Check for if n is negative.
  */
 
 
@@ -22,72 +22,78 @@ import edu.bsu.julia.ComplexNumberUtils;
  * <h3>Description</h3>
  * <p>
  * MonomialInputFunction is a subclass of InputFunction representing a function
- * of the form: a/z^n, where a is a complex coefficient and n is an integer coefficient.
+ * of the form: a*z^b + c, where a and c are complex coefficients and b is an integer coefficient.
  * </p>
  * 
  */
 public class MonomialInputFunction extends InputFunction {
 
-	private int nValue;
-
 	private Complex aValue;
+	
+	private int bValue;
+	
+	private Complex cValue;
 
 	/**
 	 * Calls the superclass constructor to set up the m value and coefficient
-	 * array and then fills that array with the coefficient parameters, a & n.
+	 * array and then fills that array with the coefficient parameters, a, b, & c.
 	 * 
 	 * @param mValue
 	 * @param a
-	 * @param n
+	 * @param b
+	 * @param c
 	 * @throws IllegalArgumentException
-	 *             if a is zero.
+	 *             if a is zero
 	 * @see InputFunction#InputFunction(int, int)
 	 */
-	public MonomialInputFunction(int mValue, Complex a, int n)
+	public MonomialInputFunction(int mValue, Complex a, int b, Complex c)
 			throws IllegalArgumentException {
-		super(2, mValue);
-		if (a.equals(Complex.ZERO)) throw new IllegalArgumentException("a zero");
-		/*if (nValue < 1) throw new IllegalArgumentException("n negative");*/
+		super(3, mValue);
+		if (a.equals(Complex.ZERO))
+			throw new IllegalArgumentException("a zero");
 		aValue = a;
-		nValue = n;
+		bValue = b;
+		cValue = c;
 		/*
-		 * The following 3 lines are required to do Editing and Cloning on a function.
-		 * This is needed to be done because nValue & aValue were created above for 
+		 * The following 4 lines are required to do Editing and Cloning on a function.
+		 * This is needed to be done because aValue, bValue, and cValue were created above for 
 		 * convenience when writing code.
 		 */
 		coefficientArray[0] = a;
-		Complex temp = new Complex(n,0);
+		Complex temp = new Complex(b,0);
 		coefficientArray[1] = temp;
+		coefficientArray[2] = c;
 	}
 	
-	/**
-	 * This method has a random element.
-	 */
 	public Complex evaluateBackwardsRandom(Complex seed) {
 		Complex w = seed;
-		Complex[] nrt = new Complex[nValue];
 		for (int i = 0; i < getM(); i++) {
-			int randomInt = (int) Math.floor( nValue*(Math.random()) );
-			w = aValue.divide(w);
-			/*Complex[]*/ nrt = w.nthRoot(nValue).toArray(new Complex[] {});
+			int randomInt = (int) Math.floor( bValue*(Math.random()) );
+			w = w.subtract(cValue);
+			w = w.divide(aValue);
+			Complex[] nrt = w.nthRoot(bValue).toArray(new Complex[] {});
 			w = nrt[randomInt];
 		}
 		return w;
 	}
 
+
 	public Complex evaluateForwards(Complex seed) {
 		Complex w = seed;
 		for (int i = 0; i < getM(); i++) {
-			w = w.pow(new Complex(nValue, 0));
-			w = aValue.divide(w);
+			w = w.pow(new Complex(bValue, 0));
+			w = aValue.multiply(w);
+			w = w.add(cValue);
 		}
+
 		return w;
 	}
 
 	public Complex evaluateFunction(Complex seed) {
 		Complex w = seed;
-		w = w.pow(new Complex(nValue, 0));
-		w = aValue.divide(w);
+		w = w.pow(new Complex(bValue, 0));
+		w = aValue.multiply(w);
+		w = w.add(cValue);
 		return w;
 	}
 
@@ -100,14 +106,15 @@ public class MonomialInputFunction extends InputFunction {
 		Complex w = seed;
 		Vector<Complex> results = new Vector<Complex>();
 		results.add(w);
-		Complex[] nrt = new Complex[nValue];
+		Complex[] nrt = new Complex[bValue];
 		for (int i = 0; i < getM(); i++) {
-			for (int j = 0; j < Math.pow(nValue, i); j++) {
+			for (int j = 0; j < Math.pow(bValue, i); j++) {
 				w = (Complex) results.firstElement();
 				results.remove(0);
-				w = aValue.divide(w);
-				nrt = w.nthRoot(nValue).toArray(new Complex[] {});
-				for (int k = 0; k < nValue; k++) {
+				w = w.subtract(cValue);
+				w = w.divide(aValue);
+				nrt = w.nthRoot(bValue).toArray(new Complex[] {});
+				for (int k = 0; k < bValue; k++) {
 					results.add(nrt[k]);
 				}
 			}
@@ -118,10 +125,11 @@ public class MonomialInputFunction extends InputFunction {
 		return finalResults;
 	}
 
-	public String toString() {return new String("f" + getSubscript() + "(z) = "
+	public String toString() {
+		return new String("f" + getSubscript() + "(z) = "
 				+ ComplexNumberUtils.complexToString(aValue) + "/z^ " 
-				+ nValue + ", m = "
-				+ getM());
+				+ bValue + " + " + ComplexNumberUtils.complexToString(cValue) 
+				+ ", m = " + getM());
 	}
 
 }
