@@ -51,6 +51,9 @@ public class MonomialInputFunction extends InputFunction {
 		super(3, mValue);
 		if (a.equals(Complex.ZERO))
 			throw new IllegalArgumentException("a zero");
+		Complex temp = new Complex(b,0);
+		if (temp.equals(Complex.ZERO))
+			throw new IllegalArgumentException("n zero");
 		aValue = a;
 		bValue = b;
 		cValue = c;
@@ -60,20 +63,51 @@ public class MonomialInputFunction extends InputFunction {
 		 * convenience when writing code.
 		 */
 		coefficientArray[0] = a;
-		Complex temp = new Complex(b,0);
 		coefficientArray[1] = temp;
 		coefficientArray[2] = c;
 	}
 	
+	/*
+	 * Dr. Stankewitz:  Here is the code where I am trying to fix things!
+	 */
+	
 	public Complex evaluateBackwardsRandom(Complex seed) {
 		Complex w = seed;
+		Complex a = coefficientArray[0];
+		int b = (int) coefficientArray[1].getReal();
+		Complex c = coefficientArray[2];
+		
+		int temp1 = Math.abs(b);
 		for (int i = 0; i < getM(); i++) {
-			int randomInt = (int) Math.floor( bValue*(Math.random()) );
-			w = w.subtract(cValue);
-			w = w.divide(aValue);
-			Complex[] nrt = w.nthRoot(bValue).toArray(new Complex[] {});
+			int randomInt = (int) Math.floor( b*(Math.random()) );
+			if (b > 0) {
+				w = w.subtract(c);
+				w = w.divide(a);
+			}
+			if (b < 0) {
+				w = w.subtract(c);
+				w = a.divide(w);
+			}
+			Complex[] nrt = w.nthRoot(temp1).toArray(new Complex[] {});
 			w = nrt[randomInt];
 		}
+		
+		/*
+		int temp1 = Math.abs(bValue);
+		for (int i = 0; i < getM(); i++) {
+			int randomInt = (int) Math.floor( bValue*(Math.random()) );
+			if (bValue > 0) {
+				w = w.subtract(cValue);
+				w = w.divide(aValue);
+			}
+			if (bValue < 0) {
+				w = w.subtract(cValue);
+				w = aValue.divide(w);
+			}
+			Complex[] nrt = w.nthRoot(temp1).toArray(new Complex[] {});
+			w = nrt[randomInt];
+		}
+		*/
 		return w;
 	}
 

@@ -149,22 +149,22 @@ public class MonomialDialog extends JDialog implements ActionListener {
 		functionPanel.add(new JLabel("<html>) z^</html>"));
 
 	
-		if (dialogType == GUIUtil.EDIT_DIALOG						/**Taking the value nxField which is the real part of n.*/			
+		if (dialogType == GUIUtil.EDIT_DIALOG						/**Taking the value bxField which is the real part of n.*/			
 				|| dialogType == GUIUtil.CLONE_DIALOG) {
 			String show = String.valueOf(coefficients[1].getReal());
 			String showShort = show;
 			if (show.length() > 5)
 				showShort = show.substring(0, 5);
-			bxField().setText(showShort);
+			bxField.setText(showShort);
 		} else
-			bxField().setText("1");
-		bxField().addFocusListener(new TextFieldFocusListener(bxField(),
+			bxField.setText("1");
+		bxField.addFocusListener(new TextFieldFocusListener(bxField,
 				parentFrame));
-		functionPanel.add(bxField());
+		functionPanel.add(bxField);
 		
-		/*NEW PART FOR b*/
+		/*NEW PART FOR c*/
 		functionPanel.add(new JLabel("<html> + (</html>"));
-		if (dialogType == GUIUtil.EDIT_DIALOG						/**Taking the value bxField which is the real part of b.*/
+		if (dialogType == GUIUtil.EDIT_DIALOG						/**Taking the value cxField which is the real part of b.*/
 				|| dialogType == GUIUtil.CLONE_DIALOG) {
 			String show = String.valueOf(coefficients[2].getReal());
 			String showShort = show;
@@ -177,7 +177,7 @@ public class MonomialDialog extends JDialog implements ActionListener {
 				parentFrame));
 		functionPanel.add(cxField);
 		functionPanel.add(new JLabel(", "));
-		if (dialogType == GUIUtil.EDIT_DIALOG						/**Taking the value byField which is the imaginary part of b.*/
+		if (dialogType == GUIUtil.EDIT_DIALOG						/**Taking the value cyField which is the imaginary part of b.*/
 				|| dialogType == GUIUtil.CLONE_DIALOG) {
 			String show = String.valueOf(coefficients[2].getImaginary());
 			String showShort = show;
@@ -190,7 +190,7 @@ public class MonomialDialog extends JDialog implements ActionListener {
 				parentFrame));
 		functionPanel.add(cyField);
 		functionPanel.add(new JLabel("<html>)</html>"));
-		/*END OF NEW PART FOR b*/
+		/*END OF NEW PART FOR c*/
 		add(functionPanel);
 
 		
@@ -243,7 +243,7 @@ public class MonomialDialog extends JDialog implements ActionListener {
 		double cx = 0;
 		double cy = 0;
 		if (axField.getText().equals("") || ayField.getText().equals("")
-				|| bxField().getText().equals("") ) {	
+				|| bxField.getText().equals("") ) {	
 			JuliaError.EMPTY_FIELD.showDialog(parentFrame);
 			return;
 		}
@@ -251,19 +251,19 @@ public class MonomialDialog extends JDialog implements ActionListener {
 		axString = GUIUtil.parsePI(axString);
 		String ayString = GUIUtil.removeCommas(ayField.getText());
 		ayString = GUIUtil.parsePI(ayString);
-		String nxString = GUIUtil.removeCommas(bxField().getText());
-		nxString = GUIUtil.parsePI(nxString);
-		String bxString = GUIUtil.removeCommas(cxField.getText());
+		String bxString = GUIUtil.removeCommas(bxField.getText());
 		bxString = GUIUtil.parsePI(bxString);
-		String byString = GUIUtil.removeCommas(cyField.getText());
-		byString = GUIUtil.parsePI(byString);
+		String cxString = GUIUtil.removeCommas(cxField.getText());
+		cxString = GUIUtil.parsePI(cxString);
+		String cyString = GUIUtil.removeCommas(cyField.getText());
+		cyString = GUIUtil.parsePI(cyString);
 		
 		try {
 			ax = Double.parseDouble(axString);
 			ay = Double.parseDouble(ayString);
-			bx = Integer.parseInt(nxString);
-			cx = Double.parseDouble(bxString);
-			cy = Double.parseDouble(byString);
+			bx = Integer.parseInt(bxString);
+			cx = Double.parseDouble(cxString);
+			cy = Double.parseDouble(cyString);
 		} catch (NumberFormatException e) {
 			JuliaError.COEFFICIENT_FORMAT_ERROR.showDialog(parentFrame);
 			return;
@@ -298,7 +298,7 @@ public class MonomialDialog extends JDialog implements ActionListener {
 		setVisible(false);
 		dispose();
 	}
-
+/*
 	public void setCxField(JTextField nxField) {
 		this.bxField = nxField;
 	}
@@ -306,5 +306,5 @@ public class MonomialDialog extends JDialog implements ActionListener {
 	public JTextField bxField() {
 		return bxField;
 	}
-
+*/
 }
