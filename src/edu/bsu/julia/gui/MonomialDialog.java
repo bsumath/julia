@@ -92,7 +92,7 @@ public class MonomialDialog extends JDialog implements ActionListener {
 	 *            the function to be edited or cloned
 	 */
 	public MonomialDialog(Julia f, int type, MonomialInputFunction fn) {
-		super(f, "Create a Test Function", false);
+		super(f, "Create a Monomial Function", false);
 		parentFrame = f;
 		dialogType = type;
 		function = fn;
