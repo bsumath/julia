@@ -10,8 +10,9 @@
 
 package edu.bsu.julia.input;
 
-import java.util.Stack;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import org.apache.commons.math.complex.Complex;
 
@@ -69,45 +70,21 @@ public class MonomialInputFunction extends InputFunction {
 		coefficientArray[2] = c;
 	}
 
-	/*
-	 * Dr. Stankewitz: Here is the code where I am trying to fix things!
-	 */
 	public Complex evaluateBackwardsRandom(Complex seed) {
+		Random random = new Random();
 		Complex w = seed;
-		Complex a = coefficientArray[0];
-		int b = (int) coefficientArray[1].getReal();
-		Complex c = coefficientArray[2];
-
-		int temp1 = Math.abs(b);
+		int bAbs = Math.abs(bValue);
 		for (int i = 0; i < getM(); i++) {
-			int randomInt = (int) Math.floor(b * (Math.random()));
-			if (b > 0) {
-				w = w.subtract(c);
-				w = w.divide(a);
+			w = w.subtract(cValue);
+			w = w.divide(aValue);
+
+			List<Complex> roots = w.nthRoot(bAbs);
+			w = roots.get(random.nextInt(bAbs));
+
+			if (bValue < 0) {
+				w = Complex.ONE.divide(w);
 			}
-			if (b < 0) {
-				w = w.subtract(c);
-				w = a.divide(w);
-			}
-			Complex[] nrt = w.nthRoot(temp1).toArray(new Complex[] {});
-			w = nrt[randomInt];
 		}
-
-		// int temp1 = Math.abs(bValue);
-		// for (int i = 0; i < getM(); i++) {
-		// int randomInt = (int) Math.floor( bValue*(Math.random()) );
-		// if (bValue > 0) {
-		// w = w.subtract(cValue);
-		// w = w.divide(aValue);
-		// }
-		// if (bValue < 0) {
-		// w = w.subtract(cValue);
-		// w = aValue.divide(w);
-		// }
-		// Complex[] nrt = w.nthRoot(temp1).toArray(new Complex[] {});
-		// w = nrt[randomInt];
-		// }
-
 		return w;
 	}
 
@@ -125,31 +102,46 @@ public class MonomialInputFunction extends InputFunction {
 	public Complex evaluateFunction(Complex seed) {
 		Complex w = seed;
 		w = w.pow(new Complex(bValue, 0));
-		w = aValue.multiply(w);
+		w = w.multiply(aValue);
 		w = w.add(cValue);
 		return w;
 	}
 
-	/**
-	 * This method returns an array with n number of values. See the superclass
-	 * method description for a more general account.
-	 */
 	public Complex[] evaluateBackwardsFull(Complex seed) {
-		// In this case there is a difference between the random & full
-		// backwards evaluations.
-		Stack<Complex> stack = new Stack<Complex>();
-		stack.add(seed);
 
+		// start with the seed
+		List<Complex> result = new ArrayList<Complex>();
+		result.add(seed);
+
+		// loop M times
 		for (int i = 0; i < getM(); i++) {
-			for (int j = 0; j < Math.pow(bValue, i); j++) {
-				Complex w = stack.pop();
-				w = w.subtract(cValue);
-				w = w.divide(aValue);
-				stack.addAll(w.nthRoot(bValue));
+
+			// collect the results of this pass in a temp list
+			List<Complex> tempResult = new ArrayList<Complex>();
+			for (Complex number : result) {
+				number = number.subtract(cValue);
+				number = number.divide(aValue);
+				List<Complex> roots = number.nthRoot(Math.abs(bValue));
+
+				// if bValue is negative, divide all the roots and add them to
+				// the temporary result list, otherwise just add them to the
+				// list
+				if (bValue < 0) {
+					for (Complex root : roots) {
+						tempResult.add(Complex.ONE.divide(root));
+					}
+				} else {
+					tempResult.addAll(roots);
+				}
 			}
+
+			// the temp results become the list to work from for the next pass
+			// in the loop
+			result = tempResult;
 		}
 
-		return stack.toArray(new Complex[] {});
+		// return the final results
+		return result.toArray(new Complex[] {});
 	}
 
 	public String toString() {
