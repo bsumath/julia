@@ -53,7 +53,7 @@ public class AddFunctionAction extends AbstractAction {
 
 		final JButton nextButton = new JButton("Next >>>");
 
-		String[] choices = new String[7];						/**Change the number here.*/
+		String[] choices = new String[6];						/**Change the number here.*/
 		choices[0] = "<html><h2>az + b</h2></html>";
 		choices[1] = "<html><h2>(az + b) / (cz + d)</h2></html>";
 		choices[2] = "<html><h2>az<sup>2</sup> + bz + c</h2></html>";
@@ -62,7 +62,7 @@ public class AddFunctionAction extends AbstractAction {
 		choices[5] = "<html><h2>az<sup>n</sup> + k</h2></html>";
 		final JList list = new JList(choices);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		list.setVisibleRowCount(6);								/**Change the number here.*/
+		list.setVisibleRowCount(choices.length + 1);
 		list.setSelectedIndex(0);
 		list.addMouseListener(new MouseAdapter() {
 			@Override
