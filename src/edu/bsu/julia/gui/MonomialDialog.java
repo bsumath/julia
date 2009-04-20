@@ -1,7 +1,8 @@
 package edu.bsu.julia.gui;
 
 import java.awt.Checkbox;
-import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -104,9 +105,10 @@ public class MonomialDialog extends JDialog implements ActionListener {
 			coefficients = function.getCoefficients();
 
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setLayout(new FlowLayout());
+		setLayout(new GridLayout(0,1));
 
-		add(new JLabel("Enter the m value:  "));
+		JPanel mPanel = new JPanel();
+		mPanel.add(new JLabel("Enter the m value:"));
 		if (dialogType == GUIUtil.EDIT_DIALOG
 				|| dialogType == GUIUtil.CLONE_DIALOG)
 			mField.setText("" + function.getM());
@@ -115,7 +117,8 @@ public class MonomialDialog extends JDialog implements ActionListener {
 		mField
 				.addFocusListener(new TextFieldFocusListener(mField,
 						parentFrame));
-		add(mField);
+		mPanel.add(mField);
+		add(mPanel);
 
 		add(new JLabel("Please enter the function coefficients:"));
 		JPanel functionPanel = new JPanel();
@@ -194,15 +197,14 @@ public class MonomialDialog extends JDialog implements ActionListener {
 		add(functionPanel);
 
 		
-		JLabel polarCheckboxLabel = new JLabel(
-				"Coefficient Values Use Polar Coordinates", JLabel.LEFT);
-		add(polarCheckboxLabel);
-		polarCheckBox = new Checkbox("", false);
+		polarCheckBox = new Checkbox("Coefficient Values Use Polar Coordinates");
+		polarCheckBox.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 10));
 		add(polarCheckBox);
 
+		JPanel buttonPanel = new JPanel();
 		JButton finishButton = new JButton("Finish");
 		finishButton.addActionListener(this);
-		add(finishButton);
+		buttonPanel.add(finishButton);
 
 		JButton cancelButton = new JButton("Cancel");
 		cancelButton.addActionListener(new ActionListener() {
@@ -211,9 +213,10 @@ public class MonomialDialog extends JDialog implements ActionListener {
 				dispose();
 			}
 		});
-		add(cancelButton);
+		buttonPanel.add(cancelButton);
+		add(buttonPanel);
 
-		setSize(325, 200);
+		pack();
 		setLocationRelativeTo(parentFrame);
 		setVisible(true);
 	}

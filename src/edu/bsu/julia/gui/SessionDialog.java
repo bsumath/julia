@@ -1,7 +1,11 @@
 package edu.bsu.julia.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Checkbox;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.apache.commons.math.complex.Complex;
@@ -23,12 +28,19 @@ import edu.bsu.julia.session.Session.InvalidSessionParametersException;
 public class SessionDialog extends JDialog implements ActionListener {
 
 	private Julia parentFrame;
+
 	private int sessionType;
+
 	private JTextField iterationsField;
+
 	private JTextField skipsField;
+
 	private JTextField seedField1;
+
 	private JTextField seedField2;
+
 	private Checkbox randomSeed;
+
 	private Checkbox polarCheckBox;
 
 	// for serializable interface: do not use
@@ -45,20 +57,27 @@ public class SessionDialog extends JDialog implements ActionListener {
 		Session s = parentFrame.getCurrentSession();
 		setLocationRelativeTo(parentFrame);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setLayout(new FlowLayout());
-		add(new JLabel("Points to Plot:  "));
+		setLayout(new GridLayout(0, 1));
+
+		JPanel pointsPanel = new JPanel();
+		pointsPanel.add(new JLabel("Points to Plot:"));
 		iterationsField = new JTextField(8);
 		if (sessionType == GUIUtil.EDIT_DIALOG) {
 			iterationsField.setText("" + s.getIterations());
 		}
-		add(iterationsField);
-		add(new JLabel("Number of Skips:  "));
+		pointsPanel.add(iterationsField);
+		add(pointsPanel);
+
+		JPanel skipPanel = new JPanel();
+		skipPanel.add(new JLabel("Number of Skips:"));
 		skipsField = new JTextField(6);
 		if (sessionType == GUIUtil.EDIT_DIALOG) {
 			skipsField.setText("" + s.getSkips());
 		}
-		add(skipsField);
-		add(new JLabel("Seed Value:  ("));
+		skipPanel.add(skipsField);
+
+		JPanel seedPanel = new JPanel();
+		seedPanel.add(new JLabel("Seed Value:  ("));
 		seedField1 = new JTextField(6);
 		if (sessionType == GUIUtil.EDIT_DIALOG) {
 			String show = String.valueOf(s.getSeedValue().getReal());
@@ -67,8 +86,8 @@ public class SessionDialog extends JDialog implements ActionListener {
 				showShort = show.substring(0, 10);
 			seedField1.setText(showShort);
 		}
-		add(seedField1);
-		add(new JLabel(","));
+		seedPanel.add(seedField1);
+		seedPanel.add(new JLabel(","));
 		seedField2 = new JTextField(6);
 		if (sessionType == GUIUtil.EDIT_DIALOG) {
 			String show = String.valueOf(s.getSeedValue().getImaginary());
@@ -77,32 +96,40 @@ public class SessionDialog extends JDialog implements ActionListener {
 				showShort = show.substring(0, 10);
 			seedField2.setText(showShort);
 		}
-		add(seedField2);
-		add(new JLabel(")"));
-		add(new JLabel("Select a Random Seed with both x and y"));
-		add(new JLabel("coordinates between -10 and 10"));
-		randomSeed = new Checkbox("", false);
-		add(randomSeed);
+		seedPanel.add(seedField2);
+		seedPanel.add(new JLabel(")"));
+		add(seedPanel);
 
-		JLabel polarCheckboxLabel = new JLabel(
-				"Seed Value Use Polar Coordinates", JLabel.LEFT);
-		add(polarCheckboxLabel);
-		polarCheckBox = new Checkbox("", false);
+		JPanel randomPanel = new JPanel(new BorderLayout());
+		randomSeed = new Checkbox("Select a Random Seed with both");
+		randomSeed.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 10));
+		randomPanel.add(randomSeed, BorderLayout.NORTH);
+		randomPanel.add(new JLabel("x and y coordinates between -10 and 10"),
+				BorderLayout.CENTER);
+		randomPanel.setPreferredSize(new Dimension(randomSeed.getWidth(),
+				randomPanel.getHeight()));
+		add(randomPanel);
+
+		polarCheckBox = new Checkbox("Seed Value Use Polar Coordinates");
+		polarCheckBox.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 10));
 		add(polarCheckBox);
 
+		JPanel buttonPanel = new JPanel();
 		JButton okButton = new JButton("OK");
 		okButton.addActionListener(this);
-		add(okButton);
+		buttonPanel.add(okButton);
 		JButton cancelButton = new JButton("Cancel");
 		cancelButton.addActionListener(new ActionListener() {
+
 			public void actionPerformed(ActionEvent event) {
 				setVisible(false);
 				dispose();
 			}
 		});
-		add(cancelButton);
+		buttonPanel.add(cancelButton);
+		add(buttonPanel);
 
-		setSize(260, 250);
+		pack();
 		Point p = getLocation();
 		p.x = p.x - 115;
 		p.y = p.y - 75;
