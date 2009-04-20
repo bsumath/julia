@@ -1,7 +1,8 @@
 package edu.bsu.julia.gui;
 
 import java.awt.Checkbox;
-import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -28,10 +29,12 @@ import edu.bsu.julia.session.Session;
  * 
  */
 public class QuadraticDialog extends JDialog implements ActionListener {
+
 	/**
 	 * The main frame over which this dialog sets.
 	 */
 	private Julia parentFrame;
+
 	/**
 	 * One of three types defined in a utility class, GUIUtil:
 	 * {@link GUIUtil#NEW_DIALOG}, {@link GUIUtil#EDIT_DIALOG}, and
@@ -39,48 +42,58 @@ public class QuadraticDialog extends JDialog implements ActionListener {
 	 * is being put.
 	 */
 	private int dialogType;
+
 	/**
 	 * If this dialog is being used to edit or clone an existing function, the
 	 * function that is being modified. If the dialog is being used to create a
 	 * new function, this field is <b>null</b>.
 	 */
 	private QuadraticInputFunction function;
+
 	/**
 	 * The text field in which the user enters the function's m value.
 	 */
 	private JTextField mField = new JTextField(5);
+
 	/**
 	 * The text field in which the user enters the real portion of the
 	 * function's 'a' coefficient.
 	 */
 	private JTextField axField = new JTextField(3);
+
 	/**
 	 * The text field in which the user enters the number which, multiplied by
 	 * i, is the imaginary portion of the function's 'a' coefficient.
 	 */
 	private JTextField ayField = new JTextField(3);
+
 	/**
 	 * The text field in which the user enters the real portion of the
 	 * function's 'b' coefficient.
 	 */
 	private JTextField bxField = new JTextField(3);
+
 	/**
 	 * The text field in which the user enters the number which, multiplied by
 	 * i, is the imaginary portion of the function's 'b' coefficient.
 	 */
 	private JTextField byField = new JTextField(3);
+
 	/**
 	 * The text field in which the user enters the real portion of the
 	 * function's 'c' coefficient.
 	 */
 	private JTextField cxField = new JTextField(3);
+
 	/**
 	 * The text field in which the user enters the number which, multiplied by
 	 * i, is the imaginary portion of the function's 'c' coefficient.
 	 */
 	private JTextField cyField = new JTextField(3);
+
 	// for serializable interface: do not use
 	public static final long serialVersionUID = 0;
+
 	private Checkbox polarCheckBox;
 
 	/**
@@ -111,9 +124,10 @@ public class QuadraticDialog extends JDialog implements ActionListener {
 			coefficients = function.getCoefficients();
 
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setLayout(new FlowLayout());
+		setLayout(new GridLayout(0, 1));
 
-		add(new JLabel("Enter the m value:  "));
+		JPanel mPanel = new JPanel();
+		mPanel.add(new JLabel("Enter the m value:"));
 		if (dialogType == GUIUtil.EDIT_DIALOG
 				|| dialogType == GUIUtil.CLONE_DIALOG)
 			mField.setText("" + function.getM());
@@ -122,7 +136,8 @@ public class QuadraticDialog extends JDialog implements ActionListener {
 		mField
 				.addFocusListener(new TextFieldFocusListener(mField,
 						parentFrame));
-		add(mField);
+		mPanel.add(mField);
+		add(mPanel);
 
 		add(new JLabel("Please enter the function coefficients:    "));
 		JPanel functionPanel = new JPanel();
@@ -208,27 +223,27 @@ public class QuadraticDialog extends JDialog implements ActionListener {
 		functionPanel.add(new JLabel("<html>)</html>"));
 		add(functionPanel);
 
-		JLabel polarCheckboxLabel = new JLabel(
-				"                   Coefficient Values Use Polar Coordinates",
-				JLabel.LEFT);
-		add(polarCheckboxLabel);
-		polarCheckBox = new Checkbox("               ", false);
+		polarCheckBox = new Checkbox("Coefficient Values Use Polar Coordinates");
+		polarCheckBox.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 10));
 		add(polarCheckBox);
 
+		JPanel buttonPanel = new JPanel();
 		JButton finishButton = new JButton("Finish");
 		finishButton.addActionListener(this);
-		add(finishButton);
+		buttonPanel.add(finishButton);
 
 		JButton cancelButton = new JButton("Cancel");
 		cancelButton.addActionListener(new ActionListener() {
+
 			public void actionPerformed(ActionEvent event) {
 				setVisible(false);
 				dispose();
 			}
 		});
-		add(cancelButton);
+		buttonPanel.add(cancelButton);
+		add(buttonPanel);
 
-		setSize(420, 166);
+		pack();
 		setLocationRelativeTo(parentFrame);
 		setVisible(true);
 	}

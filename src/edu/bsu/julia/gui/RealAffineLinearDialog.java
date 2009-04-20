@@ -1,6 +1,6 @@
 package edu.bsu.julia.gui;
 
-import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.apache.commons.math.complex.Complex;
+
 import edu.bsu.julia.Julia;
 import edu.bsu.julia.input.RealAffineLinearInputFunction;
 import edu.bsu.julia.session.Session;
@@ -25,10 +26,12 @@ import edu.bsu.julia.session.Session;
  * 
  */
 public class RealAffineLinearDialog extends JDialog implements ActionListener {
+
 	/**
 	 * The main frame over which this dialog sets.
 	 */
 	private Julia parentFrame;
+
 	/**
 	 * One of three types defined in a utility class, GUIUtil:
 	 * {@link GUIUtil#NEW_DIALOG}, {@link GUIUtil#EDIT_DIALOG}, and
@@ -36,40 +39,49 @@ public class RealAffineLinearDialog extends JDialog implements ActionListener {
 	 * is being put.
 	 */
 	private int dialogType;
+
 	/**
 	 * If this dialog is being used to edit or clone an existing function, the
 	 * function that is being modified. If the dialog is being used to create a
 	 * new function, this field is <b>null</b>.
 	 */
 	private RealAffineLinearInputFunction function;
+
 	/**
 	 * The text field in which the user enters the function's m value.
 	 */
 	private JTextField mField = new JTextField(5);
+
 	/**
 	 * The text field in which the user enters the function's 'a' coefficient.
 	 */
 	private JTextField aField = new JTextField(3);
+
 	/**
 	 * The text field in which the user enters the function's 'b' coefficient.
 	 */
 	private JTextField bField = new JTextField(3);
+
 	/**
 	 * The text field in which the user enters the function's 'c' coefficient.
 	 */
 	private JTextField cField = new JTextField(3);
+
 	/**
 	 * The text field in which the user enters the function's 'd' coefficient.
 	 */
 	private JTextField dField = new JTextField(3);
+
 	/**
 	 * The text field in which the user enters the function's 'e' coefficient.
 	 */
 	private JTextField eField = new JTextField(3);
+
 	/**
 	 * The text field in which the user enters the function's 'f' coefficient.
 	 */
 	private JTextField fField = new JTextField(3);
+
 	// for serializable interface: do not use
 	public static final long serialVersionUID = 0;
 
@@ -102,9 +114,10 @@ public class RealAffineLinearDialog extends JDialog implements ActionListener {
 			coefficients = function.getCoefficients();
 
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setLayout(new FlowLayout());
+		setLayout(new GridLayout(0, 1));
 
-		add(new JLabel("Enter the m value:  "));
+		JPanel mPanel = new JPanel();
+		mPanel.add(new JLabel("Enter the m value:"));
 		if (dialogType == GUIUtil.EDIT_DIALOG
 				|| dialogType == GUIUtil.CLONE_DIALOG)
 			mField.setText("" + function.getM());
@@ -113,12 +126,13 @@ public class RealAffineLinearDialog extends JDialog implements ActionListener {
 		mField
 				.addFocusListener(new TextFieldFocusListener(mField,
 						parentFrame));
-		add(mField);
+		mPanel.add(mField);
+		add(mPanel);
 
-		add(new JLabel("Please enter the function coefficients:        "));
+		add(new JLabel("Please enter the function coefficients:"));
 		JPanel functionPanel = new JPanel();
 		// format all labels in HTML
-		functionPanel.add(new JLabel("<html>[a=</html>"));
+		functionPanel.add(new JLabel("<html>[</html>"));
 		if (dialogType == GUIUtil.EDIT_DIALOG
 				|| dialogType == GUIUtil.CLONE_DIALOG)
 			aField.setText("" + coefficients[0].getReal());
@@ -128,7 +142,7 @@ public class RealAffineLinearDialog extends JDialog implements ActionListener {
 				.addFocusListener(new TextFieldFocusListener(aField,
 						parentFrame));
 		functionPanel.add(aField);
-		functionPanel.add(new JLabel("<html> ,b=</html>"));
+		functionPanel.add(new JLabel("<html> ,</html>"));
 		if (dialogType == GUIUtil.EDIT_DIALOG
 				|| dialogType == GUIUtil.CLONE_DIALOG)
 			bField.setText("" + coefficients[1].getReal());
@@ -138,7 +152,7 @@ public class RealAffineLinearDialog extends JDialog implements ActionListener {
 				.addFocusListener(new TextFieldFocusListener(bField,
 						parentFrame));
 		functionPanel.add(bField);
-		functionPanel.add(new JLabel("<html> ;c=</html>"));
+		functionPanel.add(new JLabel("<html> ;</html>"));
 		if (dialogType == GUIUtil.EDIT_DIALOG
 				|| dialogType == GUIUtil.CLONE_DIALOG)
 			cField.setText("" + coefficients[2].getReal());
@@ -148,7 +162,7 @@ public class RealAffineLinearDialog extends JDialog implements ActionListener {
 				.addFocusListener(new TextFieldFocusListener(cField,
 						parentFrame));
 		functionPanel.add(cField);
-		functionPanel.add(new JLabel("<html> ,d=</html>"));
+		functionPanel.add(new JLabel("<html> ,</html>"));
 		if (dialogType == GUIUtil.EDIT_DIALOG
 				|| dialogType == GUIUtil.CLONE_DIALOG)
 			dField.setText("" + coefficients[3].getReal());
@@ -158,7 +172,7 @@ public class RealAffineLinearDialog extends JDialog implements ActionListener {
 				.addFocusListener(new TextFieldFocusListener(dField,
 						parentFrame));
 		functionPanel.add(dField);
-		functionPanel.add(new JLabel("<html>]z + [e=</html>"));
+		functionPanel.add(new JLabel("<html>]z + [</html>"));
 		if (dialogType == GUIUtil.EDIT_DIALOG
 				|| dialogType == GUIUtil.CLONE_DIALOG)
 			eField.setText("" + coefficients[4].getReal());
@@ -168,7 +182,7 @@ public class RealAffineLinearDialog extends JDialog implements ActionListener {
 				.addFocusListener(new TextFieldFocusListener(eField,
 						parentFrame));
 		functionPanel.add(eField);
-		functionPanel.add(new JLabel("<html> ;f=</html>"));
+		functionPanel.add(new JLabel("<html> ;</html>"));
 		if (dialogType == GUIUtil.EDIT_DIALOG
 				|| dialogType == GUIUtil.CLONE_DIALOG)
 			fField.setText("" + coefficients[5].getReal());
@@ -181,20 +195,23 @@ public class RealAffineLinearDialog extends JDialog implements ActionListener {
 		functionPanel.add(new JLabel("<html>]</html>"));
 		add(functionPanel);
 
+		JPanel buttonPanel = new JPanel();
 		JButton finishButton = new JButton("Finish");
 		finishButton.addActionListener(this);
-		add(finishButton);
+		buttonPanel.add(finishButton);
 
 		JButton cancelButton = new JButton("Cancel");
 		cancelButton.addActionListener(new ActionListener() {
+
 			public void actionPerformed(ActionEvent event) {
 				setVisible(false);
 				dispose();
 			}
 		});
-		add(cancelButton);
+		buttonPanel.add(cancelButton);
+		add(buttonPanel);
 
-		setSize(425, 155);
+		pack();
 		setLocationRelativeTo(parentFrame);
 		setVisible(true);
 	}

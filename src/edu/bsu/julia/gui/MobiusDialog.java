@@ -1,10 +1,13 @@
 package edu.bsu.julia.gui;
 
 import java.awt.Checkbox;
-import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -28,10 +31,15 @@ import edu.bsu.julia.session.Session;
  * 
  */
 public class MobiusDialog extends JDialog implements ActionListener {
+
+	private static final Complex[] DEFAULT_COEFFICIENTS = new Complex[] {
+			Complex.ONE, Complex.ZERO, Complex.ZERO, Complex.ONE };
+
 	/**
 	 * The main frame over which this dialog sets.
 	 */
 	private Julia parentFrame;
+
 	/**
 	 * One of three types defined in a utility class, GUIUtil:
 	 * {@link GUIUtil#NEW_DIALOG}, {@link GUIUtil#EDIT_DIALOG}, and
@@ -39,58 +47,69 @@ public class MobiusDialog extends JDialog implements ActionListener {
 	 * is being put.
 	 */
 	private int dialogType;
+
 	/**
 	 * If this dialog is being used to edit or clone an existing function, the
 	 * function that is being modified. If the dialog is being used to create a
 	 * new function, this field is <b>null</b>.
 	 */
 	private MobiusInputFunction function;
+
 	/**
 	 * The text field in which the user enters the function's m value.
 	 */
 	private JTextField mField = new JTextField(5);
+
 	/**
 	 * The text field in which the user enters the real portion of the
 	 * function's 'a' coefficient.
 	 */
 	private JTextField axField = new JTextField(3);
+
 	/**
 	 * The text field in which the user enters the number which, multiplied by
 	 * i, is the imaginary portion of the function's 'a' coefficient.
 	 */
 	private JTextField ayField = new JTextField(3);
+
 	/**
 	 * The text field in which the user enters the real portion of the
 	 * function's 'b' coefficient.
 	 */
 	private JTextField bxField = new JTextField(3);
+
 	/**
 	 * The text field in which the user enters the number which, multiplied by
 	 * i, is the imaginary portion of the function's 'b' coefficient.
 	 */
 	private JTextField byField = new JTextField(3);
+
 	/**
 	 * The text field in which the user enters the real portion of the
 	 * function's 'c' coefficient.
 	 */
 	private JTextField cxField = new JTextField(3);
+
 	/**
 	 * The text field in which the user enters the number which, multiplied by
 	 * i, is the imaginary portion of the function's 'c' coefficient.
 	 */
 	private JTextField cyField = new JTextField(3);
+
 	/**
 	 * The text field in which the user enters the real portion of the
 	 * function's 'd' coefficient.
 	 */
 	private JTextField dxField = new JTextField(3);
+
 	/**
 	 * The text field in which the user enters the number which, multiplied by
 	 * i, is the imaginary portion of the function's 'd' coefficient.
 	 */
 	private JTextField dyField = new JTextField(3);
+
 	// for serializable interface: do not use
-	public static final long serialVersionUID = 0;
+	private static final long serialVersionUID = 0;
 
 	private Checkbox polarCheckBox;
 
@@ -115,15 +134,19 @@ public class MobiusDialog extends JDialog implements ActionListener {
 		function = fn;
 		parentFrame = f;
 
-		Complex[] coefficients = new Complex[4];
+		Complex[] coefficients;
 		if (dialogType == GUIUtil.EDIT_DIALOG
-				|| dialogType == GUIUtil.CLONE_DIALOG)
+				|| dialogType == GUIUtil.CLONE_DIALOG) {
 			coefficients = function.getCoefficients();
+		} else {
+			coefficients = DEFAULT_COEFFICIENTS;
+		}
 
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setLayout(new FlowLayout());
+		this.setLayout(new GridLayout(0, 1));
 
-		add(new JLabel("Enter the m value:  "));
+		JPanel mPanel = new JPanel();
+		mPanel.add(new JLabel("Enter the m value:"));
 		if (dialogType == GUIUtil.EDIT_DIALOG
 				|| dialogType == GUIUtil.CLONE_DIALOG)
 			mField.setText("" + function.getM());
@@ -132,139 +155,91 @@ public class MobiusDialog extends JDialog implements ActionListener {
 		mField
 				.addFocusListener(new TextFieldFocusListener(mField,
 						parentFrame));
-		add(mField);
+		mPanel.add(mField);
+		this.add(mPanel);
 
-		add(new JLabel("Please enter the function coefficients: "));
-		JPanel functionPanel = new JPanel();
+		this.add(new JLabel("Please enter the function coefficients:"));
+		JPanel functionPanel1 = new JPanel();
 		// format all labels in HTML
-		functionPanel.add(new JLabel("<html>((</html>"));
-		if (dialogType == GUIUtil.EDIT_DIALOG
-				|| dialogType == GUIUtil.CLONE_DIALOG) {
-			String show = String.valueOf(coefficients[0].getReal());
-			String showShort = show;
-			if (show.length() > 5)
-				showShort = show.substring(0, 5);
-			axField.setText(showShort);
-		} else
-			axField.setText("1");
+		functionPanel1.add(new JLabel("<html>((</html>"));
+		axField.setText(shortString(String.valueOf(coefficients[0].getReal())));
 		axField.addFocusListener(new TextFieldFocusListener(axField,
 				parentFrame));
-		functionPanel.add(axField);
-		functionPanel.add(new JLabel(", "));
-		if (dialogType == GUIUtil.EDIT_DIALOG
-				|| dialogType == GUIUtil.CLONE_DIALOG) {
-			String show = String.valueOf(coefficients[0].getImaginary());
-			String showShort = show;
-			if (show.length() > 5)
-				showShort = show.substring(0, 5);
-			ayField.setText(showShort);
-		} else
-			ayField.setText("0");
+		functionPanel1.add(axField);
+
+		functionPanel1.add(new JLabel(", "));
+		ayField.setText(shortString(String.valueOf(coefficients[0]
+				.getImaginary())));
 		ayField.addFocusListener(new TextFieldFocusListener(ayField,
 				parentFrame));
-		functionPanel.add(ayField);
-		functionPanel.add(new JLabel("<html>) z + (</html>"));
-		if (dialogType == GUIUtil.EDIT_DIALOG
-				|| dialogType == GUIUtil.CLONE_DIALOG) {
-			String show = String.valueOf(coefficients[1].getReal());
-			String showShort = show;
-			if (show.length() > 5)
-				showShort = show.substring(0, 5);
-			bxField.setText(showShort);
-		} else
-			bxField.setText("0");
+		functionPanel1.add(ayField);
+
+		functionPanel1.add(new JLabel("<html>) z + (</html>"));
+		bxField.setText(shortString(String.valueOf(coefficients[1].getReal())));
 		bxField.addFocusListener(new TextFieldFocusListener(bxField,
 				parentFrame));
-		functionPanel.add(bxField);
-		functionPanel.add(new JLabel(", "));
-		if (dialogType == GUIUtil.EDIT_DIALOG
-				|| dialogType == GUIUtil.CLONE_DIALOG) {
-			String show = String.valueOf(coefficients[1].getImaginary());
-			String showShort = show;
-			if (show.length() > 5)
-				showShort = show.substring(0, 5);
-			byField.setText(showShort);
-		} else
-			byField.setText("0");
+		functionPanel1.add(bxField);
+
+		functionPanel1.add(new JLabel(", "));
+		byField.setText(shortString(String.valueOf(coefficients[1]
+				.getImaginary())));
 		byField.addFocusListener(new TextFieldFocusListener(byField,
 				parentFrame));
-		functionPanel.add(byField);
-		functionPanel.add(new JLabel("<html>)) / ((</html>"));
-		if (dialogType == GUIUtil.EDIT_DIALOG
-				|| dialogType == GUIUtil.CLONE_DIALOG) {
-			String show = String.valueOf(coefficients[2].getReal());
-			String showShort = show;
-			if (show.length() > 5)
-				showShort = show.substring(0, 5);
-			cxField.setText(showShort);
-		} else
-			cxField.setText("0");
+		functionPanel1.add(byField);
+
+		functionPanel1.add(new JLabel("<html>))</html>"));
+		this.add(functionPanel1);
+
+		JPanel functionPanel2 = new JPanel();
+		functionPanel2.add(new JLabel("/ (("));
+		cxField.setText(shortString(String.valueOf(coefficients[2].getReal())));
 		cxField.addFocusListener(new TextFieldFocusListener(cxField,
 				parentFrame));
-		functionPanel.add(cxField);
-		functionPanel.add(new JLabel(", "));
-		if (dialogType == GUIUtil.EDIT_DIALOG
-				|| dialogType == GUIUtil.CLONE_DIALOG) {
-			String show = String.valueOf(coefficients[2].getImaginary());
-			String showShort = show;
-			if (show.length() > 5)
-				showShort = show.substring(0, 5);
-			cyField.setText(showShort);
-		} else
-			cyField.setText("0");
+		functionPanel2.add(cxField);
+
+		functionPanel2.add(new JLabel(", "));
+		cyField.setText(shortString(String.valueOf(coefficients[2]
+				.getImaginary())));
 		cyField.addFocusListener(new TextFieldFocusListener(cyField,
 				parentFrame));
-		functionPanel.add(cyField);
-		functionPanel.add(new JLabel("<html>) z + (</html>"));
-		if (dialogType == GUIUtil.EDIT_DIALOG
-				|| dialogType == GUIUtil.CLONE_DIALOG) {
-			String show = String.valueOf(coefficients[3].getReal());
-			String showShort = show;
-			if (show.length() > 5)
-				showShort = show.substring(0, 5);
-			dxField.setText(showShort);
-		} else
-			dxField.setText("1");
+		functionPanel2.add(cyField);
+
+		functionPanel2.add(new JLabel("<html>) z + (</html>"));
+		dxField.setText(shortString(String.valueOf(coefficients[3].getReal())));
 		dxField.addFocusListener(new TextFieldFocusListener(dxField,
 				parentFrame));
-		functionPanel.add(dxField);
-		functionPanel.add(new JLabel(", "));
-		if (dialogType == GUIUtil.EDIT_DIALOG
-				|| dialogType == GUIUtil.CLONE_DIALOG) {
-			String show = String.valueOf(coefficients[3].getImaginary());
-			String showShort = show;
-			if (show.length() > 5)
-				showShort = show.substring(0, 5);
-			dyField.setText(showShort);
-		} else
-			dyField.setText("0");
+		functionPanel2.add(dxField);
+
+		functionPanel2.add(new JLabel(", "));
+		dyField.setText(shortString(String.valueOf(coefficients[3]
+				.getImaginary())));
 		dyField.addFocusListener(new TextFieldFocusListener(dyField,
 				parentFrame));
-		functionPanel.add(dyField);
-		functionPanel.add(new JLabel("<html>))</html>"));
-		add(functionPanel);
+		functionPanel2.add(dyField);
+		functionPanel2.add(new JLabel("<html>))</html>"));
+		this.add(functionPanel2);
 
-		JLabel polarCheckboxLabel = new JLabel(
-				"                                       Coefficient Values Use Polar Coordinates",
-				JLabel.LEFT);
-		add(polarCheckboxLabel);
-		polarCheckBox = new Checkbox("                             ", false);
-		add(polarCheckBox);
+		polarCheckBox = new Checkbox("Coefficient Values Use Polar Coordinates");
+		polarCheckBox.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 10));
+		this.add(polarCheckBox);
 
+		JPanel buttonPanel = new JPanel();
 		JButton finishButton = new JButton("Finish");
 		finishButton.addActionListener(this);
-		add(finishButton);
+		buttonPanel.add(finishButton);
 
 		JButton cancelButton = new JButton("Cancel");
 		cancelButton.addActionListener(new ActionListener() {
+
 			public void actionPerformed(ActionEvent event) {
 				setVisible(false);
 				dispose();
 			}
 		});
-		add(cancelButton);
+		buttonPanel.add(cancelButton);
+		this.add(buttonPanel);
 
-		setSize(520, 180);
+		pack();
 		setLocationRelativeTo(parentFrame);
 		setVisible(true);
 	}
@@ -363,4 +338,10 @@ public class MobiusDialog extends JDialog implements ActionListener {
 		dispose();
 	}
 
+	private String shortString(String s) {
+		if (s.length() > 5)
+			return s.substring(0, 5);
+		else
+			return s;
+	}
 }
