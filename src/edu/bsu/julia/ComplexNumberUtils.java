@@ -1,7 +1,7 @@
 package edu.bsu.julia;
 
 import java.math.RoundingMode;
-import java.text.NumberFormat;
+import java.text.DecimalFormat;
 
 import org.apache.commons.math.complex.Complex;
 
@@ -66,12 +66,16 @@ public final class ComplexNumberUtils {
 	 * @return the formatted string
 	 */
 	private static String formatDouble(double number) {
-		NumberFormat nf = NumberFormat.getInstance();
-		nf.setMinimumFractionDigits(5);
-		nf.setMaximumFractionDigits(5);
-		nf.setRoundingMode(RoundingMode.HALF_UP);
+		DecimalFormat df;
+		if (number < 0.00001d || number > 99999d) {
+			df = new DecimalFormat("0.#####E0");
+		} else {
+			df = new DecimalFormat("###.#####");
+		}
 
-		return nf.format(number);
+		df.setRoundingMode(RoundingMode.HALF_UP);
+
+		return df.format(number);
 	}
 
 	/**
