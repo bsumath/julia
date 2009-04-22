@@ -146,7 +146,7 @@ public class MonomialInputFunction extends InputFunction {
 
 	public String toString() {
 		return "f" + getSubscript() + "(z) = "
-				+ ComplexNumberUtils.complexToString(aValue) + "/z^ " + bValue
+				+ ComplexNumberUtils.complexToString(aValue) + "z^ " + bValue
 				+ " + " + ComplexNumberUtils.complexToString(cValue) + ", m = "
 				+ getM();
 	}
