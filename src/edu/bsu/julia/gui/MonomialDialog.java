@@ -23,7 +23,7 @@ import edu.bsu.julia.session.Session;
  * 
  * <h3>Description</h3>
  * <p>
- * Creates a dialog box for the function type: a/z^b + c. This dialog is used when
+ * Creates a dialog box for the function type: a*z^b + c. This dialog is used when
  * creating a new linear function, editing an existing function, or cloneing an
  * existing function.
  * 
