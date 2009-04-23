@@ -173,7 +173,7 @@ public class PostCriticalAction extends AbstractAction {
 					Complex[] coefficients = function.getCoefficients();
 					seed = (coefficients[1].multiply(negOne))
 							.divide(coefficients[0].multiply(two));
-				} else if (function instanceof MonomialInputFunction) {
+				} else if (function instanceof MonomialInputFunction) {						/* HERE! */
 					seed = zero;
 				} else
 					continue;
