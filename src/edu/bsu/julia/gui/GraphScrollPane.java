@@ -17,7 +17,7 @@ public class GraphScrollPane extends GLJPanel {
 	public GraphScrollPane(Julia f) {
 		super(new GLCapabilities());
 		parentFrame = f;
-		setName("Graphical display of output functions.");
+		setName("Graphical display of output sets.");
 		setPreferredSize(new Dimension(1000, 1000));
 		addMouseListener(parentFrame.getStatusBar());
 		addMouseMotionListener(parentFrame.getStatusBar());
