@@ -88,7 +88,7 @@ public class FullForwardsOutputSetGenerator extends OutputSetGenerator {
 			}
 
 			do {
-				if (mode == Mode.POST_CRITICAL)
+				if (mode == Mode.POST_CRITICAL)										/* HERE! */
 					outputSet.addAll(currentIteration);
 
 				// iterate each point by each function

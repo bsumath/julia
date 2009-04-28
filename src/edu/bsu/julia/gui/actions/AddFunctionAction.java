@@ -24,7 +24,8 @@ import edu.bsu.julia.gui.LinearDialog;
 import edu.bsu.julia.gui.MobiusDialog;
 import edu.bsu.julia.gui.QuadraticDialog;
 import edu.bsu.julia.gui.RealAffineLinearDialog;
-import edu.bsu.julia.gui.MonomialDialog;
+import edu.bsu.julia.gui.BinomialDialog;
+import edu.bsu.julia.gui.TempDialog;
 
 public class AddFunctionAction extends AbstractAction {
 
@@ -53,13 +54,14 @@ public class AddFunctionAction extends AbstractAction {
 
 		final JButton nextButton = new JButton("Next >>>");
 
-		String[] choices = new String[6];						/**Change the number here.*/
+		String[] choices = new String[7];						/**Change the number here.*/
 		choices[0] = "<html><h2>az + b</h2></html>";
 		choices[1] = "<html><h2>(az + b) / (cz + d)</h2></html>";
 		choices[2] = "<html><h2>az<sup>2</sup> + bz + c</h2></html>";
 		choices[3] = "<html><h2>az<sup>3</sup> + b</h2></html>";
 		choices[4] = "<html><h2>[a, b ; c, d]z + [e ; f]</h2></html>";
 		choices[5] = "<html><h2>az<sup>n</sup> + k</h2></html>";
+		choices[6] = "<html><h2>az<sup>n</sup> + b/z<sup>n</sup></h2></html>";
 		final JList list = new JList(choices);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list.setVisibleRowCount(choices.length + 1);
@@ -111,7 +113,10 @@ public class AddFunctionAction extends AbstractAction {
 							null);
 					break;
 				case 5:
-					new MonomialDialog(parentFrame, GUIUtil.NEW_DIALOG, null);
+					new BinomialDialog(parentFrame, GUIUtil.NEW_DIALOG, null);
+					break;
+				case 6:
+					new TempDialog(parentFrame, GUIUtil.NEW_DIALOG, null);
 					break;
 				}
 			}
@@ -119,7 +124,7 @@ public class AddFunctionAction extends AbstractAction {
 		buttonPanel.add(nextButton);
 		addFunctionDialog.add(buttonPanel);
 
-		addFunctionDialog.setSize(250, 430);
+		addFunctionDialog.setSize(250, 500);
 		Point p = addFunctionDialog.getLocation();
 		p.x = p.x - 125;
 		p.y = p.y - 215;

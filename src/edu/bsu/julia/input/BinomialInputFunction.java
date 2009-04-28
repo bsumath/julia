@@ -28,7 +28,7 @@ import edu.bsu.julia.ComplexNumberUtils;
  * </p>
  * 
  */
-public class MonomialInputFunction extends InputFunction {
+public class BinomialInputFunction extends InputFunction {
 
 	private Complex aValue;
 
@@ -49,7 +49,7 @@ public class MonomialInputFunction extends InputFunction {
 	 *             if a is zero
 	 * @see InputFunction#InputFunction(int, int)
 	 */
-	public MonomialInputFunction(int mValue, Complex a, int b, Complex c)
+	public BinomialInputFunction(int mValue, Complex a, int b, Complex c)
 			throws IllegalArgumentException {
 		super(3, mValue);
 		if (a.equals(Complex.ZERO))
@@ -100,11 +100,15 @@ public class MonomialInputFunction extends InputFunction {
 	}
 
 	public Complex evaluateFunction(Complex seed) {
-		Complex w = seed;
+		Complex result = seed;
+		result = result.pow(new Complex(bValue, 0));
+		result = result.multiply(aValue);
+		result = result.add(cValue);
+		/*
 		w = w.pow(new Complex(bValue, 0));
 		w = w.multiply(aValue);
-		w = w.add(cValue);
-		return w;
+		w = w.add(cValue);*/
+		return result;
 	}
 
 	public Complex[] evaluateBackwardsFull(Complex seed) {
