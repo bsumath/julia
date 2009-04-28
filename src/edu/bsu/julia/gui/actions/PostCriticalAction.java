@@ -24,7 +24,7 @@ import edu.bsu.julia.gui.JuliaError;
 import edu.bsu.julia.gui.TextFieldFocusListener;
 import edu.bsu.julia.input.CubicInputFunction;
 import edu.bsu.julia.input.InputFunction;
-import edu.bsu.julia.input.MonomialInputFunction;
+import edu.bsu.julia.input.BinomialInputFunction;
 import edu.bsu.julia.input.QuadraticInputFunction;
 import edu.bsu.julia.output.OutputSet;
 import edu.bsu.julia.output.PostCriticalOutputSet;
@@ -173,13 +173,13 @@ public class PostCriticalAction extends AbstractAction {
 					Complex[] coefficients = function.getCoefficients();
 					seed = (coefficients[1].multiply(negOne))
 							.divide(coefficients[0].multiply(two));
-				} else if (function instanceof MonomialInputFunction) {						/* HERE! */
+				} else if (function instanceof BinomialInputFunction) {						/* HERE! */
 					seed = zero;
 				} else
 					continue;
 
 				for (int seedi = 0; seedi < function.getM(); seedi++) {
-					seed = function.evaluateFunction(seed);
+					seed = function.evaluateFunction(two/*seed*/);
 					seedList.add(seed);
 				}
 			}

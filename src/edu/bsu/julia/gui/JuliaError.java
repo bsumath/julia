@@ -23,8 +23,11 @@ public enum JuliaError {
 			"Illegal Coefficient Error"),
 
 	M_NEG_ERROR("M values must be positive.", "Illegal M Value Error"),
+	
+	//Added here for the binomial function.  Checks if the exponent is zero.
+	N_ZERO_ERROR("The exponent may not be zero.", "Number Format Error"),
 
-	LINEAR_ILLEGAL_ARGUMENT("The 'a' coefficient "
+	LINEAR_ILLEGAL_ARGUMENT("The 'a' coefficient "										
 			+ "of a linear\nfunction cannot be zero.",
 			"Illegal Coefficient Error"),
 

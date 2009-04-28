@@ -16,7 +16,7 @@ import org.apache.commons.math.complex.Complex;
 import org.apache.commons.math.complex.ComplexUtils;
 
 import edu.bsu.julia.Julia;
-import edu.bsu.julia.input.MonomialInputFunction;
+import edu.bsu.julia.input.BinomialInputFunction;
 import edu.bsu.julia.session.Session;
 
 /**
@@ -28,7 +28,7 @@ import edu.bsu.julia.session.Session;
  * existing function.
  * 
  */
-public class MonomialDialog extends JDialog implements ActionListener {
+public class BinomialDialog extends JDialog implements ActionListener {
 	/**
 	 * The main frame over which this dialog sets.
 	 */
@@ -45,7 +45,7 @@ public class MonomialDialog extends JDialog implements ActionListener {
 	 * function that is being modified. If the dialog is being used to create a
 	 * new function, this field is <b>null</b>.
 	 */
-	private MonomialInputFunction function;
+	private BinomialInputFunction function;
 	/**
 	 * The text field in which the user enters the function's m value.
 	 */
@@ -92,8 +92,8 @@ public class MonomialDialog extends JDialog implements ActionListener {
 	 * @param fn
 	 *            the function to be edited or cloned
 	 */
-	public MonomialDialog(Julia f, int type, MonomialInputFunction fn) {
-		super(f, "Create a Monomial Function", false);
+	public BinomialDialog(Julia f, int type, BinomialInputFunction fn) {
+		super(f, "Create a Binomial Function", false);
 		parentFrame = f;
 		dialogType = type;
 		function = fn;
@@ -250,6 +250,7 @@ public class MonomialDialog extends JDialog implements ActionListener {
 			JuliaError.EMPTY_FIELD.showDialog(parentFrame);
 			return;
 		}
+		
 		String axString = GUIUtil.removeCommas(axField.getText());
 		axString = GUIUtil.parsePI(axString);
 		String ayString = GUIUtil.removeCommas(ayField.getText());
@@ -280,12 +281,14 @@ public class MonomialDialog extends JDialog implements ActionListener {
 			c = ComplexUtils.polar2Complex(cx, cy);
 		}
 
-		MonomialInputFunction newFunction;
+		BinomialInputFunction newFunction;
 		try {
-			newFunction = new MonomialInputFunction(m, a, bx, c);
+			newFunction = new BinomialInputFunction(m, a, bx, c);
 		} catch (IllegalArgumentException e) {
 			if (e.getMessage().equals("a zero"))
 				JuliaError.LINEAR_ILLEGAL_ARGUMENT.showDialog(parentFrame);
+			else if (e.getMessage().equals("n zero"))
+				JuliaError.N_ZERO_ERROR.showDialog(parentFrame);
 			else
 				JuliaError.M_NEG_ERROR.showDialog(parentFrame);
 			return;

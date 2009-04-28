@@ -11,13 +11,13 @@ import edu.bsu.julia.gui.CubicDialog;
 import edu.bsu.julia.gui.GUIUtil;
 import edu.bsu.julia.gui.LinearDialog;
 import edu.bsu.julia.gui.MobiusDialog;
-import edu.bsu.julia.gui.MonomialDialog;
+import edu.bsu.julia.gui.BinomialDialog;
 import edu.bsu.julia.gui.QuadraticDialog;
 import edu.bsu.julia.gui.RealAffineLinearDialog;
 import edu.bsu.julia.input.CubicInputFunction;
 import edu.bsu.julia.input.InputFunction;
 import edu.bsu.julia.input.LinearInputFunction;
-import edu.bsu.julia.input.MonomialInputFunction;
+import edu.bsu.julia.input.BinomialInputFunction;
 import edu.bsu.julia.input.MobiusInputFunction;
 import edu.bsu.julia.input.QuadraticInputFunction;
 import edu.bsu.julia.input.RealAffineLinearInputFunction;
@@ -57,10 +57,10 @@ public class CopyFunctionAction extends AbstractAction {
 		} else if (fn instanceof RealAffineLinearInputFunction) {
 			RealAffineLinearInputFunction mFn = (RealAffineLinearInputFunction) fn;
 			new RealAffineLinearDialog(parentFrame, GUIUtil.CLONE_DIALOG, mFn);
-		} else if (fn instanceof MonomialInputFunction) {
-			MonomialInputFunction mFn = (MonomialInputFunction) fn;
-			new MonomialDialog(parentFrame, GUIUtil.CLONE_DIALOG, mFn);
-		}
+		} else if (fn instanceof BinomialInputFunction) {
+			BinomialInputFunction mFn = (BinomialInputFunction) fn;
+			new BinomialDialog(parentFrame, GUIUtil.CLONE_DIALOG, mFn);
+		} 
 
 	}
 
