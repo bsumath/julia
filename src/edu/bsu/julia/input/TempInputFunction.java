@@ -1,5 +1,7 @@
 /*
- *   HAVE NOT GOT THE BACKWARDS RANDOM OR FULL WORKING YET!
+ *   1.  HAVE NOT GOT THE BACKWARDS RANDOM OR FULL WORKING YET!
+ *   2.  THE CHECK IF THE CVALUE IS ZERO RETURNS THE ERROR MESSAGE FOR THE AVALUE
+ *   3.  NEED TO GET THE EDIT, COPY AND WHATEVER ELSE WORKING AS WELL
  */
 package edu.bsu.julia.input;
 
@@ -50,6 +52,8 @@ public class TempInputFunction extends InputFunction {
 			throw new IllegalArgumentException("a zero");
 		if (temp.equals(Complex.ZERO))
 			throw new IllegalArgumentException("n zero");
+		if (b < 0)
+			throw new IllegalArgumentException("n negative");
 		if (c.equals(Complex.ZERO))
 			throw new IllegalArgumentException("c zero");
 		
@@ -69,39 +73,23 @@ public class TempInputFunction extends InputFunction {
 	public Complex evaluateBackwardsRandom(Complex seed) {
 		Random random = new Random();
 		Complex w = seed;
-		int bAbs = Math.abs(bValue);
+		Complex four = new Complex(4,0);
+		Complex two = new Complex(2,0);
+		Complex temp, result;
 		for (int i = 0; i < getM(); i++) {
-			if (random.nextInt(1) == 0) {
-				w = w.subtract(cValue);   	/* FIX THE COMPUTATIONS HERE */
-				w = w.divide(aValue);
-
-				List<Complex> roots1 = w.nthRoot(bAbs);
-				w = roots1.get(random.nextInt(bAbs));
-
-				if (bValue < 0)
-					w = Complex.ONE.divide(w);
-			}
-				
-			else {
-				w = w.subtract(cValue);       /* FIX THE COMPUTATIONS HERE */
-				w = w.divide(aValue);
-
-				List<Complex> roots2 = w.nthRoot(bAbs);
-				w = roots2.get(random.nextInt(bAbs));
-
-				if (bValue < 0)
-					w = Complex.ONE.divide(w);
-			}
-			/*  OLD CODE FROM THE BINOMIAL HERE FOR REFERNCE TEMPORARILLY
-			w = w.subtract(cValue);
-			w = w.divide(aValue);
-
-			List<Complex> roots = w.nthRoot(bAbs);
-			w = roots.get(random.nextInt(bAbs));
-
-			if (bValue < 0) {
-				w = Complex.ONE.divide(w);
-			*/
+				temp = four.multiply(aValue).multiply(cValue);
+				//w^2 - 4ac
+				result = w.pow(new Complex(2,0)).subtract(temp);
+				//Finding the +/- value of the square root
+				List<Complex> results = result.nthRoot(2);
+				//randomly choosing a root
+				temp = results.get(random.nextInt(2));
+				result = w.add(temp);
+				temp = two.multiply(aValue);
+				w = result.divide(temp);
+				//Finding the "nth" roots (here we used b instead of n) & randomly choosing one root
+				List<Complex> roots = w.nthRoot(bValue);
+				w = roots.get(random.nextInt(bValue));
 		}
 		return w;
 	}
@@ -129,11 +117,15 @@ public class TempInputFunction extends InputFunction {
 		return result;
 	}
 
-	public Complex[] evaluateBackwardsFull(Complex seed) {
-
+	public Complex[] evaluateBackwardsFull(Complex seed) {					/* NOT DONE! ALL OLD CODE FROM BINOMIAL */		
 		// start with the seed
 		List<Complex> result = new ArrayList<Complex>();
 		result.add(seed);
+		Complex four = new Complex(4,0);
+		Complex two = new Complex(2,0);
+		//4ac
+		Complex fourac = four.multiply(aValue).multiply(cValue);
+		Complex denominator = two.multiply(aValue);
 
 		// loop M times
 		for (int i = 0; i < getM(); i++) {
@@ -141,20 +133,19 @@ public class TempInputFunction extends InputFunction {
 			// collect the results of this pass in a temp list
 			List<Complex> tempResult = new ArrayList<Complex>();
 			for (Complex number : result) {
-				number = number.subtract(cValue);
-				number = number.divide(aValue);
-				List<Complex> roots = number.nthRoot(Math.abs(bValue));
-
-				// if bValue is negative, divide all the roots and add them to
-				// the temporary result list, otherwise just add them to the
-				// list
-				if (bValue < 0) {
-					for (Complex root : roots) {
-						tempResult.add(Complex.ONE.divide(root));
-					}
-				} else {
-					tempResult.addAll(roots);
-				}
+				//seed^2 - 4ac
+				Complex tempvalue = number.pow(new Complex(2,0)).subtract(fourac);		//CHECK THIS TO MAKE SURE IT WORKS
+				//Finding the +/- value of the square root
+				List<Complex> templist = tempvalue.nthRoot(2);
+				//There might be a better way to do what is below
+				Complex r1 = number.add(templist.get(0));
+				Complex r2 = number.add(templist.get(1));
+				Complex n1 = r1.divide(denominator);
+				Complex n2 = r2.divide(denominator);
+				List<Complex> roots1 = n1.nthRoot(bValue);
+				List<Complex> roots2 = n2.nthRoot(bValue);
+				tempResult.addAll(roots1);
+				tempResult.addAll(roots2);												//MAKE SURE LAST 2 LINES TO NOT OVERWRITE ANYTHING
 			}
 
 			// the temp results become the list to work from for the next pass

@@ -288,6 +288,8 @@ public class TempDialog extends JDialog implements ActionListener {
 				JuliaError.LINEAR_ILLEGAL_ARGUMENT.showDialog(parentFrame);
 			else if (e.getMessage().equals("n zero"))
 				JuliaError.N_ZERO_ERROR.showDialog(parentFrame);
+			else if (e.getMessage().equals("n negative"))
+				JuliaError.N_NEGATIVE_ERROR.showDialog(parentFrame);
 			else if (e.getMessage().equals("c zero"))
 				JuliaError.LINEAR_ILLEGAL_ARGUMENT.showDialog(parentFrame);
 			else
@@ -305,13 +307,5 @@ public class TempDialog extends JDialog implements ActionListener {
 		setVisible(false);
 		dispose();
 	}
-/*
-	public void setCxField(JTextField nxField) {
-		this.bxField = nxField;
-	}
 
-	public JTextField bxField() {
-		return bxField;
-	}
-*/
 }
