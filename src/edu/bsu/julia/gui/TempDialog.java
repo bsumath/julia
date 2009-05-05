@@ -284,14 +284,16 @@ public class TempDialog extends JDialog implements ActionListener {
 		try {
 			newFunction = new TempInputFunction(m, a, bx, c);
 		} catch (IllegalArgumentException e) {
-			if (e.getMessage().equals("a zero"))
-				JuliaError.LINEAR_ILLEGAL_ARGUMENT.showDialog(parentFrame);
+			/*if (e.getMessage().equals("a zero"))
+				JuliaError.LINEAR_ILLEGAL_ARGUMENT.showDialog(parentFrame);*/
+			if (e.getMessage().equals("coefficient zero"))
+				JuliaError.COEFFICIENT_ILLEGAL_ARGUMENT.showDialog(parentFrame);
 			else if (e.getMessage().equals("n zero"))
 				JuliaError.N_ZERO_ERROR.showDialog(parentFrame);
 			else if (e.getMessage().equals("n negative"))
 				JuliaError.N_NEGATIVE_ERROR.showDialog(parentFrame);
-			else if (e.getMessage().equals("c zero"))
-				JuliaError.LINEAR_ILLEGAL_ARGUMENT.showDialog(parentFrame);
+			/*else if (e.getMessage().equals("c zero"))
+				JuliaError.LINEAR_ILLEGAL_ARGUMENT.showDialog(parentFrame);*/
 			else
 				JuliaError.M_NEG_ERROR.showDialog(parentFrame);
 			return;

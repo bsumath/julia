@@ -48,14 +48,17 @@ public class TempInputFunction extends InputFunction {
 			throws IllegalArgumentException {
 		super(3, mValue);
 		Complex temp = new Complex(b, 0);
-		if (a.equals(Complex.ZERO))
-			throw new IllegalArgumentException("a zero");
+		Complex test = a.multiply(c);
+		/*if (a.equals(Complex.ZERO))
+			throw new IllegalArgumentException("a zero");*/
+		if (test.equals(Complex.ZERO))
+			throw new IllegalArgumentException("coefficient zero");
 		if (temp.equals(Complex.ZERO))
 			throw new IllegalArgumentException("n zero");
 		if (b < 0)
 			throw new IllegalArgumentException("n negative");
-		if (c.equals(Complex.ZERO))
-			throw new IllegalArgumentException("c zero");
+		/*if (c.equals(Complex.ZERO))
+			throw new IllegalArgumentException("c zero");*/
 		
 		aValue = a;
 		bValue = b;
@@ -75,18 +78,18 @@ public class TempInputFunction extends InputFunction {
 		Complex w = seed;
 		Complex four = new Complex(4,0);
 		Complex two = new Complex(2,0);
-		Complex temp, result;
+		Complex fourac = four.multiply(aValue).multiply(cValue);
+		Complex denominator = two.multiply(aValue);
+		Complex result;
 		for (int i = 0; i < getM(); i++) {
-				temp = four.multiply(aValue).multiply(cValue);
 				//w^2 - 4ac
-				result = w.pow(new Complex(2,0)).subtract(temp);
+				result = w.pow(two).subtract(fourac);
 				//Finding the +/- value of the square root
 				List<Complex> results = result.nthRoot(2);
 				//randomly choosing a root
-				temp = results.get(random.nextInt(2));
-				result = w.add(temp);
-				temp = two.multiply(aValue);
-				w = result.divide(temp);
+				result = results.get(random.nextInt(2));
+				result = w.add(result);
+				w = result.divide(denominator);
 				//Finding the "nth" roots (here we used b instead of n) & randomly choosing one root
 				List<Complex> roots = w.nthRoot(bValue);
 				w = roots.get(random.nextInt(bValue));
@@ -134,7 +137,7 @@ public class TempInputFunction extends InputFunction {
 			List<Complex> tempResult = new ArrayList<Complex>();
 			for (Complex number : result) {
 				//seed^2 - 4ac
-				Complex tempvalue = number.pow(new Complex(2,0)).subtract(fourac);		//CHECK THIS TO MAKE SURE IT WORKS
+				Complex tempvalue = number.pow(two).subtract(fourac);		//CHECK THIS TO MAKE SURE IT WORKS
 				//Finding the +/- value of the square root
 				List<Complex> templist = tempvalue.nthRoot(2);
 				//There might be a better way to do what is below

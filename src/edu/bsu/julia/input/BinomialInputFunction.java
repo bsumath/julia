@@ -104,10 +104,6 @@ public class BinomialInputFunction extends InputFunction {
 		result = result.pow(new Complex(bValue, 0));
 		result = result.multiply(aValue);
 		result = result.add(cValue);
-		/*
-		w = w.pow(new Complex(bValue, 0));
-		w = w.multiply(aValue);
-		w = w.add(cValue);*/
 		return result;
 	}
 

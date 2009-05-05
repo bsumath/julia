@@ -171,15 +171,14 @@ public class PostCriticalAction extends AbstractAction {
 					seed = zero;
 				} else if (function instanceof QuadraticInputFunction) {
 					Complex[] coefficients = function.getCoefficients();
-					seed = (coefficients[1].multiply(negOne))
-							.divide(coefficients[0].multiply(two));
+					seed = (coefficients[1].multiply(negOne)).divide(coefficients[0].multiply(two));
 				} else if (function instanceof BinomialInputFunction) {						/* HERE! */
 					seed = zero;
 				} else
 					continue;
 
 				for (int seedi = 0; seedi < function.getM(); seedi++) {
-					seed = function.evaluateFunction(two/*seed*/);
+					seed = function.evaluateFunction(seed);
 					seedList.add(seed);
 				}
 			}
