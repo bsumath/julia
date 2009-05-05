@@ -29,6 +29,9 @@ public enum JuliaError {
 	
 	//Added here for the temp function.  Checks if the exponent is zero.
 	N_NEGATIVE_ERROR("The exponent may not be negative.", "Number Format Error"),
+	
+	COEFFICIENT_ILLEGAL_ARGUMENT("The coefficients cannot be zero.",
+			"Illegal Coefficient Error"),
 
 	LINEAR_ILLEGAL_ARGUMENT("The 'a' coefficient "										
 			+ "of a linear\nfunction cannot be zero.",

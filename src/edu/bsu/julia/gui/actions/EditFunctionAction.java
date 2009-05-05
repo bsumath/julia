@@ -14,6 +14,7 @@ import edu.bsu.julia.gui.MobiusDialog;
 import edu.bsu.julia.gui.BinomialDialog;
 import edu.bsu.julia.gui.QuadraticDialog;
 import edu.bsu.julia.gui.RealAffineLinearDialog;
+import edu.bsu.julia.gui.TempDialog;
 import edu.bsu.julia.input.CubicInputFunction;
 import edu.bsu.julia.input.InputFunction;
 import edu.bsu.julia.input.LinearInputFunction;
@@ -21,6 +22,7 @@ import edu.bsu.julia.input.BinomialInputFunction;
 import edu.bsu.julia.input.MobiusInputFunction;
 import edu.bsu.julia.input.QuadraticInputFunction;
 import edu.bsu.julia.input.RealAffineLinearInputFunction;
+import edu.bsu.julia.input.TempInputFunction;
 
 public class EditFunctionAction extends AbstractAction {
 
@@ -65,6 +67,9 @@ public class EditFunctionAction extends AbstractAction {
 		} else if (fn instanceof BinomialInputFunction) {
 			BinomialInputFunction mFn = (BinomialInputFunction) fn;
 			new BinomialDialog(parentFrame, GUIUtil.EDIT_DIALOG, mFn);
+		} else if (fn instanceof TempInputFunction) {
+			TempInputFunction mFn = (TempInputFunction) fn;
+			new TempDialog(parentFrame, GUIUtil.EDIT_DIALOG, mFn);
 		}
 	}
 
