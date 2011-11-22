@@ -25,7 +25,7 @@
 	<jar href="commons-math.jar" />
 	<j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se" />
 
-	<extension name="jogl" href="http://download.java.net/media/jogl/builds/archive/jsr-231-webstart-current/jogl.jnlp" />
+	<extension name="jogl" href="https://julia.googlecode.com/hg-history/tip/lib/jogl.jnlp" />
 </resources>
 
 <application-desc main-class="edu.bsu.julia.Julia"/>
