@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <jnlp spec="1.0+"
 	codebase="https://julia.googlecode.com/hg-history/tip/build/"
-	href="https://julia.googlecode.com/hg-history/tip/build/juliaBeta.jnlp">
+	href="https://julia.googlecode.com/hg-history/tip/build/julia.jnlp">
 
 <information>
  	<title>Julia Fractal Drawing Program (Beta)</title>
  	<vendor>Ball State University</vendor>
 	<homepage href="http://www.bsu.edu/web/rstankewitz/JuliaHelp2.0/Julia.html" />
 	<description kind="one-line" >Julia Fractal Drawing Program</description>
- 	<description kind="short" >
- 		A program for the study of polynomial semigroups. Beta Version.
+ 	<description kind="short">
+ 		A program for the study of polynomial semigroups.
  	</description>
  	<offline-allowed/>
 </information>
