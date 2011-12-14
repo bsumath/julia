@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0+"
+	codebase="https://julia.googlecode.com/hg-history/2.1/build/"
+	href="https://julia.googlecode.com/hg-history/2.1/build/julia-2.1.jnlp">
+
+  <information>
+    <title>Julia Fractal Drawing Program</title>
+    <vendor>Ball State University</vendor>
+    <homepage href="http://www.bsu.edu/web/rstankewitz/JuliaHelp2.0/Julia.html" />
+    <description kind="one-line" >Julia Fractal Drawing Program</description>
+    <description kind="short">
+      A program for the study of polynomial semigroups.
+    </description>
+    <offline-allowed/>
+  </information>
+
+  <!-- Native libs require all permissions -->
+  <security>
+    <all-permissions/>
+  </security>
+
+  <resources>
+    <jar href="julia.jar"/>
+    <jar href="resources.jar"/>
+    <jar href="commons-math.jar" />
+    <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se" />
+    
+    <!-- These jars would normally be included in the jogl jnlp. We're using our signed versions until we can upgrade to new version of jogl -->
+    <jar href="../lib/jogl.jar" />
+    <jar href="../lib/gluegen-rt.jar" />
+  </resources>
+
+  <!-- Platform native libraries, normally these are in the jogl jnlp too -->
+  <resources os="Windows" arch="x86">
+    <nativelib href="../lib/jogl-natives-windows-i586.jar" />
+    <nativelib href="../lib/gluegen-rt-natives-windows-i586.jar" />
+  </resources>
+  <resources os="Windows" arch="amd64">
+    <nativelib href="../lib/jogl-natives-windows-amd64.jar" />
+    <nativelib href="../lib/gluegen-rt-natives-windows-amd64.jar" />
+  </resources>
+  <resources os="Windows" arch="x86_64">
+    <nativelib href="../lib/jogl-natives-windows-amd64.jar" />
+    <nativelib href="../lib/gluegen-rt-natives-windows-amd64.jar" />
+  </resources>
+
+  <application-desc main-class="edu.bsu.julia.Julia"/>
+</jnlp>
+
