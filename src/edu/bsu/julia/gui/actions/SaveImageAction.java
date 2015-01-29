@@ -44,8 +44,10 @@ public class SaveImageAction extends AbstractAction {
 		Rectangle r = new Rectangle(parentFrame.getTabbedPane().getActivePane()
 				.getLocationOnScreen(), new Dimension(x, y));
 		try {
-			Robot robot = new Robot();
-			bi = robot.createScreenCapture(r);
+			parentFrame.setAlwaysOnTop(true);
+ 			Robot robot = new Robot();
+ 			bi = robot.createScreenCapture(r);
+			parentFrame.setAlwaysOnTop(false);
 		} catch (AWTException awte) {
 			System.err.println(awte);
 		}
