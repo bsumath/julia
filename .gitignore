@@ -1,0 +1,6 @@
+.ks
+lib/
+target/
+.idea/libraries
+.idea/workspace.xml
+.idea/tasks.xml
