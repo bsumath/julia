@@ -1,0 +1,18 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'idea'
+
+group = 'edu.bsu.julia'
+version = '2.2.0'
+description = "Julia Fractal Drawing Program"
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+repositories { mavenCentral() }
+
+dependencies {
+    compile group: 'org.jogamp.gluegen', name: 'gluegen-rt-main', version: '2.3.1'
+    compile group: 'org.jogamp.jogl', name: 'jogl-all-main', version: '2.3.1'
+    compile group: 'org.apache.commons', name: 'commons-math', version: '2.2'
+}

@@ -11,13 +11,15 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-import javax.media.opengl.*;
-import javax.media.opengl.glu.GLU;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GLEventListener;
+import com.jogamp.opengl.glu.GLU;
 import org.apache.commons.math.complex.Complex;
 import edu.bsu.julia.Julia;
 import edu.bsu.julia.output.OutputSet;
@@ -68,7 +70,7 @@ public class GLListener implements GLEventListener, ListSelectionListener,
 	}
 
 	public void init(GLAutoDrawable drawable) {
-		GL gl = drawable.getGL();
+		GL2 gl = drawable.getGL().getGL2();
 		gl.glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	}
 

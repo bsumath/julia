@@ -2,10 +2,9 @@ package edu.bsu.julia.gui;
 
 import java.awt.Dimension;
 
-import javax.media.opengl.GLCapabilities;
-import javax.media.opengl.GLProfile;
-import javax.media.opengl.awt.GLJPanel;
-
+import com.jogamp.opengl.GLCapabilities;
+import com.jogamp.opengl.GLProfile;
+import com.jogamp.opengl.awt.GLJPanel;
 import edu.bsu.julia.Julia;
 
 public class GraphScrollPane extends GLJPanel {

@@ -2,32 +2,35 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="src/main/java"/>
-	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="src" path="src/test/java"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: org.jogamp.gluegen:gluegen-rt-main:2.2.4"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: org.jogamp.gluegen:gluegen-rt:2.2.4"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: org.jogamp.gluegen:gluegen-rt:natives-android-armv6:2.2.4"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: org.jogamp.gluegen:gluegen-rt:natives-linux-amd64:2.2.4"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: org.jogamp.gluegen:gluegen-rt:natives-linux-armv6:2.2.4"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: org.jogamp.gluegen:gluegen-rt:natives-linux-armv6hf:2.2.4"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: org.jogamp.gluegen:gluegen-rt:natives-linux-i586:2.2.4"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: org.jogamp.gluegen:gluegen-rt:natives-macosx-universal:2.2.4"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: org.jogamp.gluegen:gluegen-rt:natives-solaris-amd64:2.2.4"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: org.jogamp.gluegen:gluegen-rt:natives-solaris-i586:2.2.4"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: org.jogamp.gluegen:gluegen-rt:natives-windows-amd64:2.2.4"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: org.jogamp.gluegen:gluegen-rt:natives-windows-i586:2.2.4"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: org.jogamp.jogl:jogl-all-main:2.2.4"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: org.jogamp.jogl:jogl-all:2.2.4"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: org.jogamp.jogl:jogl-all:natives-android-armv6:2.2.4"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: org.jogamp.jogl:jogl-all:natives-linux-amd64:2.2.4"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: org.jogamp.jogl:jogl-all:natives-linux-armv6:2.2.4"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: org.jogamp.jogl:jogl-all:natives-linux-armv6hf:2.2.4"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: org.jogamp.jogl:jogl-all:natives-linux-i586:2.2.4"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: org.jogamp.jogl:jogl-all:natives-macosx-universal:2.2.4"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: org.jogamp.jogl:jogl-all:natives-solaris-amd64:2.2.4"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: org.jogamp.jogl:jogl-all:natives-solaris-i586:2.2.4"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: org.jogamp.jogl:jogl-all:natives-windows-amd64:2.2.4"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: org.jogamp.jogl:jogl-all:natives-windows-i586:2.2.4"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Maven: org.apache.commons:commons-math:2.2"/>
-	<classpathentry kind="output" path="target/classes"/>
+	<classpathentry kind="src" path="src/main/resources"/>
+	<classpathentry kind="src" path="src/test/resources"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Gradle: org.jogamp.gluegen:gluegen-rt-main:2.3.1"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Gradle: org.jogamp.jogl:jogl-all-main:2.3.1"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Gradle: org.apache.commons:commons-math:2.2"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Gradle: org.jogamp.gluegen:gluegen-rt:2.3.1"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Gradle: org.jogamp.gluegen:gluegen-rt:2.3.1:natives-android-aarch64"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Gradle: org.jogamp.gluegen:gluegen-rt:2.3.1:natives-android-armv6"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Gradle: org.jogamp.gluegen:gluegen-rt:2.3.1:natives-linux-amd64"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Gradle: org.jogamp.gluegen:gluegen-rt:2.3.1:natives-linux-armv6"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Gradle: org.jogamp.gluegen:gluegen-rt:2.3.1:natives-linux-armv6hf"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Gradle: org.jogamp.gluegen:gluegen-rt:2.3.1:natives-linux-i586"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Gradle: org.jogamp.gluegen:gluegen-rt:2.3.1:natives-macosx-universal"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Gradle: org.jogamp.gluegen:gluegen-rt:2.3.1:natives-solaris-amd64"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Gradle: org.jogamp.gluegen:gluegen-rt:2.3.1:natives-solaris-i586"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Gradle: org.jogamp.gluegen:gluegen-rt:2.3.1:natives-windows-amd64"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Gradle: org.jogamp.gluegen:gluegen-rt:2.3.1:natives-windows-i586"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Gradle: org.jogamp.jogl:jogl-all:2.3.1"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Gradle: org.jogamp.jogl:jogl-all:2.3.1:natives-android-aarch64"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Gradle: org.jogamp.jogl:jogl-all:2.3.1:natives-android-armv6"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Gradle: org.jogamp.jogl:jogl-all:2.3.1:natives-linux-amd64"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Gradle: org.jogamp.jogl:jogl-all:2.3.1:natives-linux-armv6"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Gradle: org.jogamp.jogl:jogl-all:2.3.1:natives-linux-armv6hf"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Gradle: org.jogamp.jogl:jogl-all:2.3.1:natives-linux-i586"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Gradle: org.jogamp.jogl:jogl-all:2.3.1:natives-macosx-universal"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Gradle: org.jogamp.jogl:jogl-all:2.3.1:natives-solaris-amd64"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Gradle: org.jogamp.jogl:jogl-all:2.3.1:natives-solaris-i586"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Gradle: org.jogamp.jogl:jogl-all:2.3.1:natives-windows-amd64"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Gradle: org.jogamp.jogl:jogl-all:2.3.1:natives-windows-i586"/>
+	<classpathentry kind="output" path="build/classes/main"/>
 </classpath>

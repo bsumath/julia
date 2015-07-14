@@ -7,12 +7,12 @@ import java.awt.event.MouseMotionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.media.opengl.*;
-import javax.media.opengl.awt.GLJPanel;
-import javax.media.opengl.glu.GLU;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
+import com.jogamp.opengl.*;
+import com.jogamp.opengl.awt.GLJPanel;
+import com.jogamp.opengl.glu.GLU;
 import org.apache.commons.math.complex.Complex;
 import edu.bsu.julia.Julia;
 import edu.bsu.julia.output.OutputSet;
