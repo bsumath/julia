@@ -1,4 +1,5 @@
-.ks
-lib/
-target/
 .idea/
+build/
+keystore.ks
+keystore.properties
+.gradle/

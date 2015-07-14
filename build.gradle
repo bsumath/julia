@@ -1,13 +1,22 @@
+plugins {
+    id 'de.gliderpilot.jnlp' version '0.2.1'
+}
+
 apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'idea'
+apply plugin: 'application'
+apply plugin: 'de.gliderpilot.jnlp'
+
+ext {
+    keystoreAlias = ''
+    keystorePassword = ''
+}
+apply from: 'keystore.properties'
 
 group = 'edu.bsu.julia'
 version = '2.2.0'
-description = "Julia Fractal Drawing Program"
-
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
+description = 'Julia Fractal Drawing Program'
 
 repositories { mavenCentral() }
 
@@ -15,4 +24,32 @@ dependencies {
     compile group: 'org.jogamp.gluegen', name: 'gluegen-rt-main', version: '2.3.1'
     compile group: 'org.jogamp.jogl', name: 'jogl-all-main', version: '2.3.1'
     compile group: 'org.apache.commons', name: 'commons-math', version: '2.2'
+}
+
+jnlp {
+    href 'julia.jnlp'
+    codebase 'http://localhost:9090/'
+    mainClassName = 'edu.bsu.julia.Julia'
+    useVersions = true
+    usePack200 = false
+
+    signJarAddedManifestEntries = [
+            'Codebase'        : project.jnlp.jnlpParams.codebase,
+            'Permissions'     : 'all-permissions',
+            'Application-Name': project.name
+    ]
+    signJarParams = [keystore: 'keystore.ks', alias: keystoreAlias, storepass: keystorePassword]
+
+    withXml {
+        information {
+            title project.description
+            vendor 'Ball State University'
+            homepage href: "http://www.bsu.edu/web/rstankewitz/JuliaHelp2.0/Julia.html"
+            description kind: "one-line", 'A program for the study of polynomial semigroups.'
+            'offline-allowed'()
+        }
+        security {
+            'all-permissions'()
+        }
+    }
 }
