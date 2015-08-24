@@ -32,5 +32,5 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Gradle: org.jogamp.jogl:jogl-all:2.3.1:natives-solaris-i586"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Gradle: org.jogamp.jogl:jogl-all:2.3.1:natives-windows-amd64"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Gradle: org.jogamp.jogl:jogl-all:2.3.1:natives-windows-i586"/>
-	<classpathentry kind="output" path="build/classes/main"/>
+	<classpathentry kind="output" path="classes/production/julia"/>
 </classpath>
