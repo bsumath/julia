@@ -5,14 +5,7 @@ plugins {
 apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'idea'
-apply plugin: 'application'
 apply plugin: 'de.gliderpilot.jnlp'
-
-ext {
-    keystoreAlias = ''
-    keystorePassword = ''
-}
-apply from: 'keystore.properties'
 
 group = 'edu.bsu.julia'
 version = '2.2.0'
@@ -28,7 +21,7 @@ dependencies {
 
 jnlp {
     href 'julia.jnlp'
-    codebase 'http://localhost:9090/'
+    codebase 'https://bsumath.github.io/julia/jnlp'
     mainClassName = 'edu.bsu.julia.Julia'
     useVersions = true
     usePack200 = false
@@ -38,7 +31,6 @@ jnlp {
             'Permissions'     : 'all-permissions',
             'Application-Name': project.name
     ]
-    signJarParams = [keystore: 'keystore.ks', alias: keystoreAlias, storepass: keystorePassword]
 
     withXml {
         information {
@@ -52,4 +44,16 @@ jnlp {
             'all-permissions'()
         }
     }
+}
+
+allprojects {
+   afterEvaluate { project ->
+       def propsFile = rootProject.file('keystore.properties')
+
+       if (propsFile.exists()) {
+           def props = new Properties()
+           props.load(new FileInputStream(propsFile))
+           project.jnlp.signJarParams = props
+       }
+   }
 }
