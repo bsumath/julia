@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<jnlp spec='7.0' href='julia.jnlp' codebase='https://bsumath.github.io/julia/jnlp'>
+  <information>
+    <title>Julia Fractal Drawing Program</title>
+    <vendor>Ball State University</vendor>
+    <homepage href='http://www.bsu.edu/web/rstankewitz/JuliaHelp2.0/Julia.html' />
+    <description kind='one-line'>A program for the study of polynomial semigroups.</description>
+    <offline-allowed />
+  </information>
+  <security>
+    <all-permissions />
+  </security>
+  <resources>
+    <j2se version='1.8' />
+    <jar href='lib/gluegen-rt-main.jar' version='2.3.1' />
+    <jar href='lib/jogl-all-main.jar' version='2.3.1' />
+    <jar href='lib/commons-math.jar' version='2.2' />
+    <jar href='lib/julia.jar' version='2.2.0' main='true' />
+    <jar href='lib/gluegen-rt.jar' version='2.3.1' />
+    <jar href='lib/gluegen-rt-natives-android-aarch64.jar' version='2.3.1' />
+    <jar href='lib/gluegen-rt-natives-android-armv6.jar' version='2.3.1' />
+    <jar href='lib/gluegen-rt-natives-linux-amd64.jar' version='2.3.1' />
+    <jar href='lib/gluegen-rt-natives-linux-armv6.jar' version='2.3.1' />
+    <jar href='lib/gluegen-rt-natives-linux-armv6hf.jar' version='2.3.1' />
+    <jar href='lib/gluegen-rt-natives-linux-i586.jar' version='2.3.1' />
+    <jar href='lib/gluegen-rt-natives-macosx-universal.jar' version='2.3.1' />
+    <jar href='lib/gluegen-rt-natives-solaris-amd64.jar' version='2.3.1' />
+    <jar href='lib/gluegen-rt-natives-solaris-i586.jar' version='2.3.1' />
+    <jar href='lib/gluegen-rt-natives-windows-amd64.jar' version='2.3.1' />
+    <jar href='lib/gluegen-rt-natives-windows-i586.jar' version='2.3.1' />
+    <jar href='lib/jogl-all.jar' version='2.3.1' />
+    <jar href='lib/jogl-all-natives-android-aarch64.jar' version='2.3.1' />
+    <jar href='lib/jogl-all-natives-android-armv6.jar' version='2.3.1' />
+    <jar href='lib/jogl-all-natives-linux-amd64.jar' version='2.3.1' />
+    <jar href='lib/jogl-all-natives-linux-armv6.jar' version='2.3.1' />
+    <jar href='lib/jogl-all-natives-linux-armv6hf.jar' version='2.3.1' />
+    <jar href='lib/jogl-all-natives-linux-i586.jar' version='2.3.1' />
+    <jar href='lib/jogl-all-natives-macosx-universal.jar' version='2.3.1' />
+    <jar href='lib/jogl-all-natives-solaris-amd64.jar' version='2.3.1' />
+    <jar href='lib/jogl-all-natives-solaris-i586.jar' version='2.3.1' />
+    <jar href='lib/jogl-all-natives-windows-amd64.jar' version='2.3.1' />
+    <jar href='lib/jogl-all-natives-windows-i586.jar' version='2.3.1' />
+    <property name='jnlp.versionEnabled' value='true' />
+  </resources>
+  <application-desc main-class='edu.bsu.julia.Julia' />
+</jnlp>
