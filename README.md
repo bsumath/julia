@@ -26,7 +26,7 @@ Installation and Use
 --------------------
 Julia can be launched as a Java Web Start Application:
 
-* [Julia - v2.2.0 (stable)](https://bsumath.github.io/jnlp/julia.jnlp)
+* [Julia - v2.2.0 (stable)](http://bsumath.github.io/julia/jnlp/julia.jnlp)
 
 
 Development
