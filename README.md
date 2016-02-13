@@ -29,8 +29,9 @@ Julia can be launched as a Java Web Start Application:
 * [Julia - v2.2.0 (stable)](http://bsumath.github.io/julia/jnlp/julia.jnlp)
 
 ### Help
-Help files will be brought here soon, but in the meantime please see the help files
-located at http://rstankewitz.iweb.bsu.edu/JuliaHelp2.0/Julia.html
+Please refer to the [Julia Wiki](https://github.com/bsumath/julia/wiki) for information about how to
+use Julia.
+
 
 Development
 -----------
