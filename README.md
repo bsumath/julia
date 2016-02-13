@@ -88,7 +88,7 @@ Further development of Julia has been done by:
 
 License
 -------
-Copyright © 2007-2015 Ball State University
+Copyright © 2007-2016 Ball State University
 
 Julia is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
